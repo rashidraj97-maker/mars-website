@@ -14,51 +14,54 @@ const SITE = {
 
 /* ===== Course catalogue (shown on courses.html and the home page) ===== */
 const COURSES = [
-  ['Office & Productivity', 'MS Excel', 'Formulas, formatting, charts and data tools from basics to advanced.'],
-  ['Office & Productivity', 'MS Office 365', 'The cloud-based Office suite: Word, Excel, PowerPoint, Outlook and Teams working together.'],
-  ['Office & Productivity', 'MS Word', 'Professional documents, templates, mail merge and long-document tools, basic to advanced.'],
-  ['Office & Productivity', 'MS PowerPoint', 'Clear, well-designed presentations, slide masters and animations.'],
-  ['Office & Productivity', 'MS Outlook', 'Mail, calendar, rules and productivity in Outlook.'],
-  ['Office & Productivity', 'MS Access', 'Tables, queries, forms and reports in Access databases.'],
-  ['Office & Productivity', 'MS Office', 'Complete Word, Excel, PowerPoint and Outlook package.'],
-  ['Office & Productivity', 'MS Project (MSP)', 'Plan, schedule and track projects in Microsoft Project.'],
-  ['Office & Productivity', 'Libre Office', 'Writer, Calc and Impress for teams moving to open-source office.'],
-  ['Office & Productivity', 'Open Office', 'OpenOffice Writer, Calc and Impress.'],
-  ['Office & Productivity', 'Basics Of Computer', 'Computer fundamentals, files, internet and email.'],
-  ['Office & Productivity', 'Basic & Intermediate Computer', 'Everyday computer skills for work, step by step.'],
-  ['Data & Analytics', 'Advanced Excel for Data Analysis', 'Formulas, pivot tables and dashboards for everyday business reporting.', 'Popular'],
-  ['Data & Analytics', 'Power BI', 'Turn raw data into interactive dashboards that managers actually use.', 'Popular'],
-  ['Data & Analytics', 'SQL for Data Analytics', 'Pull and shape data from databases with confidence.'],
-  ['Data & Analytics', 'MIS Excel Dashboard', 'Dashboards that help professionals track performance at a glance.'],
-  ['Data & Analytics', 'Power Pivot', 'The Excel add-in for data models and analysis of large data.'],
-  ['Data & Analytics', 'Power Query', 'Clean, combine and refresh data automatically.'],
-  ['Data & Analytics', 'Tableau', 'Visual analytics and dashboards in Tableau.'],
-  ['Data & Analytics', 'Data Analytics', 'End-to-end analysis: cleaning, analysing and presenting data.'],
-  ['Data & Analytics', 'Data Analytics with AI', 'Data analytics with AI tools to work faster.'],
-  ['Data & Analytics', 'Business Analytics', 'Using data to answer business questions.'],
-  ['Data & Analytics', 'Business Analytics with Gen AI', 'Business analytics supported by Generative AI.'],
-  ['Data & Analytics', 'MIS', 'Management information system reporting in Excel.'],
-  ['Data & Analytics', 'MIS with Gen AI', 'MIS reporting with Generative AI.'],
-  ['Data & Analytics', 'Looker Studio', 'Free, shareable dashboards from Google data sources.'],
-  ['Automation & Google', 'Google Sheets with Automation', 'Reports that update themselves using Sheets, Apps Script and Looker Studio.', 'New'],
-  ['Automation & Google', 'VBA/Macros', 'Automate repetitive Excel work with VBA and macros.'],
-  ['Automation & Google', 'Google App Script', 'Automate Google Sheets, Forms and Gmail with Apps Script.'],
-  ['Automation & Google', 'Google Sheet', 'Google Sheets from basics to advanced functions.'],
-  ['Automation & Google', 'Google Form', 'Forms, quizzes and collecting data with Google Forms.'],
-  ['Automation & Google', 'MS Power Apps', 'Build simple business apps without heavy coding.'],
-  ['Automation & Google', 'MS PowerAutomate', 'Automate workflows across Microsoft 365.'],
-  ['AI & Programming', 'Python with AI', 'Python programming with AI tools.'],
-  ['AI & Programming', 'Gen AI', 'Generative AI tools for everyday work.'],
-  ['AI & Programming', 'Machine Learning (ML)', 'Machine learning concepts and practice.'],
-  ['ERP & Accounting', 'Tally', 'Accounting and GST in Tally.'],
-  ['ERP & Accounting', 'SAP FICO', 'SAP Finance and Controlling.'],
-  ['ERP & Accounting', 'SAP Business One', 'SAP Business One for small and mid-size companies.'],
-  ['ERP & Accounting', 'SAP MM (User Level)', 'SAP Materials Management for end users.'],
-  ['ERP & Accounting', 'SAP MM (Consultant Level)', 'SAP Materials Management configuration for consultants.'],
-  ['ERP & Accounting', 'SAP SD (Sales and Distribution)', 'SAP Sales and Distribution.'],
-  ['ERP & Accounting', 'NetSuite', 'Oracle NetSuite ERP.'],
-  ['Career Skills', 'Career Communication & Interview Skills Program', 'Communication, CV and interview preparation.']
-].map(([cat, title, desc, badge]) => ({ cat, title, desc, badge }));
+  ["Office & Productivity", "MS PowerPoint", "Create impactful, professional presentations with templates, SmartArt, charts, multimedia and animation (14 hours).", "", "1.5 months"],
+  ["Office & Productivity", "MS Word", "Work with Microsoft Word professionally: advanced formatting, styles, tables, long documents, templates and mail merge (12 hours).", "", "1.5 months"],
+  ["Office & Productivity", "MS Outlook", "Manage email, calendar, contacts and tasks efficiently in Microsoft Outlook (12 hours).", "", "1.5 months"],
+  ["Office & Productivity", "MS Access", "Design and use Access databases: tables, relationships, queries, forms, reports and basic automation.", "", "2.5 months"],
+  ["Office & Productivity", "MS Office", "A complete 6-month (about 56 hours) MS Office program: Excel from basic to advanced, PowerPoint and Word for everyday office work.", "", "5 months"],
+  ["Office & Productivity", "MS Project (MSP)", "Plan, schedule, track and report projects in Microsoft Project, from first plan to progress reports (16 hours).", "", "2.5 months"],
+  ["Office & Productivity", "Libre Office (Calc-Excel)", "Advanced spreadsheets in LibreOffice Calc: formulas, lookups, data cleaning, pivot tables and professional reports.", "", "2.5 months"],
+  ["Office & Productivity", "Libre Office (Writer-Word)", "Create professional documents in LibreOffice Writer: styles, tables, long documents, templates and mail merge.", "", "1.5 months"],
+  ["Office & Productivity", "Libre Office (Presentation-PPT)", "Build professional presentations in LibreOffice Impress with masters, charts, multimedia and animations.", "", "1.5 months"],
+  ["Office & Productivity", "Open Office (Calc-Excel)", "Advanced spreadsheets in OpenOffice Calc: formulas, lookups, data cleaning, pivot tables and professional reports.", "", "2.5 months"],
+  ["Office & Productivity", "Open Office (Writer-Word)", "Create professional documents in OpenOffice Writer: styles, tables, long documents, templates and mail merge.", "", "1.5 months"],
+  ["Office & Productivity", "Open Office (Presentation-PPT)", "Build professional presentations in OpenOffice Impress with masters, charts, multimedia and animations.", "", "1.5 months"],
+  ["Office & Productivity", "Basics of Computer", "Computer fundamentals for beginners: Windows, files and folders, internet and email, plus basic Word and Excel (24 hours).", "", "2.5 months"],
+  ["Data & Analytics", "Advanced Excel", "Master advanced Excel for analysis and MIS: complex formulas, lookups, dynamic arrays, data cleaning and professional reports and dashboards (24 hours).", "Popular", "2.5 months"],
+  ["Data & Analytics", "Basic Excel", "Build a strong Excel foundation: worksheets, cell references, everyday formulas, sorting, filtering and formatting (8 hours).", "Popular", "1.5 months"],
+  ["Data & Analytics", "SQL", "Microsoft SQL Server from basics to advanced analytics, with Python integration and AI-assisted query writing (20 hours).", "", "2.5 months"],
+  ["Data & Analytics", "Power BI", "Turn raw data into interactive dashboards with Power BI Desktop and Service: Power Query, data modelling, DAX and sharing (20 hours).", "", "2.5 months"],
+  ["Data & Analytics", "Tableau", "Visual analytics in Tableau Desktop: connect data, build charts, maps and calculations, and design interactive dashboards (24 hours).", "", "2.5 months"],
+  ["Data & Analytics", "Data Analytics", "A 10-month career program covering Advanced Excel, VBA, Power BI, SQL, statistics and Python for data analysis, with projects.", "", "10 months"],
+  ["Data & Analytics", "Data Analytics with AI", "The Data Analytics career program with AI tools added: Excel, VBA, Power BI, SQL and Python, plus AI for faster analysis and reporting (12 months).", "", "12 months"],
+  ["Data & Analytics", "Business Analytics", "A 12-month program: Excel, VBA, Power BI, SQL, Python, statistics and machine learning applied to business decisions.", "", "10 months"],
+  ["Data & Analytics", "Business Analytics with Gen AI", "Business Analytics with Generative AI: Excel, Power BI, SQL, Python and machine learning, supported by AI tools for faster insight.", "", "12 months"],
+  ["Data & Analytics", "MIS Specialist", "A 6-month MIS program: Advanced Excel, VBA automation and Power BI to build automated MIS reports and dashboards.", "", "6 months"],
+  ["Data & Analytics", "MIS with Gen AI", "The MIS Specialist program with Generative AI: Excel, VBA and Power BI reports built faster with AI tools (7 months).", "", "7 months"],
+  ["Data & Analytics", "Power Query", "Import, clean, combine and automate data in Excel Power Query, the first half of the Power Query & Power Pivot course.", "", "1 month"],
+  ["Data & Analytics", "Power Pivot", "Build data models, write DAX and create interactive dashboards with Excel Power Pivot, the second half of the Power Query & Power Pivot course.", "", "1 month"],
+  ["Automation & Google", "Google Sheets with App script (AUTOMATION)", "A job-oriented program (45–50 hours) on Google Sheets, Forms, Apps Script, web apps and Looker Studio, ending with an end-to-end business automation project.", "New", "3.5 months"],
+  ["Automation & Google", "Google sheets With Looker Studio", "Google Sheets from basic to advanced, connected to Looker Studio for live, shareable dashboards.", "", "3.5 months"],
+  ["Automation & Google", "VBA/Macros", "Automate Excel with VBA: macros, procedures, loops, user forms, ribbon tabs and your own add-ins (20 hours).", "", "2.5 months"],
+  ["Automation & Google", "MS Power Apps", "Build business apps on the Microsoft Power Platform with Power Apps, SharePoint, Dataverse and Power Automate.", "", "2 months"],
+  ["Automation & Google", "MS PowerAutomate", "Automate everyday work across Microsoft 365 with Power Automate cloud flows, approvals and Excel/Outlook/Forms automation.", "", "2 months"],
+  ["Automation & Google", "Google Sheet", "Google Sheets from basics to advanced: formulas, lookups, QUERY, pivot tables, charts and collaboration.", "", "2.5 months"],
+  ["Automation & Google", "Google sheet with Google Form", "Collect data with Google Forms and analyse it in Google Sheets with formulas, pivots and automated reports.", "", "3.5 months"],
+  ["AI & Programming", "Python with AI", "Python for data analytics (24 hours): programming basics, NumPy, Pandas, visualisation and statistics, with AI tools to code faster.", "", "3 months"],
+  ["AI & Programming", "Gen AI", "Use Generative AI with MS Office: write Excel formulas, analyse data, create presentations and documents in minutes. No coding needed.", "", "1 month"],
+  ["AI & Programming", "Machine Learning (ML)", "Machine learning with Python (20 hours): the maths, key algorithms and the full lifecycle to train, evaluate and use models.", "", "2.5 months"],
+  ["AI & Programming", "Web App Development (Full Stack)", "Build and deploy web applications end to end: HTML, CSS and JavaScript front end, back end, database and hosting.", "", "2 months"],
+  ["AI & Programming", "Claude AI", "Practical Generative AI for business teams: Claude, ChatGPT, Gemini and Grok, prompt design, document and data workflows, and responsible use.", "", "2 months"],
+  ["ERP & Accounting", "Tally", "Accounting and GST in TallyPrime: company setup, vouchers, inventory, GST returns and financial reports.", "", "2 months"],
+  ["ERP & Accounting", "SAP FICO", "SAP Financial Accounting and Controlling in S/4HANA/ECC: configuration, transactions and management reporting.", "", "2 months"],
+  ["ERP & Accounting", "SAP Business One", "SAP Business One ERP for small and mid-size companies: sales, purchasing, inventory, finance and production (20–22 hours). Practice software provided.", "", "2 months"],
+  ["ERP & Accounting", "SAP MM (User Level)", "SAP S/4HANA Materials Management for end users (30 hours): master data, the full procurement cycle and inventory.", "", "2 months"],
+  ["ERP & Accounting", "SAP MM (Consultant Level)", "SAP MM consultant training (60 hours): configuration of enterprise structure, procure-to-pay, inventory, pricing and S/4HANA specifics.", "", "3.5 months"],
+  ["ERP & Accounting", "SAP SD (User Level)", "SAP S/4HANA Sales & Distribution for end users (18–20 hours): the complete order-to-cash process.", "", "2 months"],
+  ["ERP & Accounting", "SAP SD (Consultant Level)", "SAP SD consultant training (30–35 hours): O2C configuration, pricing, shipping, billing and integration with MM and FI.", "", "3.5 months"],
+  ["ERP & Accounting", "NetSuite", "Oracle NetSuite cloud ERP (50 hours): accounting, order-to-cash, procure-to-pay, inventory, CRM, reporting and dashboards.", "", "3 months"],
+  ["Career Skills", "Career Communication & Interview Skills Program", "A 4-month program to build spoken English, confidence and interview skills for the workplace.", "", "3 months"]
+].map(([cat, title, desc, badge, dur]) => ({ cat, title, desc, badge, dur }));
 
 /* ===== Shared behaviour ===== */
 const $ = (s, r = document) => r.querySelector(s), $$ = (s, r = document) => [...r.querySelectorAll(s)];
@@ -130,15 +133,17 @@ function home() {
 
 /* Course outline PDFs come from the Courses tab (Outline PDF column) through the Apps Script API */
 const OUTLINE_ALIAS = { 'advanced excel for data analysis': 'advanced excel', 'sql for data analytics': 'sql', 'google sheets with automation': 'google sheets with app script automation',
-  'mis excel dashboard': 'mis specialist', 'ms office 365': 'ms office' };
+  'mis excel dashboard': 'mis specialist', 'ms office 365': 'ms office', 'ms excel': 'advanced excel', 'mis': 'mis specialist',
+  'google app script': 'google sheets with app script automation', 'sap sd sales and distribution': 'sap sd user level',
+  'basic intermediate computer': 'basics of computer', 'libre office': 'libre office calc excel', 'open office': 'open office calc excel' };
 const normT = s => String(s || '').toLowerCase().replace(/[^a-z0-9]+/g, ' ').trim();
 let OUTLINES = {};
 function loadOutlines() {
   if (!/^https:\/\/script\.google\.com\//.test(SITE.api)) return Promise.resolve();
-  try { const c = JSON.parse(sessionStorage.getItem('mars_outlines') || 'null'); if (c && Date.now() - c.at < 30 * 60e3) { OUTLINES = c.o; return Promise.resolve(); } } catch (e) {}
+  try { const c = JSON.parse(sessionStorage.getItem('mars_outlines2') || 'null'); if (c && Date.now() - c.at < 30 * 60e3) { OUTLINES = c.o; return Promise.resolve(); } } catch (e) {}
   return fetch(SITE.api + '?action=outlines').then(r => r.json()).then(d => {
     OUTLINES = {}; Object.entries((d && d.outlines) || {}).forEach(([t, u]) => { if (/^https:\/\//.test(u)) OUTLINES[normT(t)] = u; });
-    try { sessionStorage.setItem('mars_outlines', JSON.stringify({ at: Date.now(), o: OUTLINES })); } catch (e) {}
+    try { sessionStorage.setItem('mars_outlines2', JSON.stringify({ at: Date.now(), o: OUTLINES })); } catch (e) {}
   }).catch(() => {});
 }
 const outlineFor = title => { const n = normT(title); return OUTLINES[n] || OUTLINES[OUTLINE_ALIAS[n]] || ''; };
@@ -157,7 +162,7 @@ function coursesPage() {
     const l = COURSES.filter(c => (cat === 'All' || c.cat === cat) && (!s || (c.title + ' ' + c.cat + ' ' + c.desc).toLowerCase().includes(s)));
     count.textContent = l.length + (l.length === 1 ? ' course' : ' courses');
     list.innerHTML = l.map(c => `<article class="cc"><small>${esc(c.cat)}${c.badge ? ' · ' + esc(c.badge) : ''}</small><h3>${esc(c.title)}</h3><p>${esc(c.desc)}</p>
-      <div class="row"><span>Online / Classroom · Certificate</span><div class="ra">${outlineFor(c.title) ? `<a class="dl" href="${esc(outlineFor(c.title))}" download rel="noopener" aria-label="Download the ${esc(c.title)} course outline (PDF)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4v11m0 0-4-4m4 4 4-4M5 20h14"/></svg>Outline</a>` : ''}<a href="${esc(enquire(c.title))}"${hasApp ? '' : ' target="_blank" rel="noopener"'}>Enquire</a></div></div></article>`).join('')
+      <div class="row"><span>${c.dur ? esc(c.dur) + ' · ' : ''}Online / Classroom · Certificate</span><div class="ra">${outlineFor(c.title) ? `<a class="dl" href="${esc(outlineFor(c.title))}" download rel="noopener" aria-label="Download the ${esc(c.title)} course outline (PDF)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4v11m0 0-4-4m4 4 4-4M5 20h14"/></svg>Outline</a>` : ''}<a href="${esc(enquire(c.title))}"${hasApp ? '' : ' target="_blank" rel="noopener"'}>Enquire</a></div></div></article>`).join('')
       || `<div class="none">No course matches “${esc(q.value)}”. <a href="${esc(wa('Hi MARS, do you teach ' + q.value + '?'))}" target="_blank" rel="noopener">Ask us on WhatsApp</a>; we may still teach it.</div>`;
   }
   draw();
