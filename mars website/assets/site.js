@@ -76,7 +76,8 @@ document.addEventListener('DOMContentLoaded', () => {
   if (burger) burger.addEventListener('click', () => { const o = nav.classList.toggle('open'); burger.setAttribute('aria-expanded', o); });
   $$('#nav a').forEach(a => a.addEventListener('click', () => { nav.classList.remove('open'); if (burger) burger.setAttribute('aria-expanded', 'false'); }));
   // enquire buttons
-  $$('[data-enquire]').forEach(a => { a.href = a.dataset.enroll !== undefined && !hasApp ? wa('Hi MARS, I would like to enroll in a course.') : enquire(a.dataset.enquire); if (!hasApp) { a.target = '_blank'; a.rel = 'noopener'; } else if (a.dataset.enroll !== undefined) a.href = SITE.enquiryApp.replace(/\/?$/, '/') + '#enroll'; });
+  // Enquire and Enroll Now always open in a new browser tab, so the website stays open
+  $$('[data-enquire]').forEach(a => { a.href = a.dataset.enroll !== undefined && !hasApp ? wa('Hi MARS, I would like to enroll in a course.') : enquire(a.dataset.enquire); if (hasApp && a.dataset.enroll !== undefined) a.href = SITE.enquiryApp.replace(/\/?$/, '/') + '#enroll'; a.target = '_blank'; a.rel = 'noopener'; });
   $$('[data-wa]').forEach(a => { a.href = wa(); });
   if (hasApp) $$('[data-getapp]').forEach(a => { a.href = SITE.enquiryApp.replace(/\/?$/, '/') + '?install=1#courses'; });
   $$('[data-year]').forEach(e => { e.textContent = new Date().getFullYear(); });
@@ -93,7 +94,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const iso = $('#isoDlg');
   $$('[data-iso]').forEach(b => b.addEventListener('click', () => { if (iso && iso.showModal) iso.showModal(); else window.open('assets/iso-certificate.pdf', '_blank'); }));
   if (iso) { $$('[data-isoclose]', iso).forEach(b => b.onclick = () => iso.close()); iso.addEventListener('click', e => { if (e.target === iso) iso.close(); }); }
-  if (document.body.dataset.page === 'home') home();
+  if (document.body.dataset.page === 'home') { home(); demosHome(); }
   if (document.body.dataset.page === 'courses') coursesPage();
   if (document.body.dataset.page === 'gallery') galleryPage();
   if (document.body.dataset.page === 'join') joinPage();
@@ -162,16 +163,58 @@ function coursesPage() {
     const l = COURSES.filter(c => (cat === 'All' || c.cat === cat) && (!s || (c.title + ' ' + c.cat + ' ' + c.desc).toLowerCase().includes(s)));
     count.textContent = l.length + (l.length === 1 ? ' course' : ' courses');
     list.innerHTML = l.map(c => `<article class="cc"><small>${esc(c.cat)}${c.badge ? ' · ' + esc(c.badge) : ''}</small><h3>${esc(c.title)}</h3><p>${esc(c.desc)}</p>
-      <div class="row"><span>${c.dur ? esc(c.dur) + ' · ' : ''}Online / Classroom · Certificate</span><div class="ra">${outlineFor(c.title) ? `<a class="dl" href="${esc(outlineFor(c.title))}" download rel="noopener" aria-label="Download the ${esc(c.title)} course outline (PDF)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4v11m0 0-4-4m4 4 4-4M5 20h14"/></svg>Outline</a>` : ''}<a href="${esc(enquire(c.title))}"${hasApp ? '' : ' target="_blank" rel="noopener"'}>Enquire</a></div></div></article>`).join('')
+      <div class="row"><span>${c.dur ? esc(c.dur) + ' · ' : ''}Online / Classroom · Certificate</span><div class="ra">${demoFor(c.title) ? `<a class="dm" href="#" data-play="${esc(DEMOS.indexOf(demoFor(c.title)))}" aria-label="Watch a demo class of ${esc(c.title)}"><svg viewBox="0 0 24 24"><path d="M7 4v16l13-8z"/></svg>Demo</a>` : ''}${outlineFor(c.title) ? `<a class="dl" href="${esc(outlineFor(c.title))}" download rel="noopener" aria-label="Download the ${esc(c.title)} course outline (PDF)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4v11m0 0-4-4m4 4 4-4M5 20h14"/></svg>Outline</a>` : ''}<a href="${esc(enquire(c.title))}" target="_blank" rel="noopener">Enquire</a></div></div></article>`).join('')
       || `<div class="none">No course matches “${esc(q.value)}”. <a href="${esc(wa('Hi MARS, do you teach ' + q.value + '?'))}" target="_blank" rel="noopener">Ask us on WhatsApp</a>; we may still teach it.</div>`;
   }
   draw();
   loadOutlines().then(draw);
+  loadDemos().then(l => { if (l.length) draw(); });
+}
+
+/* Demo class videos: rows of the "Demo Videos" tab (YouTube or Google Drive links) */
+let DEMOS = [];
+function loadDemos() {
+  if (!/^https:\/\/script\.google\.com\//.test(SITE.api)) return Promise.resolve(DEMOS);
+  try { const c = JSON.parse(sessionStorage.getItem('mars_demos1') || 'null'); if (c && Date.now() - c.at < 10 * 60e3) { DEMOS = c.l; return Promise.resolve(DEMOS); } } catch (e) {}
+  return fetch(SITE.api + '?action=demos').then(r => r.json()).then(d => {
+    DEMOS = ((d && d.demos) || []).filter(v => v && /^[\w-]+$/.test(v.id) && (v.kind === 'yt' || v.kind === 'drive'));
+    try { sessionStorage.setItem('mars_demos1', JSON.stringify({ at: Date.now(), l: DEMOS })); } catch (e) {}
+    return DEMOS;
+  }).catch(() => DEMOS);
+}
+const demoFor = title => { const n = normT(title), a = OUTLINE_ALIAS[n]; return DEMOS.find(v => v.course && (normT(v.course) === n || normT(v.course) === a)) || null; };
+const thumbOf = v => v.kind === 'yt' ? `https://i.ytimg.com/vi/${v.id}/hqdefault.jpg` : `https://drive.google.com/thumbnail?id=${v.id}&sz=w640`;
+const embedOf = v => v.kind === 'yt' ? `https://www.youtube-nocookie.com/embed/${v.id}?autoplay=1&rel=0&modestbranding=1` : `https://drive.google.com/file/d/${v.id}/preview`;
+const bookDemo = course => hasApp ? SITE.enquiryApp.replace(/\/?$/, '/') + '#enquire' : wa(`Hi MARS, I would like to book a free demo class${course ? ' for ' + course : ''}.`);
+function playDemo(v) {
+  let vp = $('#vp');
+  if (!vp) {
+    vp = document.createElement('div'); vp.className = 'vp'; vp.id = 'vp'; vp.hidden = true;
+    vp.setAttribute('role', 'dialog'); vp.setAttribute('aria-modal', 'true'); vp.setAttribute('aria-label', 'Demo class video');
+    vp.innerHTML = '<button type="button" class="x" aria-label="Close">×</button><div class="box"><div class="fr"></div><div class="cap"></div></div>';
+    document.body.appendChild(vp);
+    const close = () => { vp.hidden = true; $('.fr', vp).innerHTML = ''; document.body.style.overflow = ''; };
+    $('.x', vp).onclick = close; vp.addEventListener('click', e => { if (e.target === vp) close(); });
+    addEventListener('keydown', e => { if (e.key === 'Escape' && !vp.hidden) close(); });
+  }
+  $('.fr', vp).innerHTML = `<iframe src="${esc(embedOf(v))}" title="${esc(v.title)}" allow="autoplay; encrypted-media; picture-in-picture; fullscreen" allowfullscreen referrerpolicy="strict-origin-when-cross-origin"></iframe>`;
+  $('.cap', vp).innerHTML = `<span><b>${esc(v.title)}</b>${v.course ? ' · ' + esc(v.course) : ''}</span><a class="btn pri" href="${esc(bookDemo(v.course))}" target="_blank" rel="noopener">Book a free live demo</a>`;
+  vp.hidden = false; document.body.style.overflow = 'hidden';
+}
+document.addEventListener('click', e => { const b = e.target.closest('[data-play]'); if (!b) return; e.preventDefault(); const v = DEMOS[+b.dataset.play]; if (v) playDemo(v); });
+function demosHome() {
+  const sec = $('#demos'), grid = $('#demoGrid'); if (!sec || !grid) return;
+  $$('[data-demo-book]').forEach(a => { a.href = bookDemo(''); });
+  loadDemos().then(l => {
+    if (!l.length) return;
+    grid.innerHTML = l.slice(0, 6).map((v, i) => `<button type="button" class="demo" data-play="${i}"><span class="th" style="background-image:url('${esc(thumbOf(v))}')"><span class="pl"><svg viewBox="0 0 24 24"><path d="M7 4v16l13-8z"/></svg></span>${v.dur ? `<span class="du">${esc(v.dur)}</span>` : ''}</span><span class="bd">${v.course ? `<small>${esc(v.course)}</small>` : ''}<b>${esc(v.title)}</b>${v.trainer ? `<span class="tr">Trainer: ${esc(v.trainer)}</span>` : ''}</span></button>`).join('');
+    sec.hidden = false;
+  });
 }
 
 /* Gallery: year filter, photo grid and full-screen viewer */
 function galleryPage() {
-  const G = window.GALLERY || [];
+  const G = (window.GALLERY || []).slice();
   const groups = [['All', () => true], ['2022 – 2026', e => e.y >= 2022], ['2019 – 2021', e => e.y >= 2019 && e.y <= 2021], ['2015 – 2018', e => e.y >= 2015 && e.y <= 2018], ['Before 2015', e => e.y < 2015]];
   let cur = 0, shown = [], idx = 0;
   const chips = $('#gchips'), gal = $('#gal'), count = $('#gcount'), lb = $('#lb'), img = $('#lbi'), cap = $('#lbc');
@@ -181,8 +224,8 @@ function galleryPage() {
   function draw() {
     const ev = G.filter(groups[cur][1]); shown = [];
     gal.innerHTML = ev.map(e => {
-      const items = e.p.map(src => { const i = shown.push({ src, t: e.t, l: label(e) }) - 1;
-        return `<button type="button" class="ph" data-k="${i}"><img src="${esc(src)}" alt="${esc(e.t)} Training" loading="lazy" onerror="this.closest('.ph').remove()"></button>`; }).join('');
+      const items = e.p.map(src => { const s = typeof src === 'string' ? { src, full: src } : src, i = shown.push({ src: s.full, t: e.t, l: label(e) }) - 1;
+        return `<button type="button" class="ph" data-k="${i}"><img src="${esc(s.src)}" alt="${esc(e.t)} Training" loading="lazy" referrerpolicy="no-referrer" onerror="this.closest('.ph').remove()"></button>`; }).join('');
       return `<article class="ev"><header><h3>${esc(e.t)}</h3><span>${esc(label(e))}</span><em>${e.p.length} photo${e.p.length > 1 ? 's' : ''}</em></header><div class="phs n${Math.min(e.p.length, 4)}">${items}</div></article>`;
     }).join('');
     count.textContent = ev.length + (ev.length === 1 ? ' programme' : ' programmes');
@@ -198,6 +241,15 @@ function galleryPage() {
   let x0 = null; lb.addEventListener('touchstart', e => { x0 = e.touches[0].clientX; }, { passive: true });
   lb.addEventListener('touchend', e => { if (x0 == null) return; const dx = e.changedTouches[0].clientX - x0; if (Math.abs(dx) > 50) open(idx + (dx < 0 ? 1 : -1)); x0 = null; });
   draw();
+  // Photos added to the Google Drive folder "MARS Website Gallery" (one sub-folder per programme) show up here automatically
+  if (/^https:\/\/script\.google\.com\//.test(SITE.api)) fetch(SITE.api + '?action=gallery').then(r => r.json()).then(d => {
+    const img = (id, w) => `https://lh3.googleusercontent.com/d/${encodeURIComponent(id)}=w${w}`;
+    const add = ((d && d.events) || []).filter(e => e.ids && e.ids.length).map(e => ({ t: e.t, s: e.s, d: e.d, y: Number(e.y) || new Date().getFullYear(), drive: 1, p: e.ids.map(id => ({ src: img(id, 800), full: img(id, 1800) })) }));
+    if (!add.length) return;
+    add.forEach(e => { const same = G.find(x => x.t.toLowerCase() === e.t.toLowerCase() && x.y === e.y); if (same) same.p = e.p.concat(same.p); else G.push(e); });
+    G.sort((a, b) => b.y - a.y || (b.drive || 0) - (a.drive || 0));   // newest year first; within a year, Drive uploads first
+    draw();
+  }).catch(() => {});
 }
 
 /* Join as a Trainer: sends the form and resume to the Google Sheet through Apps Script */
@@ -208,6 +260,7 @@ function joinPage() {
     e.preventDefault(); err.hidden = true;
     const d = Object.fromEntries(new FormData(form)); const file = form.resume.files[0];
     if (!String(d.name).trim()) return fail('Please enter your name.');
+    if (!String(d.gender || '').trim()) return fail('Please select your sex.');
     if (String(d.phone).replace(/\D/g, '').slice(-10).length !== 10) return fail('Please enter a 10-digit mobile number.');
     if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(String(d.email).trim())) return fail('Please enter a valid email address.');
     if (!String(d.skills).trim()) return fail('Please tell us which courses you can teach.');
