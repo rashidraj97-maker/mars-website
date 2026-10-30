@@ -664,3 +664,5 @@ html{scroll-padding-top:96px}
 .cfields .mfind{padding:9px 12px!important;font-size:15px!important}
 .cfields .mcount{font-weight:400;font-size:.82rem;color:var(--brand)}
 @media(max-width:560px){.cfields{grid-template-columns:1fr}.cfields .mlist{grid-template-columns:1fr}}
+
+.cfields .othrow{margin-top:8px}.cfields .othtxt{margin-top:8px;width:100%}

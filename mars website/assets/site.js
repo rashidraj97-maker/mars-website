@@ -321,23 +321,26 @@ const CORP_FALLBACK = [
   { q: 'Designation', type: 'text', help: 'e.g. HR Manager, L&D Head' }, { q: 'Work email', type: 'email', required: true },
   { q: 'Mobile number', type: 'phone', required: true }, { q: 'City / Location', type: 'text', required: true },
   { q: 'Number of participants', type: 'number', required: true },
-  { q: 'Training required', type: 'multi', required: true, options: COURSES.map(c => c.title) },
+  { q: 'Training required', type: 'multi', required: true, options: COURSES.map(c => c.title).concat('Other'), help: 'Not in the list? Tick Other and type it' },
   { q: 'Training mode', type: 'radio', required: true, options: ['On-site at our office', 'Live online', 'At MARS training centre', 'Hybrid'] },
   { q: 'Preferred start date', type: 'date' }, { q: 'Requirements / message', type: 'textarea' }];
 function corporatePage() {
   const form = $('#cform'), box = $('#cfields'), err = $('#cerr'), btn = $('#cbtn');
   let fields = [];
-  const id = i => 'cf' + i;
+  const id = i => 'cf' + i, isOther = o => /^other\b/i.test(String(o).trim());
+  const othBox = i => `<input class="othtxt" id="${id(i)}o" type="text" maxlength="300" placeholder="Please specify…" hidden>`;
   function draw(list) {
     fields = list;
     box.innerHTML = list.map((f, i) => {
       const req = f.required ? ' <em>*</em>' : '', help = f.help ? `<span class="help">${esc(f.help)}</span>` : '', nm = `name="${id(i)}"`;
+      const opts = f.options || [], oth = opts.find(isOther), main = opts.filter(o => !isOther(o)), big = main.length > 8;
       if (f.type === 'multi') return `<fieldset class="wide" data-i="${i}"><legend>${esc(f.q)}${req} <span class="mcount" id="${id(i)}n"></span></legend>${help}
-        ${f.options.length > 8 ? `<input class="mfind" type="search" placeholder="Search…" data-find="${i}">` : ''}
-        <div class="${f.options.length > 8 ? 'mlist' : 'opts'}">${f.options.map(o => `<label class="${f.options.length > 8 ? '' : 'opt'}"><input type="checkbox" ${nm} value="${esc(o)}">${esc(o)}</label>`).join('')}</div></fieldset>`;
-      if (f.type === 'radio') return `<fieldset class="wide" data-i="${i}"><legend>${esc(f.q)}${req}</legend>${help}<div class="opts">${f.options.map(o => `<label class="opt"><input type="radio" ${nm} value="${esc(o)}">${esc(o)}</label>`).join('')}</div></fieldset>`;
+        ${big ? `<input class="mfind" type="search" placeholder="Search…" data-find="${i}">` : ''}
+        <div class="${big ? 'mlist' : 'opts'}">${main.map(o => `<label class="${big ? '' : 'opt'}"><input type="checkbox" ${nm} value="${esc(o)}"><span>${esc(o)}</span></label>`).join('')}</div>
+        ${oth ? `<div class="opts othrow"><label class="opt"><input type="checkbox" ${nm} value="${esc(oth)}"><span>${esc(oth)}</span></label></div>${othBox(i)}` : ''}</fieldset>`;
+      if (f.type === 'radio') return `<fieldset class="wide" data-i="${i}"><legend>${esc(f.q)}${req}</legend>${help}<div class="opts">${opts.map(o => `<label class="opt"><input type="radio" ${nm} value="${esc(o)}"><span>${esc(o)}</span></label>`).join('')}</div>${oth ? othBox(i) : ''}</fieldset>`;
       if (f.type === 'textarea') return `<label class="wide"><span>${esc(f.q)}${req}</span><textarea ${nm} rows="4" placeholder="${esc(f.help || '')}"></textarea></label>`;
-      if (f.type === 'select') return `<label><span>${esc(f.q)}${req}</span><select ${nm}><option value="">Select</option>${f.options.map(o => `<option>${esc(o)}</option>`).join('')}</select>${help}</label>`;
+      if (f.type === 'select') return `<label><span>${esc(f.q)}${req}</span><select ${nm}><option value="">Select</option>${opts.map(o => `<option>${esc(o)}</option>`).join('')}</select>${help}${oth ? othBox(i) : ''}</label>`;
       const t = { email: 'email', phone: 'tel', number: 'number', date: 'date' }[f.type] || 'text';
       const extra = f.type === 'phone' ? ' inputmode="tel" autocomplete="tel"' : f.type === 'email' ? ' autocomplete="email"' : f.type === 'number' ? ' min="0" inputmode="numeric"' : '';
       return `<label><span>${esc(f.q)}${req}</span><input type="${t}" ${nm}${extra} placeholder="${f.type === 'date' ? '' : esc(f.help || '')}"></label>`;
@@ -347,7 +350,13 @@ function corporatePage() {
     const fi = e.target.dataset.find;
     if (fi !== undefined) { const q = e.target.value.toLowerCase(); $$('.mlist label', e.target.parentNode).forEach(l => { l.hidden = q && !l.textContent.toLowerCase().includes(q); }); }
   });
-  box.addEventListener('change', e => { const fs = e.target.closest('fieldset'); if (fs && e.target.type === 'checkbox') { const n = $$('input:checked', fs).length; $('#' + id(fs.dataset.i) + 'n').textContent = n ? n + ' selected' : ''; } });
+  const picked = i => $$(`[name="${id(i)}"]`, form).some(x => (x.tagName === 'SELECT' || x.checked) && isOther(x.value));
+  box.addEventListener('change', e => {
+    const fs = e.target.closest('fieldset');
+    if (fs && e.target.type === 'checkbox') { const n = $$('input:checked', fs).length; $('#' + id(fs.dataset.i) + 'n').textContent = n ? n + ' selected' : ''; }
+    const m = /^cf(\d+)$/.exec(e.target.name || ''), t = m && $('#' + id(m[1]) + 'o');
+    if (t) { const on = picked(+m[1]); t.hidden = !on; if (on && e.target.value && isOther(e.target.value)) t.focus(); }
+  });
   const api = /^https:\/\/script\.google\.com\//.test(SITE.api);
   (api ? fetch(SITE.api + '?action=corpform').then(r => r.json()) : Promise.reject()).then(d => {
     if (!d || !d.ok || !d.fields || !d.fields.length) throw 0;
@@ -360,7 +369,13 @@ function corporatePage() {
     const answers = {};
     for (let i = 0; i < fields.length; i++) {
       const f = fields[i], els = $$(`[name="${id(i)}"]`, form);
-      const v = f.type === 'multi' ? els.filter(x => x.checked).map(x => x.value) : f.type === 'radio' ? (els.find(x => x.checked) || {}).value || '' : (els[0] ? els[0].value.trim() : '');
+      let v = f.type === 'multi' ? els.filter(x => x.checked).map(x => x.value) : f.type === 'radio' ? (els.find(x => x.checked) || {}).value || '' : (els[0] ? els[0].value.trim() : '');
+      const ot = $('#' + id(i) + 'o');
+      if (ot && picked(i)) {
+        const txt = ot.value.trim();
+        if (!txt) { ot.hidden = false; ot.focus(); return fail('Please type what you need under "Other" for: ' + f.q); }
+        v = Array.isArray(v) ? v.map(x => isOther(x) ? 'Other: ' + txt : x) : 'Other: ' + txt;
+      }
       if (f.required && (Array.isArray(v) ? !v.length : !v)) return fail('Please fill in: ' + f.q);
       if (v && f.type === 'email' && !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(v)) return fail('Please enter a valid email address.');
       if (v && f.type === 'phone' && v.replace(/\D/g, '').length < 10) return fail('Please enter a valid 10-digit mobile number.');
