@@ -1,0 +1,1622 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#1B4F86">
+<meta name="description" content="Practical data analytics, Excel, SQL, Power BI and office courses in Kolkata. Enquire or enroll online.">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icon-192.png">
+<link rel="apple-touch-icon" href="icon-192.png">
+<title>MARS Training & Solution</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@600;700;800&family=Figtree:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--brand:#2A6EB5;--deep:#1B4F86;--accent:#FFC23C;--ink:#0F1B2D;--bg:#F3F6FA;--muted:#5B6B7C;--line:#E1E7EF;--soft:#E8F0FA;--bad:#B3261E;--good:#1E8E3E;--r:18px}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html{scroll-behavior:smooth;scroll-padding-top:76px}
+body{margin:0;font:16px/1.55 Figtree,system-ui,-apple-system,"Segoe UI",sans-serif;color:var(--ink);background:var(--bg);-webkit-font-smoothing:antialiased}
+h1,h2,h3{font-family:Sora,Figtree,sans-serif;margin:0;line-height:1.2;letter-spacing:-.01em}
+svg{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;flex:none}
+button,input,select,textarea{font:inherit;color:inherit}
+button{cursor:pointer}
+a{color:var(--brand)}
+:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+[hidden]{display:none!important}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+
+/* Shell */
+.app{max-width:780px;margin:0 auto;padding-bottom:calc(84px + env(safe-area-inset-bottom))}
+.bar{position:sticky;top:0;z-index:8;display:flex;align-items:center;justify-content:space-between;gap:12px;padding:calc(10px + env(safe-area-inset-top)) 16px 10px;background:rgba(243,246,250,.94);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px)}
+.logo{height:42px;width:auto;display:block}
+.bar-acts{display:flex;gap:8px}
+.ibtn{width:42px;height:42px;border-radius:50%;display:grid;place-items:center;background:#fff;border:1px solid var(--line);color:var(--brand);text-decoration:none}
+.ibtn.wa{color:#139447}
+main{padding:0 16px}
+.tab{animation:fade .2s ease}
+@keyframes fade{from{opacity:0}}
+
+/* Buttons */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:48px;padding:0 20px;border:0;border-radius:14px;font-weight:700;background:var(--accent);color:var(--ink);text-decoration:none;white-space:nowrap}
+.btn.pri{background:var(--brand);color:#fff}
+.btn.dark{background:var(--ink);color:#fff}
+.btn.line{background:#fff;color:var(--brand);border:1.5px solid var(--line)}
+.btn.ghost{background:rgba(255,255,255,.1);color:#fff;border:1.5px solid rgba(255,255,255,.32)}
+.btn.sm{min-height:40px;padding:0 14px;border-radius:12px;font-size:.92rem}
+.btn.block{width:100%}
+.btn:disabled{opacity:.6;cursor:wait}
+.btn svg{width:18px;height:18px}
+.link{background:none;border:0;padding:0;color:var(--brand);font-weight:700;text-decoration:underline;text-underline-offset:3px}
+
+/* Hero: chart paper and a rising bar chart, because the subject is data */
+.hero{position:relative;overflow:hidden;isolation:isolate;border-radius:24px;background:var(--deep);color:#fff;padding:24px 20px 20px}
+.hero:before{content:"";position:absolute;inset:0;z-index:-1;background-image:linear-gradient(rgba(255,255,255,.08) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.08) 1px,transparent 1px);background-size:26px 26px;-webkit-mask-image:linear-gradient(115deg,transparent 35%,#000 95%);mask-image:linear-gradient(115deg,transparent 35%,#000 95%)}
+.hero h1{font-size:clamp(1.55rem,6.2vw,2.35rem);font-weight:800;padding-right:84px;max-width:18ch}
+.hero p{color:#CFE0F5;margin:10px 0 18px;max-width:44ch}
+.cta{display:flex;flex-wrap:wrap;gap:10px}
+.chart{position:absolute;right:18px;top:24px;display:flex;align-items:flex-end;gap:5px;height:76px}
+.chart i{width:11px;height:var(--h);border-radius:4px 4px 1px 1px;background:rgba(255,255,255,.24);transform-origin:bottom;animation:grow .9s cubic-bezier(.2,.8,.2,1) both}
+.chart i:nth-child(2){animation-delay:.08s}.chart i:nth-child(3){animation-delay:.16s}.chart i:nth-child(4){animation-delay:.24s}
+.chart i:last-child{background:var(--accent);animation-delay:.36s}
+@keyframes grow{from{transform:scaleY(0)}}
+.skills{display:flex;gap:8px;overflow-x:auto;scrollbar-width:none;margin:18px -20px 0;padding:0 20px}
+.skills::-webkit-scrollbar{display:none}
+.skills span{white-space:nowrap;background:rgba(255,255,255,.12);padding:5px 12px;border-radius:99px;font-size:.86rem;font-weight:600}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(92px,1fr));gap:10px;margin-top:12px}
+.stat{background:#fff;border:1px solid var(--line);border-radius:16px;padding:12px 14px}
+.stat b{display:block;font:800 1.35rem/1.2 Sora,sans-serif;color:var(--brand)}
+.stat span{display:block;font-size:.82rem;line-height:1.3;color:var(--muted)}
+
+/* Sections */
+.sec{margin-top:30px}
+.sec-h{display:flex;align-items:baseline;justify-content:space-between;gap:12px;margin-bottom:12px}
+.sec-h h2,.t{font-size:1.25rem}
+.sec-h span{color:var(--muted);font-size:.9rem}
+.t{margin:10px 0 16px;font-size:1.5rem}
+.hscroll{display:flex;gap:12px;overflow-x:auto;scroll-snap-type:x mandatory;margin:0 -16px;padding:2px 16px 8px;scrollbar-width:none}
+.hscroll::-webkit-scrollbar{display:none}
+.hscroll>*{flex:0 0 84%;max-width:330px;scroll-snap-align:start}
+
+/* Batches */
+.batch{display:flex;gap:12px;align-items:center;background:#fff;border:1px solid var(--line);border-radius:16px;padding:12px}
+.date{width:54px;height:58px;border-radius:12px;background:var(--brand);color:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;line-height:1.05;flex:none}
+.date b{font:800 1.3rem Sora,sans-serif}
+.date span{font-size:.72rem;font-weight:600;opacity:.9}
+.b-info{flex:1;min-width:0;display:flex;flex-direction:column;font-size:.84rem;color:var(--muted)}
+.b-info strong{color:var(--ink);font-size:.95rem;line-height:1.3;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.b-info em{font-style:normal;font-weight:700;color:var(--good)}
+.b-info em.few{color:#A15C00}.b-info em.full{color:var(--bad)}
+
+/* Categories */
+.cats{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
+@media(min-width:600px){.cats{grid-template-columns:repeat(3,1fr)}}
+.cat{display:flex;align-items:center;gap:10px;padding:12px;background:#fff;border:1px solid var(--line);border-radius:16px;text-align:left;min-height:66px}
+.cat .ic{width:40px;height:40px;border-radius:12px;display:grid;place-items:center;background:var(--soft);color:var(--brand);flex:none}
+.cat b{display:block;font-size:.9rem;line-height:1.25}
+.cat small{color:var(--muted)}
+.cat[aria-pressed=true]{border-color:var(--brand);box-shadow:inset 0 0 0 1px var(--brand)}
+
+/* Search + chips */
+.search{position:relative}
+.search svg{position:absolute;left:14px;top:50%;transform:translateY(-50%);color:var(--muted)}
+.search input{padding-left:44px;margin:0}
+.chips{display:flex;gap:8px;overflow-x:auto;padding:12px 0 4px;scrollbar-width:none}
+.chips::-webkit-scrollbar{display:none}
+.chips button{flex:none;min-height:38px;padding:0 14px;border-radius:99px;border:1.5px solid var(--line);background:#fff;font-weight:600;font-size:.9rem}
+.chips button[aria-pressed=true]{background:var(--ink);color:#fff;border-color:var(--ink)}
+
+/* Course cards */
+.list{display:grid;gap:12px;margin-top:10px}
+@media(min-width:620px){.list{grid-template-columns:1fr 1fr}}
+.course{background:#fff;border:1px solid var(--line);border-radius:var(--r);padding:16px;display:flex;flex-direction:column;gap:8px}
+.c-top{display:flex;justify-content:space-between;gap:8px;align-items:center;min-height:22px}
+.c-cat{font-size:.78rem;font-weight:700;color:var(--brand)}
+.badge{font-size:.72rem;font-weight:800;background:var(--accent);color:var(--ink);padding:3px 9px;border-radius:99px}
+.course h3{font-size:1.06rem;line-height:1.3}
+.c-title{all:unset;cursor:pointer}
+.c-title:focus-visible{outline:3px solid var(--accent);outline-offset:2px;border-radius:4px}
+.c-desc{margin:0;color:var(--muted);font-size:.93rem;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.pills{display:flex;gap:6px;flex-wrap:wrap}
+.pills span{font-size:.76rem;font-weight:600;background:var(--bg);border-radius:8px;padding:3px 8px;color:#33475B}
+.buy{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-top:auto;padding-top:12px;border-top:1px solid var(--line)}
+.price b{font:800 1.15rem Sora,sans-serif}
+.price span{font-size:.88rem;color:var(--muted);font-weight:600}
+.acts-row{display:flex;gap:8px}
+.course.compact{padding:14px 16px;gap:4px}
+.course.compact .buy{border:0;padding-top:6px}
+.more{grid-column:1/-1}
+.empty{background:#fff;border:1px dashed var(--line);border-radius:var(--r);padding:20px;text-align:center;color:var(--muted)}
+
+/* How it works (a real sequence, so it is numbered) */
+.how{list-style:none;margin:0;padding:0;display:grid;gap:10px;counter-reset:s}
+.how li{counter-increment:s;display:flex;gap:12px;align-items:center;background:#fff;border:1px solid var(--line);border-radius:16px;padding:12px 14px;font-weight:600}
+.how li:before{content:counter(s);width:32px;height:32px;border-radius:50%;background:var(--ink);color:#fff;display:grid;place-items:center;font:800 .9rem Sora,sans-serif;flex:none}
+
+/* Testimonials */
+.quote{background:#fff;border:1px solid var(--line);border-radius:16px;padding:16px;display:flex;flex-direction:column;gap:10px}
+.quote p{margin:0}
+.quote b{display:block}
+.quote small{color:var(--muted)}
+.stars{color:#D99400;letter-spacing:2px;font-size:.9rem}
+
+/* About, FAQ, policies */
+.about-sec h3{font-size:1.1rem;margin:24px 0 6px}
+.about-sec p{margin:0;color:var(--muted)}
+.contact{background:#fff;border:1px solid var(--line);border-radius:var(--r);padding:16px;margin-top:24px;display:grid;gap:10px}
+.contact h3{font-size:1.05rem}
+.contact p{margin:0;color:var(--muted)}
+.faq{background:#fff;border:1px solid var(--line);border-radius:16px;margin-bottom:10px;padding:0 16px}
+.faq summary{list-style:none;display:flex;justify-content:space-between;gap:12px;align-items:center;min-height:58px;font-weight:700;cursor:pointer}
+.faq summary::-webkit-details-marker{display:none}
+.faq summary:after{content:"+";font-size:1.5rem;font-weight:500;color:var(--brand);flex:none}
+.faq[open] summary:after{content:"–"}
+.faq .body{padding:0 0 16px;color:var(--muted)}
+.faq .body p{margin:0 0 8px}
+.help{display:flex;gap:12px;align-items:center;justify-content:space-between;background:var(--soft);border-radius:16px;padding:14px 16px;margin-top:16px}
+.help p{margin:0;font-weight:600}
+
+/* Forms */
+.card{background:#fff;border:1px solid var(--line);border-radius:22px;padding:20px}
+.prog{height:6px;background:var(--line);border-radius:9px;overflow:hidden;margin:2px 0 6px}
+.prog i{display:block;height:100%;width:50%;background:var(--brand);border-radius:9px;transition:width .3s}
+.step{color:var(--muted);font-size:.9rem;margin:0 0 16px}
+label{display:block;font-weight:600;font-size:.95rem;margin-bottom:14px}
+input,select,textarea{width:100%;margin-top:6px;min-height:50px;padding:12px 14px;font-size:16px;font-weight:400;border:1.5px solid #C9D3E0;border-radius:12px;background:#fff;color:var(--ink);-webkit-appearance:none;appearance:none}
+select{background:#fff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%235B6B7C' stroke-width='2' fill='none'/%3E%3C/svg%3E") no-repeat right 14px center;padding-right:38px}
+input:focus,select:focus,textarea:focus{border-color:var(--brand);outline:none;box-shadow:0 0 0 3px rgba(42,110,181,.18)}
+textarea{min-height:90px;resize:vertical}
+.hp{position:absolute;left:-9999px}
+/* searchable course box */
+.combo{position:relative;margin-top:6px}
+.combo input{margin:0;padding-right:84px;font-weight:600}
+.combo .cx,.combo .ca{position:absolute;top:0;height:50px;width:40px;border:0;background:none;display:grid;place-items:center;color:var(--muted)}
+.combo .ca{right:2px}.combo .cx{right:40px;font-size:1.3rem}
+.combo .ca svg{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round;transition:transform .2s}
+.combo.open .ca svg{transform:rotate(180deg)}
+.clist{position:absolute;left:0;right:0;top:54px;z-index:30;background:#fff;border:1px solid var(--line);border-radius:14px;box-shadow:0 14px 40px rgba(15,27,45,.16);max-height:300px;overflow:auto;padding:6px;margin:0;list-style:none}
+.clist li{display:flex;justify-content:space-between;gap:10px;padding:11px 12px;border-radius:10px;font-weight:600;font-size:.95rem;cursor:pointer}
+.clist li small{color:var(--muted);font-weight:500;white-space:nowrap}
+.clist li.on,.clist li:hover{background:var(--soft)}
+.clist li[aria-selected=true]{color:var(--deep)}
+.clist .none{color:var(--muted);font-weight:500;cursor:default}
+.clist mark{background:#FFF1C2;color:inherit;border-radius:3px}
+.sr,select.sr{position:absolute;left:0;top:0;width:1px!important;min-width:0!important;max-width:1px!important;height:1px!important;min-height:0!important;padding:0!important;margin:0!important;border:0!important;overflow:hidden;clip:rect(0 0 0 0);opacity:0;pointer-events:none}
+/* collapsible course cards */
+.trk.fold header{cursor:pointer;margin-bottom:0}
+.trk .tg{display:flex;flex-direction:column;align-items:center;gap:2px;background:none;border:0;color:var(--brand);font-size:.74rem;font-weight:700;padding:0 0 0 6px;min-width:64px}
+.trk .tg svg{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round;transition:transform .2s}
+.trk.fold.open .tg svg{transform:rotate(180deg)}
+.trk.fold .body{display:none;margin-top:12px}.trk.fold.open .body{display:block}
+.trk .hd{display:flex;flex-direction:column;align-items:flex-end;gap:6px}
+.trk .mini{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px}
+/* ISO window + Google rating */
+.stat.tap{cursor:pointer;text-align:left;font:inherit;color:inherit;display:block;width:100%;text-decoration:none;position:relative}
+.stat.tap:after{content:"›";position:absolute;right:10px;top:50%;transform:translateY(-50%);color:var(--brand);font-size:1.3rem;font-weight:700}
+.isowin{position:fixed;inset:0;z-index:80;background:rgba(10,20,40,.62);display:grid;place-items:center;padding:20px}
+.isowin[hidden]{display:none}
+.isowin .box{background:#fff;border-radius:18px;width:min(460px,100%);max-height:80vh;overflow:auto;box-shadow:0 30px 80px rgba(0,0,0,.35)}
+.isowin .top{display:flex;justify-content:space-between;align-items:center;padding:12px 14px 10px 16px;border-bottom:1px solid var(--line);position:sticky;top:0;background:#fff}
+.isowin .top b{font-size:.98rem}
+.isowin .top button{width:36px;height:36px;border-radius:50%;border:0;background:var(--soft);font-size:1.3rem;color:var(--ink)}
+.isowin img{display:block;width:100%;height:auto}
+.isowin .meta{padding:12px 16px 16px;font-size:.84rem;color:var(--muted);display:grid;gap:6px}
+.isowin .meta a{font-weight:700;color:var(--brand)}
+.isowin .pbody{padding:16px;display:grid;gap:10px}
+.isowin .pbody p{margin:0;color:var(--muted);font-size:.9rem}
+.isowin .popt{display:flex;flex-direction:column;align-items:flex-start;gap:2px;width:100%;text-align:left;background:#fff;border:1.5px solid #C9D3E0;border-radius:14px;padding:12px 14px;font-weight:700;color:var(--ink)}
+.isowin .popt small{font-weight:500;color:var(--muted);font-size:.8rem}
+.isowin .popt:hover{border-color:var(--brand);background:#F7FAFE}
+.isowin .otpbox{margin:0}
+.trk .bwhen{display:block;margin-top:2px;color:var(--muted);font-size:.84rem}
+.trk .bwhen.tba{color:#8A5A00}
+.err{color:var(--bad);font-weight:600;min-height:1.4em;margin:0 0 8px}
+.two{display:grid;grid-template-columns:1fr 2fr;gap:10px}
+.chk{display:flex;gap:10px;align-items:flex-start;font-weight:500}
+.chk input{width:22px;min-height:22px;height:22px;margin:1px 0 0;flex:none;-webkit-appearance:auto;appearance:auto;accent-color:var(--brand)}
+.lbl{font-weight:600;font-size:.95rem;margin:0 0 6px}
+.pick{width:100%;min-height:50px;padding:12px 14px;border:1.5px solid #C9D3E0;border-radius:12px;background:#fff;font-size:16px;color:var(--muted);text-align:left;display:flex;justify-content:space-between;align-items:center}
+.pick:after{content:"";width:12px;height:8px;background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%235B6B7C' stroke-width='2' fill='none'/%3E%3C/svg%3E")}
+.chosen{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0 14px}
+.chosen button{border:0;border-radius:99px;background:var(--brand);color:#fff;min-height:36px;padding:0 14px;font-size:.9rem;font-weight:600}
+.note{color:var(--muted);font-size:.84rem;margin:12px 0 0;text-align:center}
+.feebox{display:flex;justify-content:space-between;align-items:center;gap:12px;background:var(--deep);color:#fff;border-radius:16px;padding:14px 16px;margin:0 0 16px}
+.feebox b{font:800 1.55rem Sora,sans-serif}
+.feebox span{font-size:.85rem;color:#CFE0F5;text-align:right}
+.secure{display:flex;gap:8px;align-items:center;justify-content:center;color:var(--muted);font-size:.85rem;margin:12px 0 0;text-align:center}
+.secure svg{width:16px;height:16px;color:var(--good)}
+.mine{margin-bottom:16px}
+.mine h3{font-size:1.05rem;margin:0 0 10px}
+.own{background:#fff;border:1px solid var(--line);border-left:5px solid var(--good);border-radius:14px;padding:12px 14px;margin-bottom:10px}
+.own b{display:block}
+.own span{color:var(--good);font-weight:700;font-size:.88rem}
+.own small{display:block;color:var(--muted)}
+.lookup{margin-top:14px}
+.lookup summary{cursor:pointer;color:var(--brand);font-weight:700;padding:8px 0}
+.okbox{text-align:center}
+.tick{width:72px;height:72px;border-radius:50%;background:var(--good);color:#fff;display:grid;place-items:center;margin:4px auto 14px;animation:pop .45s cubic-bezier(.2,1.5,.4,1)}
+.tick svg{width:36px;height:36px;stroke-width:3}
+.tick.wait{background:var(--accent);color:var(--ink)}
+@keyframes pop{from{transform:scale(.4);opacity:0}}
+.okbox p{margin:6px 0;color:var(--muted)}
+.rcpt{text-align:left;margin:16px 0;border:1px dashed #C9D3E0;border-radius:14px;padding:4px 14px}
+.rcpt div{display:flex;justify-content:space-between;gap:12px;padding:10px 0;border-bottom:1px solid var(--line);font-size:.93rem}
+.rcpt div:last-child{border:0}
+.rcpt span{color:var(--muted)}
+.rcpt b{text-align:right;word-break:break-word}
+.stack{display:grid;gap:10px}
+.plans{display:grid;gap:10px;margin-bottom:14px}
+#pf .modes{display:flex;flex-wrap:nowrap;gap:8px;margin-bottom:10px}
+.mode{flex:1 1 0;min-width:0;width:auto;margin:0;display:flex;flex-direction:column;align-items:flex-start;gap:2px;text-align:left;background:#fff;border:1.5px solid #C9D3E0;border-radius:14px;padding:10px 12px;font-weight:700;min-height:58px;color:var(--ink)}
+.mode small{font-weight:500;font-size:.78rem;color:var(--muted)}
+.mode[aria-checked=true]{border-color:var(--brand);box-shadow:inset 0 0 0 1px var(--brand);background:#F7FAFE;color:var(--deep)}
+#pf .mode.more{flex:0 0 58px;width:58px;align-items:center;justify-content:center;font-size:1.3rem;line-height:1;padding:0 4px;text-align:center}
+#pf .mode.more small{font-size:.7rem;font-weight:700;color:var(--brand);letter-spacing:0}
+.moremenu{background:#fff;border:1px solid var(--line);border-radius:14px;box-shadow:0 10px 30px rgba(15,27,45,.12);padding:6px;margin:-2px 0 10px}
+.moremenu button{display:block;width:100%;text-align:left;background:none;border:0;border-radius:10px;padding:10px 12px;font-weight:700;color:var(--ink)}
+.moremenu button:hover{background:var(--soft)}
+.moremenu small{display:block;font-weight:500;color:var(--muted);font-size:.8rem}
+.splitbox,.otpbox{background:var(--soft);border-radius:14px;padding:12px 14px;margin-bottom:12px}
+.splitbox label,.otpbox label{margin-bottom:6px}
+.splitcalc{display:grid;grid-template-columns:auto 1fr auto;gap:4px 10px;font-size:.9rem;margin:6px 0 0}
+.splitcalc span{color:var(--muted)}.splitcalc b{text-align:right}
+.otpbox p{margin:0 0 8px;font-size:.9rem}
+.otpbox input{letter-spacing:.4em;font:700 1.3rem Sora,sans-serif;text-align:center}
+.otpbox .done{color:var(--good);font-weight:700}
+.plan{display:flex;gap:12px;align-items:flex-start;width:100%;text-align:left;background:#fff;border:1.5px solid #C9D3E0;border-radius:14px;padding:12px 14px}
+.plan[aria-checked=true]{border-color:var(--brand);box-shadow:inset 0 0 0 1px var(--brand);background:#F7FAFE}
+.plan .dot{width:20px;height:20px;border-radius:50%;border:2px solid #9AA9BC;flex:none;margin-top:3px;display:grid;place-items:center}
+.plan[aria-checked=true] .dot{border-color:var(--brand)}
+.plan[aria-checked=true] .dot:after{content:"";width:10px;height:10px;border-radius:50%;background:var(--brand)}
+.plan .pt{flex:1;min-width:0}
+.plan b{display:block}
+.plan small{display:block;color:var(--muted);font-size:.84rem;line-height:1.35}
+.plan .now{text-align:right;font:800 1.02rem Sora,sans-serif;white-space:nowrap}
+.plan .now small{font:500 .74rem Figtree,sans-serif}
+.plan:disabled{opacity:.5;cursor:not-allowed}
+.sched{background:var(--bg);border-radius:14px;padding:10px 14px 12px;margin:-4px 0 14px}
+.srow{display:grid;grid-template-columns:28px 1fr auto;gap:10px;align-items:center;padding:6px 0}
+.srow .n{width:26px;height:26px;border-radius:50%;background:var(--ink);color:#fff;display:grid;place-items:center;font-size:.8rem;font-weight:700}
+.srow input{margin:0;min-height:44px;padding:8px 10px}
+.srow .when b{display:block;font-family:Figtree,sans-serif;font-size:.95rem}
+.srow .when small{display:block;color:var(--muted);font-size:.8rem}
+.srow b{font-family:Sora,sans-serif;font-size:.95rem}
+.sched p{margin:8px 0 0;color:var(--muted);font-size:.84rem}
+.bar2{height:8px;background:var(--line);border-radius:9px;overflow:hidden;margin:8px 0 6px}
+.bar2 i{display:block;height:100%;background:var(--good);border-radius:9px}
+.own .due{display:block;font-weight:700;color:var(--ink);margin-top:2px}
+.own .due.late{color:var(--bad)}
+.own .btn{margin-top:10px}
+.slist{width:100%;border-collapse:collapse;font-size:.88rem;margin:4px 0 12px;text-align:left}
+.slist td{padding:7px 4px;border-bottom:1px solid var(--line)}
+.slist td:last-child{text-align:right;font-weight:700}
+.slist .Paid{color:var(--good)}.slist .Overdue{color:var(--bad)}
+
+/* Sheets and dialogs */
+.sheet{position:fixed;inset:0;z-index:30;display:flex;align-items:flex-end;justify-content:center;background:rgba(10,20,40,.5)}
+.panel{background:#fff;width:100%;max-width:640px;max-height:88vh;overflow:auto;border-radius:24px 24px 0 0;padding:6px 18px calc(18px + env(safe-area-inset-bottom));animation:up .25s ease;overscroll-behavior:contain}
+@keyframes up{from{transform:translateY(40px);opacity:0}}
+.grab{width:44px;height:5px;border-radius:9px;background:var(--line);margin:6px auto 8px}
+.p-head{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;margin-bottom:8px}
+.p-head h2{font-size:1.3rem;margin-top:4px}
+.x{width:40px;height:40px;border-radius:50%;border:0;background:var(--bg);display:grid;place-items:center;flex:none}
+.pdf{margin-top:16px}
+.hl{list-style:none;padding:0;margin:12px 0;display:grid;gap:8px}
+.hl li{display:flex;gap:10px;align-items:flex-start}
+.hl svg{color:var(--good);margin-top:2px}
+.p-foot{position:sticky;bottom:calc(-18px - env(safe-area-inset-bottom));background:#fff;margin:16px -18px 0;padding:12px 18px calc(18px + env(safe-area-inset-bottom));border-top:1px solid var(--line);display:flex;gap:10px;align-items:center}
+.p-foot .price{margin-right:auto}
+.box{background:#fff;width:100%;max-width:560px;max-height:85vh;border-radius:22px 22px 0 0;display:flex;flex-direction:column;padding-bottom:env(safe-area-inset-bottom)}
+.mhead{display:flex;gap:10px;padding:14px;border-bottom:1px solid var(--line)}
+.mhead input{margin:0}
+#opts{overflow:auto;padding:4px 14px 14px}
+.grp{font:700 .82rem Sora,sans-serif;color:var(--muted);margin:16px 0 4px}
+.opt{display:flex;justify-content:space-between;align-items:center;width:100%;min-height:48px;padding:0 4px;border:0;border-bottom:1px solid var(--line);background:none;text-align:left;font-size:1rem}
+.opt[aria-pressed=true]{color:var(--brand);font-weight:700}
+.opt[aria-pressed=true]:after{content:"✓"}
+
+/* Bottom navigation */
+.tabs{position:fixed;left:0;right:0;bottom:0;z-index:9;background:#fff;border-top:1px solid var(--line);padding-bottom:env(safe-area-inset-bottom)}
+.tabs div{max-width:780px;margin:0 auto;display:flex}
+.tabs button{flex:1;background:none;border:0;min-height:62px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;font-size:.72rem;font-weight:600;color:var(--muted);padding:0 2px}
+.tabs .ti{width:52px;height:30px;border-radius:99px;display:grid;place-items:center;transition:background .2s}
+.tabs button[aria-current=true]{color:var(--brand)}
+.tabs button[aria-current=true] .ti{background:var(--soft)}
+.tabs .go .ti{background:var(--accent);color:var(--ink)}
+.tabs .go[aria-current=true] .ti{background:var(--accent)}
+
+/* Offer ticker */
+.ticker{display:flex;align-items:center;gap:10px;width:calc(100% - 32px);margin:0 16px 12px;padding:0 0 0 4px;border:0;border-radius:12px;background:var(--accent);color:var(--ink);font-weight:700;overflow:hidden;min-height:40px;text-align:left}
+.tk-label{flex:none;background:var(--ink);color:#fff;font-size:.74rem;padding:4px 9px;border-radius:8px;margin-left:4px}
+.tk-win{flex:1;overflow:hidden;white-space:nowrap;-webkit-mask-image:linear-gradient(90deg,transparent,#000 16px,#000 calc(100% - 16px),transparent);mask-image:linear-gradient(90deg,transparent,#000 16px,#000 calc(100% - 16px),transparent)}
+.tk-track{display:inline-flex;gap:48px;padding-right:48px;animation:tick var(--dur,20s) linear infinite}
+.ticker:hover .tk-track,.ticker:focus-visible .tk-track{animation-play-state:paused}
+@keyframes tick{to{transform:translateX(-50%)}}
+@media(prefers-reduced-motion:reduce){.tk-win{white-space:normal}.tk-track{display:block}.tk-track span+span{display:none}}
+.price s{color:var(--muted);font-size:.85rem;margin-right:6px}
+.offer{font-size:.72rem;font-weight:800;background:#FDE8E7;color:var(--bad);padding:3px 9px;border-radius:99px}
+.save{display:block;font-size:.85rem;color:#FFD979;font-weight:700}
+/* Opening screen (splash): MARS logo on the festival design, then fades into the app */
+.splash{position:fixed;inset:0;z-index:100;display:none;flex-direction:column;align-items:center;justify-content:center;gap:18px;background:var(--bg);transition:opacity .45s ease,visibility .45s}
+.splash.on{display:flex}
+.splash.fest{background:var(--spbg)}
+.splash.fest:before{content:"";position:absolute;inset:0;background:radial-gradient(circle at 50% 46%,rgba(0,0,0,.05) 0,rgba(0,0,0,.42) 75%),radial-gradient(circle at 50% 42%,rgba(255,215,120,.35),transparent 45%);pointer-events:none}
+.splash.gone{opacity:0;visibility:hidden}
+.sp-logo{position:relative;background:#fff;border-radius:22px;padding:14px 22px;box-shadow:0 10px 40px rgba(0,0,0,.18);animation:spin-in .6s cubic-bezier(.2,1.3,.4,1) both}
+.sp-logo img{display:block;width:min(64vw,260px);height:auto}
+.sp-msg{position:relative;color:#fff;font:700 1.1rem Sora,Figtree,sans-serif;text-align:center;padding:8px 18px;border-radius:99px;background:rgba(0,0,0,.38);backdrop-filter:blur(2px);-webkit-backdrop-filter:blur(2px)}
+.sp-msg:empty{display:none}
+.splash:not(.fest) .sp-msg{color:var(--muted);text-shadow:none}
+.sp-dots{position:relative;display:flex;gap:8px}
+.sp-dots i{width:8px;height:8px;border-radius:50%;background:var(--brand);opacity:.35;animation:dot 1s ease-in-out infinite}
+.splash.fest .sp-dots i{background:#FDE68A}
+.sp-dots i:nth-child(2){animation-delay:.15s}.sp-dots i:nth-child(3){animation-delay:.3s}
+@keyframes spin-in{from{opacity:0;transform:scale(.85)}}
+@keyframes dot{50%{opacity:1;transform:translateY(-4px)}}
+/* Festival themes: top bar, banner and greeting share one design per festival */
+.bar.fest{background:var(--fbar)}
+.bar.fest>*{position:relative;z-index:1}
+.bar.fest>a:first-child{display:block;background:#fff;border-radius:14px;padding:3px 10px;box-shadow:0 2px 10px rgba(0,0,0,.2)}
+.bar.fest .logo{height:36px}
+.bar.fest .ibtn{border-color:transparent;box-shadow:0 2px 8px rgba(0,0,0,.2)}
+.bar.fest.tw:after{content:"";position:absolute;inset:0;background:var(--ftw);animation:twinkle 2.2s ease-in-out infinite alternate;pointer-events:none}
+@keyframes twinkle{from{opacity:.25}to{opacity:1}}
+.hero.fest:not(.img):after,.greet:after{content:"";position:absolute;inset:0;z-index:-1;background:var(--fpat);opacity:.28;pointer-events:none}
+.greet:after{z-index:0;opacity:.35}
+/* Festival */
+.hero.fest{background:var(--fest,var(--deep)) var(--festimg,none) center/cover no-repeat}
+.hero.fest.img:before{background:linear-gradient(180deg,rgba(0,0,0,.25),rgba(0,0,0,.6));-webkit-mask-image:none;mask-image:none}
+.fest-tag{display:inline-block;background:rgba(255,255,255,.18);border:1px solid rgba(255,255,255,.35);border-radius:99px;padding:4px 12px;font-size:.82rem;font-weight:700;margin-bottom:12px}
+.sheet.center{align-items:center;padding:16px}
+.greet{position:relative;overflow:hidden;width:100%;max-width:420px;border-radius:24px;background:var(--fest,var(--deep)) var(--festimg,none) center/cover;color:#fff;padding:34px 24px 24px;text-align:center;animation:pop .35s cubic-bezier(.2,1.4,.4,1)}
+.greet:before{content:"";position:absolute;inset:0;background:radial-gradient(circle at 50% -20%,rgba(255,215,120,.45),transparent 60%),linear-gradient(180deg,rgba(0,0,0,.1),rgba(0,0,0,.45))}
+.greet>*{position:relative}
+.greet h2{font-size:1.9rem;margin:0 0 10px}
+.greet p{margin:0 0 20px;color:#F3F6FA}
+.greet .stack{gap:8px}
+.lamps{display:flex;justify-content:center;gap:10px;margin-bottom:14px}
+.lamps i{width:10px;height:10px;border-radius:50%;background:var(--accent);box-shadow:0 0 12px 4px rgba(255,194,60,.7);animation:glow 1.6s ease-in-out infinite alternate}
+.lamps i:nth-child(2){animation-delay:.3s}.lamps i:nth-child(3){animation-delay:.6s}
+@keyframes glow{to{opacity:.45;transform:scale(.8)}}
+
+/* Footer, toast, skeleton */
+.foot{padding:32px 0 8px;text-align:center;color:var(--muted);font-size:.85rem}
+.foot nav{display:flex;flex-wrap:wrap;justify-content:center;gap:6px 18px;margin-bottom:10px}
+.foot a{color:var(--muted);font-weight:600}
+.ver{margin-top:6px;font-size:.75rem;opacity:.7}
+.ver.old{opacity:1;color:var(--bad);font-weight:700}
+.toast{position:fixed;left:50%;bottom:calc(92px + env(safe-area-inset-bottom));transform:translateX(-50%);z-index:40;background:var(--ink);color:#fff;padding:12px 16px;border-radius:14px;width:max-content;max-width:calc(100% - 32px);font-weight:600;box-shadow:0 10px 30px rgba(0,0,0,.25);animation:up .25s ease}
+.sk{color:transparent!important;background:linear-gradient(90deg,#E6EBF2 25%,#F3F6FA 50%,#E6EBF2 75%) 0 0/200% 100%;animation:shimmer 1.2s infinite linear;border-radius:10px}
+.hero .sk{background:rgba(255,255,255,.16);animation:none}
+.course.ph{height:150px;border:0}
+@keyframes shimmer{to{background-position:-200% 0}}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*,*:before{animation:none!important;transition:none!important}}
+@media(min-width:700px){.hero{padding:34px 32px 26px}.chart{right:32px;top:34px;height:110px;gap:7px}.chart i{width:16px}.hero h1{padding-right:120px}.skills{margin:22px -32px 0;padding:0 32px}}
+@media print{body{background:#fff}.bar,.tabs,.foot,.noprint,main>section:not(#enroll),#enroll>*:not(.card),#pf,.lookup{display:none!important}.card{border:0}}
+
+/* My courses tracker */
+.sub{color:var(--muted);margin:4px 0 14px}
+.ibtn.on{background:var(--brand);color:#fff;border-color:var(--brand)}
+.minelink{display:block;background:#fff;border:1px solid var(--line);border-left:5px solid var(--good);border-radius:14px;padding:12px 14px;margin-bottom:12px;text-decoration:none;color:var(--ink)}
+.minelink b{display:block}.minelink span{color:var(--muted);font-size:.88rem}
+.trk{background:#fff;border:1px solid var(--line);border-radius:var(--r);padding:16px;margin-bottom:14px}
+.trk header{display:flex;justify-content:space-between;gap:10px;align-items:flex-start;margin-bottom:12px}
+.trk h3{font-size:1.08rem}.trk header small{color:var(--muted)}
+.chip{flex:none;font-size:.78rem;font-weight:800;padding:4px 10px;border-radius:99px;white-space:nowrap}
+.chip.ok{background:#E6F4EA;color:var(--good)}.chip.warn{background:#FFF4D6;color:#8A5A00}.chip.bad{background:#FCE8E6;color:var(--bad)}.chip.info{background:var(--soft);color:var(--deep)}.chip.off{background:#EEF1F5;color:var(--muted)}
+.steps{list-style:none;margin:0;padding:0}
+.st{position:relative;display:flex;gap:12px;padding:0 0 16px}
+.st:not(:last-child)::before{content:"";position:absolute;left:13px;top:28px;bottom:2px;width:2px;background:var(--line)}
+.st.done:not(:last-child)::before{background:var(--good)}
+.dotc{width:28px;height:28px;border-radius:50%;display:grid;place-items:center;flex:none;border:2px solid var(--line);background:#fff;font-weight:900;font-size:.9rem}
+.dotc svg{width:15px;height:15px;stroke-width:3}
+.st.done .dotc{background:var(--good);border-color:var(--good);color:#fff}
+.st.now .dotc{border-color:var(--brand)}.st.now .dotc i{width:12px;height:12px;border-radius:50%;background:var(--brand);animation:pulse 1.6s infinite}
+.st.lock .dotc{color:var(--muted);background:#F3F6FA}
+.st.bad .dotc{background:var(--bad);border-color:var(--bad);color:#fff}
+.st b{display:block;font-size:.98rem}.st small{display:block;color:var(--muted);font-size:.86rem;line-height:1.4}
+.st.lock b,.st.todo b{color:var(--muted)}
+.st .btn{margin-top:8px}
+@keyframes pulse{50%{transform:scale(.6);opacity:.5}}
+.inst summary{cursor:pointer;color:var(--brand);font-weight:700;font-size:.9rem}
+.hint{color:var(--muted);font-size:.86rem;margin-top:8px}
+</style>
+</head>
+<body>
+<div class="splash" id="splash" aria-hidden="true">
+  <div class="sp-logo"><img src="logo.png" alt=""></div>
+  <div class="sp-msg" id="spMsg"></div>
+  <div class="sp-dots"><i></i><i></i><i></i></div>
+</div>
+<script>/* Festival opening screen: shown at once, before anything else paints, only while a festival is running */
+try { var sp = JSON.parse(localStorage.getItem('mars_splash') || 'null'), td = new Date(Date.now() - new Date().getTimezoneOffset() * 6e4).toISOString().slice(0, 10);
+  if (sp && sp.bg && (!sp.end || sp.end >= td)) { var se = document.getElementById('splash'); se.style.setProperty('--spbg', sp.bg); se.className = 'splash fest on'; document.getElementById('spMsg').textContent = sp.msg || ''; }
+} catch (e) {}</script>
+<div class="app">
+  <header class="bar">
+    <a href="#courses" aria-label="Home"><img class="logo" alt="MARS Training & Solution" src="logo.png"></a>
+    <div class="bar-acts">
+      <a class="ibtn" href="#learn" id="learnTop" aria-label="My courses"><svg viewBox="0 0 24 24"><path d="M2 9l10-5 10 5-10 5z"/><path d="M6 11v5c3 2.5 9 2.5 12 0v-5M22 9v6"/></svg></a>
+      <a class="ibtn wa" id="waTop" target="_blank" rel="noopener" aria-label="Chat on WhatsApp" hidden><svg viewBox="0 0 24 24"><path d="M20 11.5a8 8 0 0 1-11.8 7L4 20l1.5-4.1A8 8 0 1 1 20 11.5z"/><path d="M9 9.5c.3 2 1.8 3.8 4 4.5l1-1.2 2 .9c-.3 1-1.2 1.6-2.2 1.5-3-.4-5.4-2.8-5.8-5.8-.1-1 .5-1.9 1.5-2.2l.9 2z"/></svg></a>
+      <a class="ibtn" id="call" aria-label="Call us" hidden><svg viewBox="0 0 24 24"><path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2z"/></svg></a>
+    </div>
+  </header>
+
+  <button class="ticker" id="ticker" type="button" hidden aria-label="See courses on offer"><span class="tk-label">Offer</span><span class="tk-win"><span class="tk-track" id="tkTrack"></span></span></button>
+
+  <main>
+    <!-- Home / Courses -->
+    <section class="tab" id="courses">
+      <div class="hero">
+        <div class="chart" aria-hidden="true"><i style="--h:34%"></i><i style="--h:52%"></i><i style="--h:44%"></i><i style="--h:70%"></i><i style="--h:100%"></i></div>
+        <span class="fest-tag" id="festTag" hidden></span>
+        <h1 id="heroT"><span class="sk">Loading courses for you</span></h1>
+        <p id="heroS"></p>
+        <div class="cta">
+          <button class="btn" id="heroBtn" data-go="enroll">Enroll now</button>
+          <button class="btn ghost" id="heroBtn2" data-go="enquire">Free counselling</button>
+        </div>
+        <div class="skills" id="skills"></div>
+      </div>
+      <div class="stats" id="homeStats"></div>
+
+      <section class="sec" id="batchWrap" hidden>
+        <div class="sec-h"><h2 id="batchT">Upcoming batches</h2></div>
+        <div class="hscroll" id="batchList"></div>
+      </section>
+
+      <section class="sec" id="catWrap" hidden>
+        <div class="sec-h"><h2>Browse by category</h2></div>
+        <div class="cats" id="cats"></div>
+      </section>
+
+      <section class="sec" id="listWrap">
+        <div class="sec-h"><h2 id="listT">All courses</h2><span id="count"></span></div>
+        <div class="search"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg><input type="search" id="cq" placeholder="Search courses, e.g. Excel, SAP, Python" autocomplete="off" aria-label="Search courses"></div>
+        <div class="chips" id="chips"></div>
+        <div class="list" id="courseList"><div class="course ph sk"></div><div class="course ph sk"></div><div class="course ph sk"></div></div>
+      </section>
+
+      <section class="sec" id="howWrap" hidden>
+        <div class="sec-h"><h2>How it works</h2></div>
+        <ol class="how" id="how"></ol>
+      </section>
+
+      <section class="sec" id="tWrap" hidden>
+        <div class="sec-h"><h2 id="tT">What our students say</h2></div>
+        <div class="hscroll" id="tList"></div>
+      </section>
+    </section>
+
+    <!-- About -->
+    <section class="tab" id="about" hidden>
+      <h2 class="t" id="aboutT">About us</h2>
+      <div class="stats" id="aboutStats"></div>
+      <div class="about-sec" id="aboutList"></div>
+      <div class="contact" id="aboutContact"></div>
+    </section>
+
+    <!-- FAQs -->
+    <section class="tab" id="faqs" hidden>
+      <h2 class="t" id="faqT">Questions we often get</h2>
+      <div id="faqList"></div>
+      <div class="help"><p>Still have a question?</p><button class="btn sm pri" data-go="enquire">Ask us</button></div>
+    </section>
+
+    <!-- Enquire -->
+    <section class="tab" id="enquire" hidden>
+      <h2 class="t" id="enquireT">Send an enquiry</h2>
+      <div class="card">
+        <form id="f" novalidate>
+          <div class="prog"><i id="pbar"></i></div>
+          <p class="step" id="stepTxt">Step 1 of 2: Your details</p>
+          <div id="s1">
+            <label>Full name *<input name="name" autocomplete="name"></label>
+            <label>Gender *<select name="gender"></select></label>
+            <label>Calling number *<input name="calling" type="tel" inputmode="tel" autocomplete="tel"></label>
+            <label class="chk"><input type="checkbox" id="same" checked><span>My WhatsApp number is the same</span></label>
+            <label id="waWrap" hidden>WhatsApp number *<input name="whatsapp" type="tel" inputmode="tel"></label>
+            <label>Email *<input name="email" type="email" autocomplete="email" inputmode="email"></label>
+            <label>Your current location *<select name="location"></select></label>
+            <label id="cityWrap" hidden>Your city name *<input name="city" id="city" autocomplete="address-level2" placeholder="Type your city"></label>
+            <p class="err" id="e1" role="alert"></p>
+            <button class="btn pri block" type="button" id="next">Next</button>
+          </div>
+          <div id="s2" hidden>
+            <p class="lbl">Courses you are interested in *</p>
+            <button type="button" class="pick" id="pick">Search and select courses</button>
+            <div class="chosen" id="chosen"></div>
+            <input type="hidden" name="course" id="courseVal">
+            <label>Level<select name="level"></select></label>
+            <label>Preferred batch start date *<input name="batch" type="date"></label>
+            <label>Preferred mode<select name="mode"></select></label>
+            <label>Working status<select name="working"></select></label>
+            <label>How did you hear about us?<select name="source"></select></label>
+            <label>Message (optional)<textarea name="message"></textarea></label>
+            <label class="hp" aria-hidden="true">Website<input name="website" tabindex="-1" autocomplete="off"></label>
+            <p class="err" id="e2" role="alert"></p>
+            <div class="two"><button class="btn line" type="button" id="back">Back</button><button class="btn pri" id="send" type="submit">Send enquiry</button></div>
+          </div>
+          <p class="note privacy"></p>
+        </form>
+        <div class="okbox" id="done" hidden>
+          <div class="tick"><svg viewBox="0 0 24 24"><path d="m5 12 5 5 9-10"/></svg></div>
+          <h2>Enquiry sent</h2>
+          <p>Thanks, <b id="who"></b>. <span id="okMsg">Our team will call you within one working day.</span></p>
+          <div class="stack" id="doneActs" style="margin-top:18px"></div>
+          <p><button class="btn line block" id="again" type="button">Send another enquiry</button></p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Enroll and pay -->
+    <section class="tab" id="enroll" hidden>
+      <h2 class="t" id="enrollT">Enroll and pay</h2>
+      <div class="mine" id="mine"></div>
+      <div class="card">
+        <p id="noPay" class="note" hidden>Online enrollment opens soon. <button class="link" data-go="enquire">Send an enquiry</button> and we will call you.</p>
+        <form id="pf" novalidate>
+          <label id="ttWrap" hidden>Training type *<select name="ttype" id="pttype"><option value="batch">Batch (group classes)</option><option value="individual">Individual (one-to-one)</option></select></label>
+          <label for="pcq">Course *</label>
+          <div class="combo" id="pcombo">
+            <input id="pcq" type="text" role="combobox" aria-expanded="false" aria-controls="pclist" aria-autocomplete="list" autocomplete="off" placeholder="Search or select a course">
+            <button type="button" class="cx" id="pcx" aria-label="Clear" hidden>&times;</button>
+            <button type="button" class="ca" id="pca" aria-label="Show all courses" tabindex="-1"><svg viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></button>
+            <ul class="clist" id="pclist" role="listbox" hidden></ul>
+            <select name="course" id="pcourse" class="sr" tabindex="-1" aria-hidden="true"></select>
+          </div>
+          <div style="height:14px"></div>
+          <div class="feebox" id="pfee" hidden><b id="pfeeAmt"></b><span id="pfeeMeta"></span></div>
+          <label id="pbatchWrap" hidden>Batch *<select name="batchId" id="pbatch"></select></label>
+          <label id="pdateWrap">Preferred batch start date *<input name="batch" type="date"></label>
+          <div id="planWrap" hidden>
+            <p class="lbl">How would you like to pay?</p>
+            <div class="plans" id="plans" role="radiogroup" aria-label="Payment option"></div>
+            <div class="sched" id="sched" hidden></div>
+          </div>
+          <label>Full name *<input name="name" autocomplete="name"></label>
+          <label>Phone number *<input name="calling" type="tel" inputmode="tel" autocomplete="tel"></label>
+          <label>Email (for your receipt) *<input name="email" type="email" autocomplete="email" inputmode="email"></label>
+          <label>Sex *<select name="gender" id="pgender"></select></label>
+          <label>Date of birth *<input name="dob" id="pdob" type="date" min="1930-01-01"></label>
+          <label>Working status *<select name="working" id="pworking"></select></label>
+          <label class="hp" aria-hidden="true">Website<input name="website" tabindex="-1" autocomplete="off"></label>
+          <label class="chk" id="pTermsWrap"><input type="checkbox" name="terms"><span><span id="pTerms"></span> <a href="#refund">Refund policy</a> and <a href="#terms">terms</a>.</span></label>
+          <div id="modeWrap">
+            <p class="lbl">Payment mode</p>
+            <div class="modes" role="radiogroup" aria-label="Payment mode">
+              <button type="button" class="mode" role="radio" aria-checked="true" data-mode="online">Pay online<small>UPI, card, net banking</small></button>
+              <button type="button" class="mode" role="radio" aria-checked="false" data-mode="cash">Pay in cash<small>At our office</small></button>
+              <button type="button" class="mode more" role="radio" aria-checked="false" id="moreBtn" aria-label="More payment options" aria-expanded="false">⋯</button>
+            </div>
+            <div class="moremenu" id="moreMenu" hidden>
+              <button type="button" data-mode="split">Part online, part cash<small>Pay some now online, the rest in cash at our office</small></button>
+            </div>
+            <div class="splitbox" id="splitBox" hidden>
+              <label>Amount to pay online now *<input id="splitOn" type="number" inputmode="numeric" min="1" step="1" placeholder="e.g. 5000"></label>
+              <div class="splitcalc" id="splitCalc"></div>
+            </div>
+            <div class="otpbox" id="otpBox" hidden>
+              <p id="otpNote"></p>
+              <label>Approval code *<input id="otpIn" inputmode="numeric" maxlength="6" autocomplete="one-time-code" placeholder="••••••"></label>
+              <button type="button" class="link" id="otpResend">Send a new code</button>
+            </div>
+          </div>
+          <p class="err" id="pe" role="alert"></p>
+          <button class="btn pri block" id="pay" type="submit"><svg viewBox="0 0 24 24"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg><span>Pay now</span></button>
+          <p class="secure"><svg viewBox="0 0 24 24"><path d="M12 3 5 6v6c0 4 3 7.5 7 9 4-1.5 7-5 7-9V6z"/><path d="m9 12 2 2 4-4"/></svg><span id="secureNote">Pay securely with UPI, card or net banking.</span></p>
+        </form>
+        <div class="okbox" id="paid" hidden>
+          <div class="tick" id="tick"><svg viewBox="0 0 24 24"><path d="m5 12 5 5 9-10"/></svg></div>
+          <h2 id="paidT">Payment successful</h2>
+          <p id="paidMsg"></p>
+          <div class="rcpt" id="rcpt"></div>
+          <div id="rcptSched"></div>
+          <div class="stack noprint">
+            <button class="btn" id="payNext" type="button" hidden></button>
+            <button class="btn pri" id="print" type="button"><svg viewBox="0 0 24 24"><path d="M12 4v11m0 0-4-4m4 4 4-4M5 20h14"/></svg>Save receipt</button>
+            <a class="btn line" id="paidWa" target="_blank" rel="noopener" hidden>Message us on WhatsApp</a>
+            <button class="btn line" id="pDone" type="button">Done</button>
+          </div>
+        </div>
+      </div>
+      <details class="lookup noprint" id="lookup">
+        <summary>Already paid? Check your enrollment</summary>
+        <div class="card">
+          <label>Enrollment ID<input id="lkId" placeholder="MARS-2610-0003" autocapitalize="characters" autocomplete="off"></label>
+          <label>Phone number used to pay<input id="lkPh" type="tel" inputmode="tel"></label>
+          <p class="err" id="lkErr" role="alert"></p>
+          <button class="btn line block" id="lkBtn" type="button">Check status</button>
+        </div>
+      </details>
+    </section>
+
+    <!-- Policies (#terms, #privacy, #refund, #delivery, #contact) -->
+    <!-- My courses: enrollment, fees, classes, exam and certificate track -->
+    <section class="tab" id="learn" hidden>
+      <h2 class="t">My courses</h2>
+      <p class="sub">Track your course, fees, exam and certificate.</p>
+      <div id="learnList"></div>
+      <details class="lookup" id="learnLook">
+        <summary id="learnSum">Find my courses</summary>
+        <div class="card">
+          <label>Enrollment ID<input id="lnId" placeholder="MARS-2610-0005" autocapitalize="characters" autocomplete="off"></label>
+          <label>Phone number used to enroll<input id="lnPh" type="tel" inputmode="tel"></label>
+          <p class="err" id="lnErr" role="alert"></p>
+          <button class="btn pri block" id="lnBtn" type="button">Show my courses</button>
+          <p class="hint">Your Enrollment ID is on your payment receipt and in the confirmation email.</p>
+        </div>
+      </details>
+    </section>
+
+    <section class="tab" id="policy" hidden>
+      <h2 class="t">Policies</h2>
+      <div id="policyList"></div>
+      <div class="contact" id="policyContact"></div>
+    </section>
+
+    <footer class="foot"><nav id="footLinks"></nav><div id="foot"></div><div class="ver" id="ver"></div></footer>
+  </main>
+</div>
+
+<!-- Course details -->
+<div class="sheet" id="detail" hidden data-close>
+  <div class="panel" role="dialog" aria-modal="true" aria-labelledby="dTitle">
+    <div class="grab"></div>
+    <div class="p-head"><div><span class="c-cat" id="dCat"></span><h2 id="dTitle"></h2></div><button class="x" data-close aria-label="Close"><svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6 6 18"/></svg></button></div>
+    <div id="dBody"></div>
+    <div class="p-foot" id="dFoot"></div>
+  </div>
+</div>
+
+<!-- Course picker for the enquiry form -->
+<div class="sheet" id="modal" hidden>
+  <div class="box" role="dialog" aria-modal="true" aria-label="Select courses">
+    <div class="mhead"><input id="q" type="search" placeholder="Search courses" autocomplete="off" aria-label="Search courses"><button type="button" class="btn pri" id="mdone">Done</button></div>
+    <div id="opts"></div>
+  </div>
+</div>
+
+<div class="isowin" id="isoWin" hidden role="dialog" aria-modal="true" aria-labelledby="isoT">
+  <div class="box"><div class="top"><b id="isoT">ISO 9001:2015 certificate</b><button type="button" data-close aria-label="Close">&times;</button></div>
+    <img src="iso-certificate.jpg" alt="ISO 9001:2015 certificate of MARS Training &amp; Solution" loading="lazy">
+    <div class="meta" id="isoMeta"></div></div>
+</div>
+<div class="isowin" id="payWin" hidden role="dialog" aria-modal="true" aria-labelledby="payT">
+  <div class="box"><div class="top"><b id="payT">Pay installment</b><button type="button" data-close aria-label="Close">&times;</button></div>
+    <div class="pbody" id="payBody"></div></div>
+</div>
+<div class="toast" id="toast" role="status" hidden></div>
+
+<!-- Festival greeting (Festivals tab) -->
+<div class="sheet center" id="festPop" hidden data-close>
+  <div class="greet" role="dialog" aria-modal="true" aria-labelledby="festName">
+    <div class="lamps" aria-hidden="true"><i></i><i></i><i></i></div>
+    <h2 id="festName"></h2>
+    <p id="festMsg"></p>
+    <div class="stack"><button class="btn" id="festGo" type="button" data-close>See offers</button><button class="btn ghost" type="button" data-close>Continue</button></div>
+  </div>
+</div>
+
+<nav class="tabs" aria-label="Main"><div>
+  <button data-tab="courses" aria-current="true"><span class="ti"><svg viewBox="0 0 24 24"><path d="M4 5a2 2 0 0 1 2-2h13v16H6a2 2 0 0 0-2 2zM4 19a2 2 0 0 1 2-2h13"/></svg></span><span id="tl_courses">Courses</span></button>
+  <button data-tab="about"><span class="ti"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 11v6M12 7.5v.01"/></svg></span><span id="tl_about">About us</span></button>
+  <button data-tab="faqs"><span class="ti"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M9.5 9.5a2.5 2.5 0 1 1 3.5 2.3c-.7.4-1 .9-1 1.7M12 17v.01"/></svg></span><span id="tl_faqs">FAQs</span></button>
+  <button data-tab="enquire"><span class="ti"><svg viewBox="0 0 24 24"><path d="M4 5h16v11H9l-5 4z"/></svg></span><span id="tl_enquire">Enquire</span></button>
+  <button class="go" data-tab="enroll"><span class="ti"><svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 10h18M7 15h3"/></svg></span><span id="tl_enroll">Enroll</span></button>
+</div></nav>
+
+<script src="config.js"></script>
+<script>
+const APP_VERSION = 14, MIN_SERVER = 7;   // the app needs a server (Code.gs VERSION) of at least MIN_SERVER   // must match VERSION in Code.gs
+const API = (window.APP_CONFIG || {}).API_URL || '';
+const $ = (s, r = document) => r.querySelector(s), $$ = (s, r = document) => [...r.querySelectorAll(s)];
+const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+const amt = f => { const s = String(f ?? '').trim(); return /^(₹|rs\.?)?\s*[\d,]+(\.\d+)?$/i.test(s) ? Number(s.replace(/[^\d.]/g, '')) : 0; };
+const inr = n => '₹' + Number(n).toLocaleString('en-IN');
+const price = c => Number(c && c.Price) || amt(c && c.Fee);   // offer price when an offer is running
+// Batch (Fee column) or Individual / one-to-one (Individual Fee column). Offers apply to full payment only.
+const indOn = () => (Number(D && D.version) || 0) >= 15;
+const tt = () => indOn() && $('#pttype').value === 'individual' ? 'individual' : 'batch';
+const feeT = (c, t) => !c ? 0 : (t || tt()) === 'individual' ? (Number(c.IndFee) || 0) : amt(c.Fee);
+const priceT = (c, t) => !c ? 0 : (t || tt()) === 'individual' ? (Number(c.IndPrice) || Number(c.IndFee) || 0) : price(c);
+const offerT = (c, t) => !c ? null : (t || tt()) === 'individual' ? c.IndOffer || null : c.Offer || null;
+const buyable = c => !!(amt(c.Fee) || (indOn() && Number(c.IndFee)));
+const post = b => fetch(API, { method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: JSON.stringify(b) }).then(r => r.json());
+const store = (k, v) => { try { if (v === undefined) return JSON.parse(localStorage.getItem(k) || 'null'); if (v === null) localStorage.removeItem(k); else localStorage.setItem(k, JSON.stringify(v)); } catch (e) { return null; } };
+const svgI = (d, cls) => `<svg viewBox="0 0 24 24"${cls ? ` class="${cls}"` : ''} aria-hidden="true"><path d="${d}"/></svg>`;
+const I = {
+  office: 'M7 3h7l5 5v13H7zM14 3v5h5M10 13h6M10 17h6', data: 'M4 20h16M7 16v-5M12 16V7M17 16V9', auto: 'M13 2 4 14h7l-1 8 9-12h-7z',
+  ai: 'M12 3l2 5 5 2-5 2-2 5-2-5-5-2 5-2zM19 15l.8 2 2 .8-2 .8-.8 2-.8-2-2-.8 2-.8z', erp: 'M6 3h12v18H6zM9 7h6M9 12h.01M12 12h.01M15 12h.01M9 16h.01M12 16h.01M15 16h.01',
+  career: 'M4 8h16v11H4zM9 8V5h6v3M4 13h16', book: 'M4 5a2 2 0 0 1 2-2h13v16H6a2 2 0 0 0-2 2zM4 19a2 2 0 0 1 2-2h13', check: 'm5 12 5 5 9-10'
+};
+const iconFor = c => { const s = String(c).toLowerCase(); return s.includes('office') ? I.office : s.includes('data') || s.includes('analytic') ? I.data : s.includes('autom') || s.includes('google') ? I.auto : s.includes('erp') || s.includes('account') ? I.erp : s.includes('career') ? I.career : s.includes('ai') || s.includes('program') ? I.ai : I.book; };
+const MON = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+const ymd = s => { const m = String(s || '').match(/^(\d{4})-(\d\d)-(\d\d)/); return m ? { y: m[1], m: MON[+m[2] - 1], d: String(+m[3]) } : null; };
+const nice = s => { const p = ymd(s); return p ? `${p.d} ${p.m} ${p.y}` : String(s || ''); };
+const isoOk = s => /^\d{4}-\d\d-\d\d$/.test(String(s || ''));
+const utc = s => { const [y, m, d] = s.split('-').map(Number); return Date.UTC(y, m - 1, d); };
+const addDays = (s, n) => new Date(utc(s) + n * 864e5).toISOString().slice(0, 10);
+const dBetween = (a, b) => Math.round((utc(b) - utc(a)) / 864e5);
+const durDays = s => { const m = String(s || '').toLowerCase().match(/(\d+(?:\.\d+)?)\s*(day|week|month|year)/); return m ? Math.round(Number(m[1]) * { day: 1, week: 7, month: 30, year: 365 }[m[2]]) : 0; };
+const UTM = (() => {
+  const p = new URLSearchParams(location.search);
+  const v = ['utm_source', 'utm_medium', 'utm_campaign'].map(k => p.get(k) || '').filter(Boolean).join('/') || (p.get('gclid') ? 'google-ads' : p.get('fbclid') ? 'facebook' : '');
+  try { if (v) sessionStorage.setItem('mars_utm', v); return v || sessionStorage.getItem('mars_utm') || ''; } catch (e) { return v; }
+})();
+
+let D = null, S = {}, cat = 'All', shown = false, expanded = false, selPlan = 1, planKey = '', lastAuth = null, authById = {};
+const picked = new Set();
+const TABS = ['courses', 'about', 'faqs', 'enquire', 'enroll', 'learn', 'policy'];
+const TODAY = new Date(Date.now() - new Date().getTimezoneOffset() * 6e4).toISOString().slice(0, 10);
+
+/* ---------- Festival designs (Festivals tab: Theme column, or picked from the festival name) ---------- */
+const svgUrl = s => `url("data:image/svg+xml,${encodeURIComponent(s.replace(/\s+/g, ' '))}")`;
+const SPARK = (x, y, s, c) => `<path d='M${x} ${y - s} l${s * .3} ${s * .7} ${s * .7} ${s * .3} -${s * .7} ${s * .3} -${s * .3} ${s * .7} -${s * .3} -${s * .7} -${s * .7} -${s * .3} ${s * .7} -${s * .3}z' fill='${c}'/>`;
+const PAT = {
+  diwali: [64, 44, `<circle cx='32' cy='22' r='10' fill='#FDE68A' opacity='.16'/><ellipse cx='32' cy='30' rx='13' ry='2.2' fill='#B45309'/><path d='M19 30 Q32 43 45 30 Z' fill='#F59E0B'/>
+    <path d='M22 32 Q32 39 42 32' fill='none' stroke='#FCD34D' stroke-width='1.2'/><path d='M32 14 C36.5 19 36.5 25 32 27.5 C27.5 25 27.5 19 32 14 Z' fill='#FDE68A'/>
+    <path d='M32 18.5 C34.2 21.5 34.2 25 32 26.3 C29.8 25 29.8 21.5 32 18.5 Z' fill='#F97316'/>${SPARK(8, 12, 4, '#FDE68A')}<circle cx='56' cy='8' r='1.3' fill='#FDE68A'/>`],
+  puja: [52, 52, `<g fill='none' stroke='#FFF' stroke-opacity='.6' stroke-width='1.4' transform='translate(26 26)'><circle r='3.5'/>${[0, 45, 90, 135, 180, 225, 270, 315].map(a => `<path transform='rotate(${a})' d='M0 -6 C4 -10 4 -15 0 -19 C-4 -15 -4 -10 0 -6Z'/>`).join('')}</g>
+    ${[[0, 0], [52, 0], [0, 52], [52, 52]].map(([x, y]) => `<circle cx='${x}' cy='${y}' r='2' fill='#FFF' fill-opacity='.6'/>`).join('')}`],
+  eid: [56, 56, `<path d='M22 10 a12 12 0 1 0 10 19 a9.5 9.5 0 1 1 -10 -19z' fill='#FCD34D'/><path d='M41 10 l1.6 3.3 3.6 .5 -2.6 2.5 .6 3.6 -3.2 -1.7 -3.2 1.7 .6 -3.6 -2.6 -2.5 3.6 -.5z' fill='#FDE68A'/>
+    <circle cx='46' cy='42' r='1.3' fill='#FDE68A'/><circle cx='10' cy='46' r='1' fill='#FDE68A'/>`],
+  christmas: [48, 48, `<g stroke='#FFF' stroke-opacity='.75' stroke-width='1.3' stroke-linecap='round' transform='translate(16 16)'><path d='M0 -7V7M-6 -3.5L6 3.5M-6 3.5L6 -3.5'/></g>
+    <circle cx='38' cy='36' r='1.6' fill='#FFF' fill-opacity='.8'/><circle cx='36' cy='12' r='2.2' fill='#F87171'/><circle cx='8' cy='40' r='1.2' fill='#FFF' fill-opacity='.7'/>`],
+  holi: [64, 64, [[12, 14, 7, '#F472B6'], [40, 10, 5, '#FBBF24'], [52, 36, 8, '#34D399'], [22, 44, 6, '#60A5FA'], [44, 56, 4, '#A78BFA'], [6, 58, 3, '#FB923C']].map(([x, y, r, c]) => `<circle cx='${x}' cy='${y}' r='${r}' fill='${c}' opacity='.8'/>`).join('')],
+  newyear: [56, 56, [[8, 10, '#FBBF24', 25], [30, 6, '#F472B6', -30], [46, 20, '#34D399', 60], [16, 34, '#60A5FA', -15], [38, 44, '#F87171', 40]].map(([x, y, c, a]) => `<rect x='${x}' y='${y}' width='7' height='3' rx='1' fill='${c}' transform='rotate(${a} ${x + 3} ${y + 1})'/>`).join('') + `<circle cx='50' cy='50' r='1.5' fill='#FDE68A'/>`],
+  sparkle: [56, 56, `${SPARK(14, 14, 5, '#FDE68A')}${SPARK(42, 38, 3.5, '#FDE68A')}<circle cx='44' cy='10' r='1.2' fill='#FFF'/><circle cx='12' cy='44' r='1' fill='#FFF'/>`]
+};
+const PAT_COLOR = { diwali: '#7A1F1F', puja: '#B3261E', eid: '#0F5E57', christmas: '#14532D', holi: '#9D174D', newyear: '#1E1B4B', sparkle: '#1B4F86', plain: '#1B4F86' };
+function festKey(fe) {
+  const t = String(fe.theme || '').toLowerCase(), n = (t && t !== 'auto' ? t : String(fe.name || '')).toLowerCase();
+  return /plain/.test(n) ? 'plain' : /diwali|deepavali|deepawali|dipawali|dipavali|kali puja/.test(n) ? 'diwali' : /puja|durga|navratri|dussehra|dasara/.test(n) ? 'puja'
+    : /eid|ramadan|ramzan/.test(n) ? 'eid' : /christmas|xmas/.test(n) ? 'christmas' : /holi/.test(n) ? 'holi' : /independence|republic/.test(n) ? 'india' : /new year/.test(n) ? 'newyear' : 'sparkle';
+}
+function festTheme(fe) {
+  if (!fe) return null;
+  const k = festKey(fe);
+  if (k === 'india') {
+    const tri = 'linear-gradient(180deg,#FF9933 0 34%,#FFFFFF 34% 66%,#138808 66%)';
+    return { key: k, color: '#FF9933', bar: tri, hero: '#0B3D91', pat: `${svgUrl(`<svg xmlns='http://www.w3.org/2000/svg' width='56' height='56'><g transform='translate(28 28)' fill='none' stroke='#FFF' stroke-opacity='.55'><circle r='9'/>${Array.from({ length: 12 }, (_, i) => `<path transform='rotate(${i * 30})' d='M0 0V-9'/>`).join('')}</g></svg>`)} 0 0/56px 56px repeat` };
+  }
+  const color = fe.color || PAT_COLOR[k];
+  if (k === 'plain') return { key: k, color, bar: color, hero: color, pat: 'none' };
+  const [w, hh, body] = PAT[k], tile = svgUrl(`<svg xmlns='http://www.w3.org/2000/svg' width='${w}' height='${hh}' viewBox='0 0 ${w} ${hh}'>${body}</svg>`);
+  return {
+    key: k, color, hero: color,
+    bar: `${tile} 0 50%/${w}px ${hh}px repeat-x, ${color}`,
+    pat: `${tile} 0 0/${w}px ${hh}px repeat`,
+    tw: k === 'diwali' || k === 'newyear' || k === 'sparkle' ? `${svgUrl(`<svg xmlns='http://www.w3.org/2000/svg' width='90' height='60'>${SPARK(20, 14, 3, '#FFF7CC')}${SPARK(70, 44, 2.5, '#FFF7CC')}<circle cx='48' cy='8' r='1' fill='#FFF'/></svg>`)} 0 0/90px 60px repeat` : ''
+  };
+}
+
+function toast(msg) { const t = $('#toast'); t.textContent = msg; t.hidden = false; clearTimeout(toast.t); toast.t = setTimeout(() => t.hidden = true, 4500); }
+
+/* ---------- Navigation (hash links like /#enroll and /#refund work and can be shared) ---------- */
+function show(tab, push = true) {
+  if (!TABS.includes(tab)) tab = 'courses';
+  $$('.tab').forEach(t => t.hidden = t.id !== tab);
+  $$('.tabs button').forEach(b => b.setAttribute('aria-current', b.dataset.tab === tab));
+  if (push && location.hash !== '#' + tab) history.pushState(null, '', '#' + tab);
+  scrollTo({ top: 0, behavior: 'instant' });
+  if (tab === 'enroll') { prefill(); loadMine(); }
+  if (tab === 'learn') loadMine();
+  const lt = $('#learnTop'); if (lt) lt.classList.toggle('on', tab === 'learn');
+}
+function route() {
+  const h = decodeURIComponent(location.hash.slice(1));
+  closeSheets();
+  if (D && D.policies.some(p => p.Key === h)) {
+    show('policy', false);
+    $$('#policyList details').forEach(d => d.open = d.id === 'pol-' + h);
+    const el = document.getElementById('pol-' + h);
+    if (el) requestAnimationFrame(() => el.scrollIntoView());
+    return;
+  }
+  show(TABS.includes(h) ? h : 'courses', false);
+}
+addEventListener('hashchange', route);
+
+document.addEventListener('click', e => {
+  const t = e.target.closest('[data-tab],[data-go],[data-ask],[data-buy],[data-cat],[data-pick],[data-unpick],[data-open],[data-close]');
+  if (!t) return;
+  const d = t.dataset;
+  if ('close' in d) { if (t === e.target || t.tagName === 'BUTTON') { closeSheets(); if (t.id === 'festGo') $('#ticker').click(); } return; }
+  if (d.open) return openCourse(d.open);
+  if (d.cat) { cat = d.cat; drawCourses(); if (t.closest('#cats')) $('#listWrap').scrollIntoView(); return; }
+  if (d.pick) { picked.has(d.pick) ? picked.delete(d.pick) : picked.add(d.pick); t.setAttribute('aria-pressed', picked.has(d.pick)); return drawPicked(); }
+  if (d.unpick) { picked.delete(d.unpick); return drawPicked(); }
+  if (d.buy) { closeSheets(); return startBuy(d.buy, d.batch || ''); }
+  if (d.ask) { closeSheets(); picked.clear(); picked.add(d.ask); drawPicked(); resetEnquiry(); return show('enquire'); }
+  closeSheets();
+  show(d.tab || d.go);
+});
+addEventListener('keydown', e => { if (e.key === 'Escape') closeSheets(); });
+function closeSheets() { $('#detail').hidden = true; $('#modal').hidden = true; $('#festPop').hidden = true; document.body.style.overflow = ''; }
+$('#ticker').addEventListener('click', () => { cat = 'On offer'; show('courses'); drawCourses(); requestAnimationFrame(() => $('#listWrap').scrollIntoView()); });
+
+/* ---------- Rendering ---------- */
+const waLink = (msg) => { const n = String(S.whatsapp || '').replace(/\D/g, ''); return n ? `https://wa.me/${n}?text=${encodeURIComponent(msg || S.whatsapp_message || 'Hi, I would like to know more about your courses.')}` : ''; };
+const telLink = () => S.phone ? 'tel:' + String(S.phone).replace(/[^\d+]/g, '') : '';
+function contactHtml(title) {
+  const wa = waLink();
+  return `<h3>${esc(title || 'Talk to us')}</h3>` +
+    (wa ? `<a class="btn pri" target="_blank" rel="noopener" href="${esc(wa)}">Chat on WhatsApp</a>` : '') +
+    (S.phone ? `<a class="btn line" href="${esc(telLink())}">Call ${esc(S.phone)}</a>` : '') +
+    (S.email ? `<a class="btn line" href="mailto:${esc(S.email)}">${esc(S.email)}</a>` : '') +
+    (S.address ? `<p>${esc(S.address)}</p>` : '');
+}
+const reviewsUrl = () => /^https:\/\//.test(S.google_reviews_url || '') ? S.google_reviews_url : 'https://search.google.com/local/reviews?placeid=ChIJA2Tq7_ax5zsRdXed0byIdqg';
+const statsHtml = () => D.about.filter(a => a.Type === 'Stat').map(a => {
+  const inner = `<b>${esc(a.Heading)}</b><span>${esc(a.Text)}</span>`, t = (a.Heading + ' ' + a.Text).toLowerCase();
+  if (/\biso\b|9001/.test(t)) return `<button type="button" class="stat tap" data-isowin aria-label="View our ISO 9001:2015 certificate">${inner}</button>`;
+  if (/google/.test(t) && /rating|review|★/.test(t)) return `<a class="stat tap" href="${esc(reviewsUrl())}" target="_blank" rel="noopener" aria-label="See our Google reviews">${inner}</a>`;
+  return `<div class="stat">${inner}</div>`;
+}).join('');
+function openWin(w) { w.hidden = false; document.body.style.overflow = 'hidden'; const c = w.querySelector('[data-close]'); if (c) c.focus(); }
+function closeWin(w) { w.hidden = true; document.body.style.overflow = ''; }
+document.addEventListener('click', e => {
+  if (e.target.closest('[data-isowin]')) {
+    const sec = D && D.about.find(a => a.Type === 'Section' && /iso/i.test(a.Heading));
+    $('#isoMeta').innerHTML = (sec ? `<span>${esc(sec.Text)}</span>` : '') + '<a href="iso-certificate.jpg" target="_blank" rel="noopener">Open full size</a>';
+    return openWin($('#isoWin'));
+  }
+  const w = e.target.closest('.isowin');
+  if (w && (e.target === w || e.target.closest('[data-close]'))) closeWin(w);
+});
+document.addEventListener('keydown', e => { if (e.key === 'Escape') $$('.isowin').forEach(w => { if (!w.hidden) closeWin(w); }); });
+const hay = c => [c.Title, c.Category, c.Description, c.Level].join(' ').toLowerCase();
+const batchesOf = title => D.batches.filter(b => b.course === title);
+
+function priceHtml(c) { return !amt(c.Fee) ? `<span>${esc(c.Fee || 'Ask for fee')}</span>` : c.Offer ? `<s>${inr(amt(c.Fee))}</s><b>${inr(price(c))}</b>` : `<b>${inr(amt(c.Fee))}</b>`; }
+function card(c) {
+  const full = c.Description || amt(c.Fee) || c.Duration || c.Outline, pills = [c.Duration, c.Level, c.Mode].filter(Boolean);
+  return `<article class="course${full ? '' : ' compact'}">
+    <div class="c-top"><span class="c-cat">${esc(c.Category || 'Course')}</span>${c.Offer ? `<span class="offer">${esc(c.Offer.name)}: ${esc(c.Offer.label)}</span>` : c.Badge ? `<span class="badge">${esc(c.Badge)}</span>` : ''}</div>
+    <h3><button class="c-title" data-open="${esc(c.Title)}">${esc(c.Title)}</button></h3>
+    ${c.Description ? `<p class="c-desc">${esc(c.Description)}</p>` : ''}
+    ${full && pills.length ? `<div class="pills">${pills.map(p => `<span>${esc(p)}</span>`).join('')}</div>` : ''}
+    <div class="buy"><div class="price">${priceHtml(c)}</div><div class="acts-row">${full ? `<button class="btn sm line" data-open="${esc(c.Title)}">Details</button>` : `<button class="btn sm line" data-ask="${esc(c.Title)}">Enquire</button>`}${buyable(c) ? `<button class="btn sm" data-buy="${esc(c.Title)}">Enroll</button>` : ''}</div></div>
+  </article>`;
+}
+function batchCard(b, withCourse = true) {
+  const p = ymd(b.start), full = b.left === 0, few = b.left > 0 && b.left <= 3, c = D.courses.find(x => x.Title === b.course), pay = c && amt(c.Fee);
+  const seats = b.left === null ? '' : `<em class="${full ? 'full' : few ? 'few' : ''}">${full ? 'Batch full' : b.left + (b.left === 1 ? ' seat left' : ' seats left')}</em>`;
+  const btn = full ? '' : pay ? `<button class="btn sm" data-buy="${esc(b.course)}" data-batch="${esc(b.id)}">Book</button>` : `<button class="btn sm line" data-ask="${esc(b.course)}">Enquire</button>`;
+  return `<div class="batch"><div class="date">${p ? `<b>${p.d}</b><span>${p.m}</span>` : '<span>Soon</span>'}</div>
+    <div class="b-info">${withCourse ? `<strong>${esc(b.course)}</strong>` : `<strong>${esc(nice(b.start))}</strong>`}<span>${esc([b.timing, b.mode].filter(Boolean).join(', '))}</span>${seats}</div>${btn}</div>`;
+}
+
+function drawCourses() {
+  const q = $('#cq').value.trim().toLowerCase(), cats = ['All', ...(D.courses.some(c => c.Offer) ? ['On offer'] : []), ...new Set(D.courses.map(c => c.Category).filter(Boolean))];
+  if (!cats.includes(cat)) cat = 'All';
+  $('#chips').innerHTML = cats.length > 2 || cats.includes('On offer') ? cats.map(l => `<button data-cat="${esc(l)}" aria-pressed="${l === cat}">${esc(l)}</button>`).join('') : '';
+  $$('#cats .cat').forEach(b => b.setAttribute('aria-pressed', b.dataset.cat === cat));
+  const list = D.courses.filter(c => (cat === 'All' || (cat === 'On offer' ? c.Offer : c.Category === cat)) && (!q || hay(c).includes(q)));
+  $('#count').textContent = (q ? list.length + ' found' : list.length + (list.length === 1 ? ' course' : ' courses'));
+  const short = cat === 'All' && !q && !expanded && list.length > 8, vis = short ? list.slice(0, 8) : list;
+  $('#courseList').innerHTML = (vis.map(card).join('') + (short ? `<button class="btn line block more" id="more">Show all ${list.length} courses</button>` : '')) || `<div class="empty">No course matches “${esc(q)}”. <button class="link" data-go="enquire">Ask us</button> and we will tell you if we teach it.</div>`;
+}
+
+function render(d) {
+  D = d; S = d.settings || {};
+  D.batches = D.batches || []; D.testimonials = D.testimonials || []; D.policies = D.policies || []; D.emi = D.emi || {};
+  const css = document.documentElement.style, list = (k, f) => String(S[k] ?? f).split('|').map(x => x.trim()).filter(Boolean);
+  if (S.brand_color) css.setProperty('--brand', S.brand_color);
+  if (S.dark_color) { css.setProperty('--deep', S.dark_color); $('meta[name=theme-color]').content = S.dark_color; }
+  if (S.accent_color) css.setProperty('--accent', S.accent_color);
+  if (S.logo_url) $('.logo').src = S.logo_url;
+  document.title = S.org_name || document.title;
+  $('#heroT').textContent = S.hero_title || '';
+  $('#heroS').textContent = S.hero_subtitle || '';
+  if (S.hero_button) $('#heroBtn').textContent = S.hero_button;
+  if (S.hero_button2) $('#heroBtn2').textContent = S.hero_button2;
+  $('#skills').innerHTML = list('hero_chips', 'Excel|Google Sheets|SQL|Power BI|Looker Studio').map(c => `<span>${esc(c)}</span>`).join('');
+  ['courses', 'about', 'faqs', 'enquire', 'enroll'].forEach(k => { if (S['tab_' + k]) $('#tl_' + k).textContent = S['tab_' + k]; });
+  ['about', 'faqs'].forEach(k => $('.tabs [data-tab=' + k + ']').hidden = String(S['show_' + k]).toLowerCase() === 'no');
+  [['#aboutT', 'about_title'], ['#faqT', 'faqs_title'], ['#enquireT', 'enquire_title'], ['#enrollT', 'enroll_title'], ['#okMsg', 'enroll_success'], ['#batchT', 'batches_title'], ['#tT', 'testimonials_title'], ['#secureNote', 'secure_note']]
+    .forEach(([i, k]) => { if (S[k]) $(i).textContent = S[k]; });
+  $$('.privacy').forEach(p => p.textContent = S.privacy_note || '');
+  [['mode', 'Online|Classroom|Either', 0], ['gender', 'Male|Female|Other', 1], ['level', 'Basic|Intermediate|Advance|All levels', 1], ['working', 'Employed|Unemployed|Self-employed|Student', 1],
+   ['source', 'Google Search|Social Media|Friend|Flyer/Brochure|YouTube', 1], ['location', 'Mumbai|Delhi|Kolkata|Chennai|Pune|Bangalore|Hyderabad|Kanpur|Gujarat|Ranchi|Jamshedpur|Bokaro|Assam|Guwahati|Kerala|Karnataka|Odisha|Nashik|Siliguri|Punjab|Others', 1]]
+    .forEach(([n, f, ph]) => { const el = $('#f select[name=' + n + ']'), cur = el.value; el.innerHTML = (ph ? '<option value="">Select</option>' : '') + list(n + '_options', f).map(o => `<option>${esc(o)}</option>`).join(''); el.value = cur || el.value; });
+  [['#pgender', 'gender', 'Male|Female|Other'], ['#pworking', 'working', 'Employed|Unemployed|Self-employed|Student']]
+    .forEach(([sel, n, f]) => { const el = $(sel), cur = el.value; el.innerHTML = '<option value="">Select</option>' + list(n + '_options', f).map(o => `<option>${esc(o)}</option>`).join(''); el.value = cur; });
+  $('#pdob').max = addDays(TODAY, -3650);
+  const terms = S.payment_note === undefined ? 'I understand that the payment is non-refundable.' : S.payment_note;
+  $('#pTerms').textContent = terms ? terms + ' I agree to the' : 'I agree to the'; $('#pTermsWrap').hidden = !terms;
+
+  const wa = waLink();
+  ['#waTop'].forEach(i => { $(i).hidden = !wa; if (wa) $(i).href = wa; });
+  $('#call').hidden = !S.phone; if (S.phone) $('#call').href = telLink();
+
+  // Offer ticker (Offers tab)
+  const tk = (D.offers || []).map(o => o.text || `${o.name}: ${/%\s*$/.test(o.discount) ? o.discount : inr(amt(o.discount))} off ${o.course.toLowerCase() === 'all' ? 'all courses' : o.course}${o.end ? ' till ' + nice(o.end) : ''}`);
+  $('#ticker').hidden = !tk.length;
+  if (tk.length) { const line = tk.map(esc).join(' &nbsp;✦&nbsp; '); $('#tkTrack').innerHTML = `<span>${line}</span><span aria-hidden="true">${line}</span>`; $('#tkTrack').style.setProperty('--dur', Math.max(14, tk.join('').length * 0.2) + 's'); }
+  // Festival (Festivals tab)
+  const fe = D.festival, hero = $('.hero'), th = festTheme(fe);
+  hero.classList.toggle('fest', !!fe); hero.classList.toggle('img', !!(fe && fe.image));
+  [hero, $('.greet')].forEach(el => { el.style.setProperty('--fest', th ? th.hero : ''); el.style.setProperty('--festimg', fe && fe.image ? `url("${fe.image.replace(/"/g, '')}")` : 'none'); el.style.setProperty('--fpat', th ? th.pat : 'none'); });
+  const bar = $('.bar');
+  bar.classList.toggle('fest', !!th); bar.classList.toggle('tw', !!(th && th.tw));
+  bar.style.setProperty('--fbar', th ? th.bar : ''); bar.style.setProperty('--ftw', th && th.tw ? th.tw : 'none');
+  const sp = $('#splash'), spBg = th ? th.pat.replace(/ 0 0\//, ' 50% 50%/') + ', ' + (th.key === 'india' ? '#0B3D91' : th.hero) : '';
+  store('mars_splash', th ? { bg: spBg, msg: 'Happy ' + fe.name, end: fe.end || '' } : null);
+  if (sp.classList.contains('on')) {                                        // already showing: follow the latest data
+    if (!th) sp.classList.add('gone'); else { sp.style.setProperty('--spbg', spBg); $('#spMsg').textContent = 'Happy ' + fe.name; }
+  }
+  $('#festTag').hidden = !fe; if (fe) $('#festTag').textContent = 'Happy ' + fe.name;
+  if (th) $('meta[name=theme-color]').content = th.color;
+
+  // Home
+  $('#homeStats').innerHTML = $('#aboutStats').innerHTML = statsHtml();
+  $('#batchWrap').hidden = !D.batches.length;
+  $('#batchList').innerHTML = D.batches.map(b => batchCard(b)).join('');
+  const cats = [...new Set(D.courses.map(c => c.Category).filter(Boolean))];
+  $('#catWrap').hidden = cats.length < 2;
+  $('#cats').innerHTML = cats.map(c => `<button class="cat" data-cat="${esc(c)}" aria-pressed="${c === cat}"><span class="ic">${svgI(iconFor(c))}</span><span><b>${esc(c)}</b><small>${D.courses.filter(x => x.Category === c).length} courses</small></span></button>`).join('');
+  drawCourses();
+  const steps = list('how_steps', '');
+  $('#howWrap').hidden = !steps.length; $('#how').innerHTML = steps.map(s => `<li>${esc(s)}</li>`).join('');
+  $('#tWrap').hidden = !D.testimonials.length;
+  $('#tList').innerHTML = D.testimonials.map(t => { const r = Math.max(0, Math.min(5, Math.round(Number(t.Rating) || 0))); return `<figure class="quote" style="margin:0">${r ? `<span class="stars" aria-label="${r} out of 5">${'★'.repeat(r)}${'☆'.repeat(5 - r)}</span>` : ''}<p>“${esc(t.Quote)}”</p><figcaption><b>${esc(t.Name)}</b>${t.Course ? `<small>${esc(t.Course)}</small>` : ''}</figcaption></figure>`; }).join('');
+
+  // About, FAQs, policies, footer
+  $('#aboutList').innerHTML = D.about.filter(a => a.Type !== 'Stat').map(a => `<h3>${esc(a.Heading)}</h3><p>${esc(a.Text)}</p>`).join('');
+  $('#aboutContact').innerHTML = contactHtml();
+  $('#faqList').innerHTML = D.faqs.map(q => `<details class="faq"><summary>${esc(q.Question)}</summary><div class="body"><p>${esc(q.Answer)}</p></div></details>`).join('') || '<p class="empty">No questions yet.</p>';
+  $('#policyList').innerHTML = D.policies.map(p => `<details class="faq" id="pol-${esc(p.Key)}"><summary>${esc(p.Title || p.Key)}</summary><div class="body">${String(p.Text).split(/\n+/).map(x => `<p>${esc(x)}</p>`).join('')}</div></details>`).join('');
+  $('#policyContact').innerHTML = contactHtml('Contact us');
+  $('#footLinks').innerHTML = D.policies.map(p => `<a href="#${esc(p.Key)}">${esc(p.Title || p.Key)}</a>`).join('');
+  $('#foot').textContent = S.footer || '';
+  const sv = Number(d.version) || 0, old = sv < MIN_SERVER;
+  $('#ver').className = 'ver' + (old ? ' old' : '');
+  $('#ver').textContent = `App v${APP_VERSION}, server v${sv || 'old'}` + (sv < MIN_SERVER ? '. Server not updated: in Apps Script deploy a New version.' : '');
+  $('#doneActs').innerHTML = (wa ? `<a class="btn pri" target="_blank" rel="noopener" href="${esc(wa)}">Chat on WhatsApp</a>` : '') + (S.phone ? `<a class="btn line" href="${esc(telLink())}">Call ${esc(S.phone)}</a>` : '');
+
+  // Enroll
+  $('#ttWrap').hidden = !indOn() || !D.courses.some(c => Number(c.IndFee));
+  if ($('#ttWrap').hidden) $('#pttype').value = 'batch';
+  const pays = D.courses.filter(buyable);
+  fillPay(); updFee();
+  if (splitSt && !splitResumed) { splitResumed = true; resumeSplit(); }
+  $('#noPay').hidden = pays.length > 0; $('#pf').hidden = !pays.length || !$('#paid').hidden;
+
+  if (!shown) { shown = true; route(); }
+  greet();
+}
+function greet() {
+  const fe = D.festival;
+  const sp = $('#splash');
+  if (!fe || greet.done || (sp.classList.contains('on') && !sp.classList.contains('gone'))) return;   // wait until the opening screen has faded
+  const key = 'mars_greet_' + fe.name + '_' + TODAY;
+  if (store(key)) return;
+  greet.done = true; store(key, 1);
+  $('#festName').textContent = 'Happy ' + fe.name;
+  $('#festMsg').textContent = fe.message || '';
+  $('#festGo').hidden = !(D.offers || []).length;
+  $('#festPop').hidden = false;
+}
+
+function openCourse(title) {
+  const c = D.courses.find(x => x.Title === title); if (!c) return;
+  const hl = String(c['Highlights (separate with |)'] || '').split('|').map(s => s.trim()).filter(Boolean), bs = batchesOf(c.Title);
+  const pills = [['Duration', c.Duration], ['Level', c.Level], ['Mode', c.Mode], ['One-to-one fee', indOn() && Number(c.IndFee) ? inr(Number(c.IndPrice) || Number(c.IndFee)) : '']].filter(x => x[1]);
+  $('#dCat').textContent = c.Category || 'Course'; $('#dTitle').textContent = c.Title;
+  $('#dBody').innerHTML = (c.Badge ? `<span class="badge">${esc(c.Badge)}</span>` : '') +
+    (c.Description ? `<p style="color:var(--muted);margin:10px 0">${esc(c.Description)}</p>` : `<p style="color:var(--muted);margin:10px 0">Ask us for the syllabus, duration and fee for this course.</p>`) +
+    (pills.length ? `<div class="pills">${pills.map(p => `<span>${esc(p[0])}: ${esc(p[1])}</span>`).join('')}</div>` : '') +
+    (hl.length ? `<h3 style="font-size:1rem;margin-top:18px">What you’ll learn</h3><ul class="hl">${hl.map(h => `<li>${svgI(I.check)}<span>${esc(h)}</span></li>`).join('')}</ul>` : '') +
+    (/^https:\/\//.test(c.Outline || '') ? `<a class="btn line block pdf" href="${esc(c.Outline)}" target="_blank" rel="noopener" download>${svgI('M12 4v11m0 0-4-4m4 4 4-4M5 20h14')}Download course outline (PDF)</a>` : '') +
+    (bs.length ? `<h3 style="font-size:1rem;margin:18px 0 10px">Upcoming batches</h3><div class="stack">${bs.map(b => batchCard(b, false)).join('')}</div>` : '') +
+    (waLink() ? `<p style="margin:18px 0 0"><a href="${esc(waLink('Hi, I want to know more about ' + c.Title + '.'))}" target="_blank" rel="noopener">Ask about this course on WhatsApp</a></p>` : '');
+  $('#dFoot').innerHTML = `<div class="price">${priceHtml(c)}</div><button class="btn line" data-ask="${esc(c.Title)}">Enquire</button>${buyable(c) ? `<button class="btn" data-buy="${esc(c.Title)}">Enroll</button>` : ''}`;
+  $('#detail').hidden = false; document.body.style.overflow = 'hidden';
+  $('#detail .panel').scrollTop = 0; $('#detail .x').focus();
+}
+
+/* ---------- Enquiry ---------- */
+function drawPicked() {
+  $('#courseVal').value = [...picked].join(', ');
+  $('#chosen').innerHTML = [...picked].map(t => `<button type="button" data-unpick="${esc(t)}">${esc(t)} ×</button>`).join('');
+  $('#pick').textContent = picked.size ? picked.size + ' selected. Tap to change' : 'Search and select courses';
+}
+function drawOpts() {
+  const q = $('#q').value.trim().toLowerCase(), g = {};
+  D.courses.forEach(c => { if (!q || hay(c).includes(q)) (g[c.Category || 'Other courses'] = g[c.Category || 'Other courses'] || []).push(c.Title); });
+  $('#opts').innerHTML = Object.entries(g).map(([k, l]) => `<div class="grp">${esc(k)}</div>` + l.map(t => `<button type="button" class="opt" data-pick="${esc(t)}" aria-pressed="${picked.has(t)}">${esc(t)}</button>`).join('')).join('') || '<p style="padding:16px;color:var(--muted)">No course found. Try another word.</p>';
+}
+function step(n) {
+  $('#s1').hidden = n !== 1; $('#s2').hidden = n !== 2;
+  $('#pbar').style.width = n * 50 + '%';
+  $('#stepTxt').textContent = n === 1 ? 'Step 1 of 2: Your details' : 'Step 2 of 2: What you’re interested in';
+}
+function resetEnquiry() { $('#done').hidden = true; $('#f').hidden = false; }
+$('#same').addEventListener('change', e => $('#waWrap').hidden = e.target.checked);
+$('#f').elements.location.addEventListener('change', e => { const o = /^others?$/i.test(e.target.value); $('#cityWrap').hidden = !o; if (o) setTimeout(() => $('#city').focus(), 30); else $('#city').value = ''; });
+$('#next').addEventListener('click', () => {
+  const f = $('#f'), v = n => f.elements[n].value.trim(), dg = n => v(n).replace(/\D/g, '').length;
+  const bad = v('name').length < 2 ? 'Please enter your full name.' : !v('gender') ? 'Please select your gender.'
+    : dg('calling') < 10 ? 'Enter a valid calling number (at least 10 digits).'
+    : (!$('#same').checked && dg('whatsapp') < 10) ? 'Enter a valid WhatsApp number (at least 10 digits).'
+    : !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(v('email')) ? 'Enter a valid email address.' : !v('location') ? 'Please select your current location.'
+    : /^others?$/i.test(v('location')) && v('city').length < 2 ? 'Please type your city name.' : '';
+  $('#e1').textContent = bad; if (!bad) { step(2); $('#f').scrollIntoView(); }
+});
+$('#pick').addEventListener('click', () => { $('#modal').hidden = false; document.body.style.overflow = 'hidden'; $('#q').value = ''; drawOpts(); $('#q').focus(); });
+$('#q').addEventListener('input', drawOpts);
+$('#cq').addEventListener('input', () => { if ($('#cq').value.trim()) cat = 'All'; drawCourses(); });  // a search always looks in every category
+document.addEventListener('click', e => { if (e.target.id === 'more') { expanded = true; drawCourses(); } });
+$('#mdone').addEventListener('click', closeSheets);
+$('#modal').addEventListener('click', e => { if (e.target.id === 'modal') closeSheets(); });
+$('#back').addEventListener('click', () => step(1));
+$('#f').addEventListener('submit', e => {
+  e.preventDefault();
+  const f = Object.fromEntries(new FormData(e.target)), b = $('#send');
+  if ($('#same').checked) f.whatsapp = f.calling;
+  if (/^others?$/i.test(f.location || '') && (f.city || '').trim()) f.location = (f.city || '').trim() + ' (Others)';
+  delete f.city;
+  f.utm = UTM;
+  const bad = !picked.size ? 'Please select at least one course.' : !f.batch ? 'Please choose a preferred batch start date.' : '';
+  if (bad) { $('#e2').textContent = bad; return; }
+  b.disabled = true; b.textContent = 'Sending…'; $('#e2').textContent = '';
+  const reset = () => { b.disabled = false; b.textContent = 'Send enquiry'; };
+  post(f).then(r => {
+    reset();
+    if (!r.ok) { $('#e2').textContent = r.error; return; }
+    store('mars_me', { name: f.name, calling: f.calling, email: f.email });
+    $('#who').textContent = f.name.split(' ')[0];
+    $('#f').hidden = true; $('#done').hidden = false; e.target.reset(); picked.clear(); drawPicked(); $('#waWrap').hidden = true; $('#cityWrap').hidden = true; step(1);
+    scrollTo({ top: 0 });
+  }).catch(() => { reset(); $('#e2').textContent = 'Could not send. Check your connection and try again.'; });
+});
+$('#again').addEventListener('click', resetEnquiry);
+
+/* ---------- Enroll and pay ---------- */
+function prefill() {
+  const me = store('mars_me') || {}, f = $('#pf').elements;
+  ['name', 'calling', 'email'].forEach(k => { if (!f[k].value && me[k]) f[k].value = me[k]; });
+}
+/** Course list for the chosen training type (one-to-one shows only courses with an Individual Fee). */
+function fillPay() {
+  const t = tt(), pays = D.courses.filter(c => feeT(c, t)), cur = $('#pcourse').value;
+  $('#pcourse').innerHTML = '<option value="">Select a course</option>' + pays.map(c => `<option value="${esc(c.Title)}">${esc(c.Title)}, ${inr(priceT(c, t))}${offerT(c, t) ? ' (offer)' : ''}</option>`).join('');
+  $('#pcourse').value = pays.some(c => c.Title === cur) ? cur : '';
+  return pays;
+}
+$('#pttype').addEventListener('change', () => { fillPay(); updFee(); });
+function updFee() {
+  const t = tt(), c = D && D.courses.find(x => x.Title === $('#pcourse').value), a = c ? feeT(c) : 0, bs = c && t === 'batch' ? batchesOf(c.Title) : [], of = offerT(c);
+  $('#pfee').hidden = !a;
+  syncCombo();
+  if (a) { $('#pfeeAmt').textContent = inr(priceT(c)); $('#pfeeMeta').innerHTML = (of ? `<span class="save">${esc(of.name)}: you save ${inr(of.off)} on full payment</span>` : '') + esc([t === 'individual' ? 'One-to-one' : '', c.Duration, c.Mode].filter(Boolean).join(', ')); }
+  const cur = $('#pbatch').value;
+  $('#pbatchWrap').hidden = !bs.length; $('#pdateWrap').hidden = !!bs.length;
+  $('#pbatch').innerHTML = '<option value="">Select a batch</option>' + bs.map(b => `<option value="${esc(b.id)}"${b.left === 0 ? ' disabled' : ''}>${esc(nice(b.start))}${b.timing ? ', ' + esc(b.timing) : ''}${b.left === 0 ? ' (full)' : b.left !== null ? ` (${b.left} left)` : ''}</option>`).join('');
+  if (bs.some(b => b.id === cur && b.left !== 0)) $('#pbatch').value = cur;
+  drawPlans();
+}
+$('#pcourse').addEventListener('change', updFee);
+
+/* ---------- Course box: type to search, or tap the arrow to pick from the full list ---------- */
+let cIdx = -1;
+const cOpts = () => [...$('#pcourse').options].filter(o => o.value);
+function syncCombo() {
+  const o = cOpts().find(x => x.value === $('#pcourse').value);
+  if (document.activeElement !== $('#pcq')) $('#pcq').value = o ? o.value : '';
+  $('#pcx').hidden = !$('#pcq').value;
+}
+function drawCombo(all) {
+  const q = all ? '' : $('#pcq').value.trim().toLowerCase(), words = q.split(/\s+/).filter(Boolean), cur = $('#pcourse').value;
+  const list = cOpts().filter(o => words.every(w => o.textContent.toLowerCase().includes(w)));
+  const hl = t => { let h = esc(t); words.forEach(w => { h = h.replace(new RegExp('(' + w.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + ')', 'ig'), '<mark>$1</mark>'); }); return h; };
+  cIdx = list.findIndex(o => o.value === cur);
+  $('#pclist').innerHTML = list.length ? list.map((o, i) => { const c = D.courses.find(x => x.Title === o.value); return `<li role="option" id="pco${i}" data-v="${esc(o.value)}" aria-selected="${o.value === cur}"${i === cIdx ? ' class="on"' : ''}><span>${hl(o.value)}</span><small>${c ? inr(priceT(c)) : ''}</small></li>`; }).join('')
+    : '<li class="none">No course matches “' + esc($('#pcq').value.trim()) + '”. Try another word.</li>';
+  openCombo(true);
+}
+function openCombo(on) { $('#pclist').hidden = !on; $('#pcombo').classList.toggle('open', on); $('#pcq').setAttribute('aria-expanded', String(on)); if (!on) syncCombo(); }
+function pickCourse(v) { $('#pcourse').value = v; openCombo(false); $('#pcq').blur(); updFee(); syncCombo(); }
+$('#pcq').addEventListener('input', () => { $('#pcx').hidden = !$('#pcq').value; drawCombo(false); });
+$('#pcq').addEventListener('focus', () => { $('#pcq').select(); drawCombo(true); });
+$('#pca').addEventListener('click', () => { if (!$('#pclist').hidden) { openCombo(false); return; } $('#pcq').focus(); drawCombo(true); });
+$('#pcx').addEventListener('click', () => { $('#pcq').value = ''; $('#pcourse').value = ''; updFee(); $('#pcq').focus(); drawCombo(true); });
+$('#pclist').addEventListener('mousedown', e => e.preventDefault());
+$('#pclist').addEventListener('click', e => { const li = e.target.closest('li[data-v]'); if (li) pickCourse(li.dataset.v); });
+$('#pcq').addEventListener('keydown', e => {
+  const items = $$('#pclist li[data-v]');
+  if (e.key === 'ArrowDown' || e.key === 'ArrowUp') { e.preventDefault(); if ($('#pclist').hidden) drawCombo(false); cIdx = Math.max(0, Math.min(items.length - 1, cIdx + (e.key === 'ArrowDown' ? 1 : -1))); items.forEach((li, i) => li.classList.toggle('on', i === cIdx)); if (items[cIdx]) items[cIdx].scrollIntoView({ block: 'nearest' }); }
+  else if (e.key === 'Enter') { e.preventDefault(); const li = items[cIdx] || (items.length === 1 ? items[0] : null); if (li) pickCourse(li.dataset.v); }
+  else if (e.key === 'Escape') { openCombo(false); $('#pcq').blur(); }
+});
+$('#pcq').addEventListener('blur', () => setTimeout(() => { if (document.activeElement !== $('#pcq')) openCombo(false); }, 120));
+$('#pbatch').addEventListener('change', drawPlans);
+$('#pf').elements.batch.addEventListener('change', drawPlans);
+
+/* ---------- Installment plans (set in the EMI Plans tab of the sheet) ---------- */
+const gapDays = () => Math.max(1, Math.round(Number(S.emi_gap_days) || 30));
+const graceDays = () => { const g = S.emi_grace_days; return Math.max(0, Math.round(Number(g === undefined || g === '' ? 5 : g) || 0)); };
+function payCtx() {
+  const t = tt(), c = D && D.courses.find(x => x.Title === $('#pcourse').value), bs = c && t === 'batch' ? batchesOf(c.Title) : [];
+  const b = bs.find(x => x.id === $('#pbatch').value) || null, start = b ? b.start : $('#pf').elements.batch.value;
+  return { c, b, start, plans: c ? ((t === 'individual' ? D.emiInd : D.emi) || {})[c.Title] || [] : [], hasBatches: bs.length > 0 };
+}
+function lastDate(c, b, start, p) {
+  if (b && isoOk(b.end)) return b.end;
+  const base = isoOk(start) && start > TODAY ? start : TODAY;
+  return addDays(base, p.within || durDays(c.Duration) || 90);
+}
+const dueDates = n => Array.from({ length: n - 1 }, (_, i) => addDays(TODAY, gapDays() * (i + 1)));   // fixed: every 30 days from today
+function drawPlans() {
+  const x = payCtx(), a = x.c && feeT(x.c) ? priceT(x.c) : 0, of = offerT(x.c);
+  $('#planWrap').hidden = !a || !x.plans.length;
+  if ($('#planWrap').hidden) { selPlan = 1; $('#sched').hidden = true; updPay(); return; }
+  const ready = !x.hasBatches || x.b;
+  const opts = [{ n: 1, total: a, amounts: [a] }].concat(x.plans);
+  if (!opts.some(p => p.n === selPlan)) selPlan = 1;
+  $('#plans').innerHTML = opts.map(p => {
+    const ds = p.n > 1 ? dueDates(p.n) : [], ok = p.n === 1 || (ready && ds[ds.length - 1] <= lastDate(x.c, x.b, x.start, p));
+    if (!ok && selPlan === p.n) selPlan = 1;
+    const sub = p.n === 1 ? 'Pay the whole fee at once' + (of ? ` (offer price: you save ${inr(of.off)})` : '') : !ready ? 'Choose a batch first' : !ok ? 'Not available: the course ends before the last installment' :
+      `${inr(p.amounts[0])} today, then ${p.amounts.slice(1).map(inr).join(' + ')} every ${gapDays()} days. Total ${inr(p.total)}${p.extra ? ` (${inr(p.extra)} extra)` : ''}${of ? '. Offers apply to full payment only' : ''}`;
+    return `<button type="button" class="plan" role="radio" aria-checked="${p.n === selPlan}" data-plan="${p.n}"${ok ? '' : ' disabled'}><span class="dot"></span><span class="pt"><b>${p.n === 1 ? 'Full payment' : p.n + ' installments (EMI)'}</b><small>${esc(sub)}</small></span><span class="now">${inr(p.amounts[0])}<small>${p.n === 1 ? 'total' : 'today'}</small></span></button>`;
+  }).join('');
+  $$('#plans .plan').forEach(b => b.setAttribute('aria-checked', Number(b.dataset.plan) === selPlan));
+  drawSched();
+}
+function drawSched() {
+  const x = payCtx(), p = x.plans.find(q => q.n === selPlan);
+  $('#sched').hidden = !p;
+  if (!p) { updPay(); return; }
+  const ds = dueDates(p.n), g = graceDays();
+  $('#sched').innerHTML = p.amounts.map((amount, i) => `<div class="srow"><span class="n">${i + 1}</span><span class="when">${i ? `<b>Due ${esc(nice(ds[i - 1]))}</b>${g ? `<small>Pay by ${esc(nice(addDays(ds[i - 1], g)))}</small>` : ''}` : '<b>Today</b><small>At enrollment</small>'}</span><b>${inr(amount)}</b></div>`).join('') +
+    `<p>Dates are fixed: every ${gapDays()} days from your payment date${g ? `, with ${g} extra days to pay` : ''}. We email you a payment link before each due date.${S.emi_note && !/set automatically from your payment date/.test(S.emi_note) ? ' ' + esc(S.emi_note) : ''}</p>`;
+  updPay();
+}
+function dueNow() { const x = payCtx(), p = x.plans.find(q => q.n === selPlan), a = x.c && feeT(x.c) ? priceT(x.c) : 0; return p ? p.amounts[0] : a; }
+function updPay() {
+  const x = payCtx(), p = x.plans.find(q => q.n === selPlan), a = dueNow();
+  const cashOk = String(S.cash_enabled || 'Yes').toLowerCase() !== 'no' && (Number(D && D.version) || 0) >= 11;
+  $('#modeWrap').hidden = !a || !cashOk;
+  if (!cashOk && payMode !== 'online') setMode('online', true);
+  if (splitSt && payMode === 'split') { $('#pay span').textContent = 'Confirm cash and enroll'; return; }
+  if (cashSent && payMode === 'cash') { $('#pay span').textContent = 'Confirm cash and enroll'; return; }
+  const on = splitAmt();
+  $('#pay span').textContent = !a ? 'Pay now' : payMode === 'cash' ? `Pay ${inr(a)} in cash` : payMode === 'split' ? (on ? `Pay ${inr(on)} online` : 'Enter the online amount')
+    : p ? `Pay ${inr(p.amounts[0])} now` : 'Pay ' + inr(a);
+  $('#secureNote').textContent = payMode === 'online' ? 'Pay securely with UPI, card or net banking.' : payMode === 'cash'
+    ? 'Pay the cash at our office. Our HOD gets an approval code to give you after receiving it.' : 'Pay the online part first. Then pay the rest in cash at our office and enter the approval code.';
+  drawSplit();
+}
+
+/* ---------- Payment mode: online, cash, or part online + part cash ---------- */
+var payMode = 'online', cashSent = false, splitSt = store('mars_split'), splitResumed = false;
+const splitAmt = () => { const n = Math.round(Number($('#splitOn').value) || 0), a = dueNow(); return n >= 1 && n < a ? n : 0; };
+function setMode(m, quiet) {
+  if (splitSt && m !== 'split') { if (!quiet) toast('Finish the cash part of your payment first.'); return; }
+  payMode = m; cashSent = false; $('#otpBox').hidden = true; $('#otpIn').value = '';
+  $$('.mode').forEach(b => b.setAttribute('aria-checked', (b.dataset.mode || 'split') === m));
+  $('#moreBtn').innerHTML = m === 'split' ? '⋯<small>Part</small>' : '⋯';
+  $('#moreMenu').hidden = true; $('#moreBtn').setAttribute('aria-expanded', 'false');
+  $('#splitBox').hidden = m !== 'split';
+  $('#pe').textContent = '';
+  updPay();
+}
+function drawSplit() {
+  if (payMode !== 'split') return;
+  const a = dueNow(), on = splitAmt(), raw = Math.round(Number($('#splitOn').value) || 0);
+  $('#splitOn').max = Math.max(a - 1, 1);
+  $('#splitCalc').innerHTML = `<span>Due today</span><span></span><b>${inr(a)}</b><span>1. Online now</span><span></span><b>${on ? inr(on) : '–'}</b><span>2. Cash at our office</span><span></span><b>${on ? inr(a - on) : '–'}</b>` +
+    (raw && !on ? `<span style="grid-column:1/-1;color:var(--bad)">Enter between ${inr(1)} and ${inr(a - 1)}.</span>` : '');
+}
+$('#splitOn').addEventListener('input', updPay);
+document.addEventListener('click', e => {
+  const m = e.target.closest('[data-mode]');
+  if (m) return setMode(m.dataset.mode);
+  if (e.target.closest('#moreBtn')) { const h = !$('#moreMenu').hidden; $('#moreMenu').hidden = h; $('#moreBtn').setAttribute('aria-expanded', String(!h)); return; }
+  if (!e.target.closest('#moreMenu')) $('#moreMenu').hidden = true;
+});
+function showOtp(note) { $('#otpBox').hidden = false; $('#otpNote').innerHTML = note; $('#otpIn').value = ''; setTimeout(() => $('#otpIn').focus(), 50); updPay(); }
+function askSplitCode() {
+  const b = $('#pay'); b.disabled = true; $('#pay span').textContent = 'Sending approval code…';
+  return post({ action: 'splitCashOtp', id: splitSt.id, token: splitSt.token }).then(r => {
+    b.disabled = false;
+    if (r.ok && r.done) return finishSplit(r);
+    if (!r.ok && /not found/i.test(r.error || '')) { splitSt = null; store('mars_split', null); setMode('online', true); return toast(r.error); }
+    if (!r.ok) { updPay(); $('#otpBox').hidden = false; $('#otpNote').innerHTML = `<span class="done">✓ ${inr(splitSt.online)} paid online.</span> ` + esc(r.error); return; }
+    splitSt.cash = r.cash; store('mars_split', splitSt);
+    showOtp(`<span class="done">✓ ${inr(r.online)} paid online.</span><br>Now pay <b>${inr(r.cash)}</b> in cash at our office. Our HOD has the approval code; you get it when you hand over the cash.`);
+  }).catch(() => { b.disabled = false; updPay(); toast('Could not connect. Check your internet and tap "Send a new code".'); $('#otpBox').hidden = false; });
+}
+function finishSplit(r) {
+  const auth = { id: splitSt.id, token: splitSt.token };
+  splitSt = null; store('mars_split', null); store('mars_pending', null);
+  setMode('online', true); $('#splitOn').value = ''; $('#pf').elements.terms.checked = false;
+  loadMine(); receipt(r, true, auth);
+}
+$('#otpResend').addEventListener('click', () => {
+  if (splitSt) return askSplitCode();
+  if (payMode === 'cash') { cashSent = false; $('#pf').requestSubmit(); }
+});
+function resumeSplit() {
+  if (!splitSt) return;
+  setMode('split', true);
+  $('#pttype').value = splitSt.ttype === 'individual' && indOn() ? 'individual' : 'batch'; fillPay();
+  $('#pcourse').value = splitSt.course; updFee();
+  $('#splitOn').value = splitSt.online; drawSplit();
+  showOtp(`<span class="done">✓ ${inr(splitSt.online)} paid online</span> for ${esc(splitSt.course)}.<br>Pay <b>${inr(splitSt.cash || 0)}</b> in cash at our office and enter the approval code from our HOD. <button type="button" class="link" id="splitCancel">Not now</button>`);
+}
+document.addEventListener('click', e => { if (e.target.id === 'splitCancel') { $('#otpBox').hidden = true; toast('Your online payment is saved. Come back here to finish the cash part.'); } });
+document.addEventListener('click', e => { const b = e.target.closest('.plan'); if (b && !b.disabled) { selPlan = Number(b.dataset.plan); drawPlans(); } });
+function schedDates() { const p = payCtx().plans.find(q => q.n === selPlan); return { dates: p ? dueDates(p.n) : [] }; }
+
+function startBuy(course, batch) {
+  $('#paid').hidden = true; $('#pf').hidden = false; $('#pe').textContent = '';
+  const c = D.courses.find(x => x.Title === course);
+  if (c && !amt(c.Fee) && indOn() && Number(c.IndFee)) $('#pttype').value = 'individual'; else if (batch || (c && amt(c.Fee) && tt() === 'individual' && !Number(c.IndFee))) $('#pttype').value = 'batch';
+  fillPay(); $('#pcourse').value = course; updFee();
+  if (batch) { $('#pbatch').value = batch; drawPlans(); }   // the EMI options depend on the batch, so redraw them
+  show('enroll');
+}
+
+const buys = () => store('mars_buys') || [];
+function saveBuy(b) { store('mars_buys', [b, ...buys().filter(x => x.id !== b.id)].slice(0, 20)); }
+function ownHtml(l) {
+  return l.length ? '<h3>Your courses</h3>' + l.map(x => {
+    const emi = x.emi ? `<div class="bar2"><i style="width:${Math.round(100 * (x.paidSoFar || 0) / (x.amount || 1))}%"></i></div><small>${inr(x.paidSoFar || 0)} of ${inr(x.amount)} paid, ${esc(x.plan)}</small>` +
+      (x.next ? `<span class="due${x.next.status === 'Overdue' ? ' late' : ''}">${x.next.status === 'Overdue' ? 'Overdue' : 'Next'}: ${inr(x.next.amount)} ${x.next.status === 'Overdue' ? 'was due' : 'due'} ${esc(nice(x.next.due))}${x.next.payBy && x.next.status !== 'Overdue' ? `, pay by ${esc(nice(x.next.payBy))}` : ''}</span><button class="btn sm pri" data-payinst="${esc(x.id)}">Pay ${inr(x.next.amount)} now</button>` : '<span class="due">Fully paid</span>') : '';
+    return `<div class="own"><b>${esc(x.course)}</b><span>Enrolled</span><small>ID ${esc(x.id)}${x.emi ? '' : ', ' + inr(x.amount)}${x.paidAt && !x.emi ? ', paid ' + esc(x.paidAt) : ''}</small>${x.batchStart ? `<small>Batch start: ${esc(nice(x.batchStart))}</small>` : ''}${emi}</div>`;
+  }).join('') : '';
+}
+/* Pay the next installment: online (Razorpay link) or in cash with the HOD's approval code */
+const cashOn = () => String(S.cash_enabled || 'Yes').toLowerCase() !== 'no' && (Number(D && D.version) || 0) >= 13;
+let payCtxI = null;
+document.addEventListener('click', e => {
+  const t = e.target.closest('[data-payinst]');
+  if (!t) return;
+  const id = t.dataset.payinst, mine = buys().find(b => b.id === id), auth = mine || authById[id] || (lastAuth && lastAuth.id === id ? lastAuth : null);
+  if (!auth) return toast('Open this from the phone you paid with, or check your enrollment first.');
+  const amt = (t.textContent.match(/₹[\d,]+/) || [''])[0];
+  payCtxI = { id, auth, amt };
+  if (!cashOn()) return payOnline();
+  $('#payT').textContent = 'Pay ' + (amt || 'installment');
+  $('#payBody').innerHTML = `<p>How would you like to pay${amt ? ' ' + esc(amt) : ''}?</p>
+    <button type="button" class="popt" id="pOn">Pay online<small>UPI, card or net banking (Razorpay)</small></button>
+    <button type="button" class="popt" id="pCash">Pay in cash<small>At our office. Our HOD gives you an approval code after receiving the cash.</small></button>`;
+  openWin($('#payWin'));
+});
+function payOnline() {
+  const { id, auth } = payCtxI;
+  $('#payBody').innerHTML = '<p>Opening secure payment…</p>';
+  post(Object.assign({ action: 'payInstallment' }, auth)).then(r => {
+    if (!r.ok) { closeWin($('#payWin')); return toast(r.error); }
+    if (r.done) { closeWin($('#payWin')); refreshMine(); return toast('Nothing left to pay. Thank you!'); }
+    try { store('mars_link_return', { id, at: Date.now() }); } catch (x) {}
+    location.href = r.url;
+  }).catch(() => { closeWin($('#payWin')); toast('Could not connect. Check your internet and try again.'); });
+}
+function payCash() {
+  $('#payBody').innerHTML = '<p>Sending the approval code to our office…</p>';
+  post(Object.assign({ action: 'instCashOtp' }, payCtxI.auth)).then(r => {
+    if (!r.ok) { $('#payBody').innerHTML = `<p style="color:var(--bad)">${esc(r.error)}</p><button type="button" class="popt" id="pOn">Pay online instead<small>UPI, card or net banking</small></button>`; return; }
+    if (r.done) { closeWin($('#payWin')); refreshMine(); return toast('Nothing left to pay. Thank you!'); }
+    $('#payT').textContent = `Installment ${r.no} of ${r.of}: ${inr(r.amount)} in cash`;
+    $('#payBody').innerHTML = `<p>Pay <b>${inr(r.amount)}</b> in cash at our office. Our HOD has the approval code and gives it to you after receiving the cash.</p>
+      <div class="otpbox"><label>Approval code *<input id="pOtp" inputmode="numeric" maxlength="6" autocomplete="one-time-code" placeholder="••••••"></label></div>
+      <p class="err" id="pErr" role="alert"></p>
+      <button type="button" class="btn pri block" id="pConfirm">Confirm cash payment</button>
+      <button type="button" class="link" id="pCash">Send a new code</button>`;
+    setTimeout(() => $('#pOtp') && $('#pOtp').focus(), 60);
+  }).catch(() => { $('#payBody').innerHTML = '<p style="color:var(--bad)">Could not connect. Check your internet and try again.</p>'; });
+}
+function payCashConfirm() {
+  const otp = ($('#pOtp').value || '').replace(/\D/g, ''), b = $('#pConfirm');
+  if (otp.length !== 6) { $('#pErr').textContent = 'Enter the 6-digit approval code from our office.'; return; }
+  b.disabled = true; b.textContent = 'Confirming…';
+  post(Object.assign({ action: 'instCashConfirm', otp }, payCtxI.auth)).then(r => {
+    b.disabled = false; b.textContent = 'Confirm cash payment';
+    if (!r.ok) { $('#pErr').textContent = r.error; return; }
+    $('#payT').textContent = 'Payment received';
+    $('#payBody').innerHTML = `<p style="color:var(--good);font-weight:700">✓ ${inr(r.paidNow || 0)} paid in cash${r.no ? ` (installment ${r.no} of ${r.of})` : ''}.</p><p>${r.balance ? 'Balance: ' + inr(r.balance) + (r.next ? ', next due ' + esc(nice(r.next.due)) : '') + '.' : 'All fees are paid. Thank you!'} Your invoice and receipt have been emailed to you.</p><button type="button" class="btn pri block" data-close>Done</button>`;
+    refreshMine();
+  }).catch(() => { b.disabled = false; b.textContent = 'Confirm cash payment'; $('#pErr').textContent = 'Could not connect. Check your internet and try again.'; });
+}
+document.addEventListener('click', e => {
+  if (e.target.closest('#pOn')) payOnline();
+  else if (e.target.closest('#pCash')) payCash();
+  else if (e.target.closest('#pConfirm')) payCashConfirm();
+});
+function refreshMine() {
+  loadMine();
+  const a = payCtxI && payCtxI.auth;
+  if (a && a.phone && !a.token) post({ action: 'myLearning', id: a.id, phone: a.phone }).then(r => { if (r.ok) drawLearn(r.list || [], false); }).catch(() => {});
+}
+function loadMine(quiet) {
+  const items = buys();
+  if (!items.length || !API) return;
+  post({ action: 'myCourses', items }).then(r => {
+    const l = (r.list || []).filter(x => x.paid);
+    const dues = l.filter(x => x.next && x.balance > 0);
+    $('#mine').innerHTML = l.length ? `<a class="minelink" href="#learn"><b>My courses (${l.length})</b><span>See your fees, classes, exam and certificate</span></a>` +
+      dues.map(x => `<div class="own"><b>${esc(x.course)}</b><span class="due${x.next.status === 'Overdue' ? ' late' : ''}">${x.next.status === 'Overdue' ? 'Overdue' : 'Next'}: ${inr(x.next.amount)} ${x.next.status === 'Overdue' ? 'was due' : 'due'} ${esc(nice(x.next.due))}</span><button class="btn sm pri" data-payinst="${esc(x.id)}">Pay ${inr(x.next.amount)} now</button></div>`).join('') : '';
+    drawLearn(l, true);
+    const pend = store('mars_pending');
+    if (pend && l.some(x => x.id === pend.id)) { store('mars_pending', null); if (quiet) toast('Payment confirmed: ' + l.find(x => x.id === pend.id).course); }
+  }).catch(() => {});
+}
+function loadRzp() {
+  return window.Razorpay ? Promise.resolve() : new Promise((ok, no) => {
+    const s = document.createElement('script'); s.src = 'https://checkout.razorpay.com/v1/checkout.js'; s.onload = ok; s.onerror = no; document.head.appendChild(s);
+  });
+}
+function schedTable(s) {
+  return s && s.length > 1 ? `<table class="slist">${s.map(x => `<tr><td>${x.no} of ${s.length}</td><td>${esc(nice(x.due))}</td><td>${inr(x.amount)}</td><td class="${esc(x.status)}">${esc(x.status)}</td></tr>`).join('')}</table>` : '';
+}
+function receipt(r, paid, auth) {
+  $('#pf').hidden = true; $('#paid').hidden = false; $('#mine').hidden = true;
+  $('#tick').className = 'tick' + (paid ? '' : ' wait');
+  $('#paidT').textContent = paid ? (r.emi && !r.fullyPaid && r.paidSoFar === r.firstAmount ? 'First installment paid' : 'Payment successful') : 'Confirming your payment';
+  $('#paidMsg').textContent = !paid ? 'Your payment is being confirmed. Do not pay again. This page updates within 15 minutes; keep your Enrollment ID.'
+    : r.emi && !r.fullyPaid ? 'You are enrolled. We will email you a payment link before each installment date.' : 'You are enrolled. A receipt has been sent to your email.';
+  $('#rcpt').innerHTML = [['Enrollment ID', r.id], ['Name', r.name], ['Course', r.course], ['Training', r.ttype === 'individual' ? 'Individual (one-to-one)' : ''], [r.batchStart ? 'Batch start' : 'Preferred start', r.batchStart ? nice(r.batchStart) : r.batch], ['Plan', r.emi ? r.plan : ''],
+    [r.emi ? 'Paid so far' : paid ? 'Amount paid' : 'Amount', r.emi ? inr(r.paidSoFar || 0) : r.amount ? inr(r.amount) : ''], [r.emi ? 'Total fee' : '', r.emi ? inr(r.amount) : ''],
+    [r.cashPaid && r.onlinePaid ? 'Paid online' : '', inr(r.onlinePaid || 0)], [r.cashPaid ? 'Paid in cash' : '', inr(r.cashPaid || 0)],
+    [r.emi && r.balance ? 'Balance' : '', r.balance ? inr(r.balance) : ''], [r.cashPaid ? 'Payment ref' : 'Payment ID', r.ref], ['Paid on', r.paidAt], ['Status', r.status]]
+    .filter(x => x[0] && x[1]).map(([k, v]) => `<div><span>${esc(k)}</span><b>${esc(v)}</b></div>`).join('');
+  $('#rcptSched').innerHTML = paid ? schedTable(r.schedule) : '';
+  lastAuth = auth || lastAuth;
+  const nx = paid && r.next && lastAuth && lastAuth.id === r.id;
+  $('#payNext').hidden = !nx;
+  if (nx) { $('#payNext').textContent = `Pay installment ${r.next.no}: ${inr(r.next.amount)}`; $('#payNext').dataset.payinst = r.id; }
+  const wa = waLink(`Hi, I have enrolled in ${r.course}. My Enrollment ID is ${r.id}.`);
+  $('#paidWa').hidden = !wa; if (wa) $('#paidWa').href = wa;
+  scrollTo({ top: 0 });
+}
+$('#pf').addEventListener('submit', e => {
+  e.preventDefault();
+  // Part online + part cash, step 2: the online part is paid, confirm the cash with the HOD's code
+  if (splitSt) {
+    const otp = $('#otpIn').value.replace(/\D/g, ''), b = $('#pay'), err = m => { $('#pe').textContent = m; };
+    if (otp.length !== 6) { $('#otpBox').hidden = false; return err('Enter the 6-digit approval code from our office.'); }
+    b.disabled = true; $('#pay span').textContent = 'Confirming…';
+    return post({ action: 'confirmSplitCash', id: splitSt.id, token: splitSt.token, otp }).then(r => { b.disabled = false; if (!r.ok) { updPay(); return err(r.error); } finishSplit(r); })
+      .catch(() => { b.disabled = false; updPay(); err('Could not connect. Check your internet and try again.'); });
+  }
+  const f = Object.fromEntries(new FormData(e.target)), b = $('#pay'), err = m => { $('#pe').textContent = m; };
+  const v = k => (f[k] || '').trim(), c = D && D.courses.find(x => x.Title === f.course), bs = c && tt() === 'batch' ? batchesOf(c.Title) : [];
+  f.ttype = tt();
+  const bad = !c || !feeT(c) ? 'Please select a course.' : bs.length && !v('batchId') ? 'Please select a batch.' : !bs.length && !v('batch') ? 'Please choose a preferred batch start date.'
+    : v('name').length < 2 ? 'Please enter your full name.' : v('calling').replace(/\D/g, '').length < 10 ? 'Enter a valid phone number (at least 10 digits).'
+    : !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(v('email')) ? 'Enter a valid email address.' : !v('gender') ? 'Please select your sex.'
+    : !isoOk(v('dob')) || v('dob') > addDays(TODAY, -3650) ? 'Please enter your date of birth.' : !v('working') ? 'Please select your working status.' : (!$('#pTermsWrap').hidden && !f.terms) ? 'Please accept the payment terms to continue.' : '';
+  if (bad) return err(bad);
+  const sd = schedDates();
+  if (sd.error) return err(sd.error);
+  f.plan = selPlan; f.dates = sd.dates;
+  err(''); b.disabled = true; $('#pay span').textContent = 'Please wait…';
+  const reset = () => { b.disabled = false; updFee(); };
+  const otp = $('#otpIn').value.replace(/\D/g, '');
+  // Pay in cash: 1) send the approval code to our HOD, 2) the student types it and is enrolled
+  if (payMode === 'cash') {
+    if (cashSent && otp.length !== 6) return err('Enter the 6-digit approval code from our office.');
+    b.disabled = true; $('#pay span').textContent = cashSent ? 'Confirming…' : 'Sending approval code…';
+    return post(Object.assign({ action: 'createEnrollment', utm: UTM }, f, { method: cashSent ? 'cash' : 'cashotp', otp })).then(r => {
+      b.disabled = false;
+      if (!r.ok) { updPay(); return err(r.error); }
+      if (!cashSent) { cashSent = true; return showOtp(`Pay <b>${inr(r.amount)}</b> in cash at our office${r.total > r.amount ? ` (first installment of ${inr(r.total)})` : ''}. Our HOD has the approval code; you get it when you hand over the cash.`); }
+      saveBuy({ id: r.id, token: r.token }); store('mars_me', { name: v('name'), calling: v('calling'), email: v('email') });
+      setMode('online', true); e.target.elements.terms.checked = false; loadMine(); receipt(r, true, { id: r.id, token: r.token });
+    }).catch(() => { b.disabled = false; updPay(); err('Could not connect. Check your internet and try again.'); });
+  }
+  if (payMode === 'split') {
+    if (!splitAmt()) return err(`Enter the amount to pay online now: between ${inr(1)} and ${inr(dueNow() - 1)}.`);
+    f.method = 'split'; f.online = splitAmt();
+  }
+  const pend = store('mars_pending'), same = pend && pend.course === f.course && (pend.ttype || 'batch') === f.ttype && (pend.batchId || '') === (v('batchId') || '') && Number(pend.plan || 1) === selPlan;
+  const req = Object.assign({ action: 'createEnrollment', utm: UTM }, f, same && payMode === 'online' ? { prevId: pend.id, prevToken: pend.token } : {});
+  Promise.all([post(req), loadRzp()]).then(([o]) => {
+    if (!o.ok) throw Object.assign(new Error(o.error), { known: 1 });
+    if (o.alreadyPaid) { reset(); store('mars_pending', null); loadMine(); return receipt(o, true, req.prevId ? { id: req.prevId, token: req.prevToken } : null); }
+    saveBuy({ id: o.id, token: o.token });
+    if (o.split) { splitSt = { id: o.id, token: o.token, course: f.course, ttype: f.ttype, online: o.online, cash: o.cash, paid: false }; }
+    store('mars_pending', { id: o.id, token: o.token, course: f.course, ttype: f.ttype, batchId: v('batchId') || '', plan: selPlan });
+    store('mars_me', { name: v('name'), calling: v('calling'), email: v('email') });
+    const rz = new Razorpay({
+      key: o.keyId, order_id: o.orderId, amount: o.paise, currency: 'INR', name: o.org, description: o.course,
+      prefill: { name: v('name'), email: v('email'), contact: v('calling') }, notes: { enrollment_id: o.id },
+      theme: { color: getComputedStyle(document.documentElement).getPropertyValue('--brand').trim() || '#2A6EB5' },
+      modal: { ondismiss: () => { if (o.split) splitSt = null; reset(); err('Payment not completed. Your seat is not booked yet. You can try again.'); } },
+      handler: resp => {
+        b.disabled = true; $('#pay span').textContent = 'Confirming payment…';
+        post(Object.assign({ action: 'verifyPayment', id: o.id, token: o.token }, resp)).then(r => {
+          reset();
+          if (!r.ok) return err(r.error);
+          if (o.split && !r.paid) { splitSt.paid = true; store('mars_split', splitSt); store('mars_pending', null); return askSplitCode(); }
+          if (r.paid) store('mars_pending', null);
+          e.target.elements.terms.checked = false; loadMine(); receipt(r, r.paid, { id: o.id, token: o.token });
+        }).catch(() => { if (o.split) { splitSt.paid = true; store('mars_split', splitSt); return askSplitCode(); } reset(); receipt({ id: o.id, course: o.course, amount: o.total, firstAmount: o.paise / 100 }, false); });
+      }
+    });
+    rz.on('payment.failed', r => { if (o.split) splitSt = null; reset(); err((r.error && r.error.description) || 'Payment failed. No money was taken. Please try again.'); });
+    rz.open();
+  }).catch(x => { reset(); err(x.known ? x.message : 'Could not start the payment. Check your connection and try again.'); });
+});
+$('#pDone').addEventListener('click', () => { $('#paid').hidden = true; $('#pf').hidden = false; $('#mine').hidden = false; $('#pe').textContent = ''; prefill(); scrollTo({ top: 0 }); });
+$('#print').addEventListener('click', () => print());
+$('#lkBtn').addEventListener('click', () => {
+  const id = $('#lkId').value.trim(), ph = $('#lkPh').value.trim(), b = $('#lkBtn');
+  if (!id || ph.replace(/\D/g, '').length < 10) { $('#lkErr').textContent = 'Enter your Enrollment ID and the phone number you paid with.'; return; }
+  b.disabled = true; $('#lkErr').textContent = '';
+  post({ action: 'checkStatus', id, phone: ph }).then(r => {
+    b.disabled = false;
+    if (!r.ok) { $('#lkErr').textContent = r.error; return; }
+    $('#lookup').open = false; receipt(r, r.paid, { id: r.id, phone: ph });
+  }).catch(() => { b.disabled = false; $('#lkErr').textContent = 'Could not connect. Check your internet and try again.'; });
+});
+
+/* ---------- My courses: learning track (enrolled -> fees -> classes -> exam -> certificate) ---------- */
+function stepHtml(state, title, text, extra) {
+  const icon = { done: '<svg viewBox="0 0 24 24"><path d="M5 12l5 5 9-10"/></svg>', now: '<i></i>', lock: '<svg viewBox="0 0 24 24"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg>', bad: '!', todo: '' }[state] || '';
+  return `<li class="st ${state}"><span class="dotc">${icon}</span><div><b>${esc(title)}</b>${text ? `<small>${text}</small>` : ''}${extra || ''}</div></li>`;
+}
+function trackHtml(x, i, all) {
+  const fold = all && all.length > 1;
+  const g = x.progress || {}, overdue = x.next && x.next.status === 'Overdue', due = x.balance > 0;
+  const starts = isoOk(x.batchStart) ? x.batchStart : '', future = starts && starts > TODAY;
+  const chip = g.certReady ? ['Certified', 'ok'] : g.course === 'Completed' ? ['Completed', 'ok'] : g.course === 'Discontinued' ? ['Discontinued', 'off'] :
+    overdue ? ['Fee overdue', 'bad'] : due ? ['Fee due', 'warn'] : future && g.course !== 'In progress' ? ['Starting soon', 'info'] : ['In progress', 'info'];
+  const steps = [];
+  steps.push(stepHtml('done', 'Enrolled', `ID ${esc(x.id)}${x.paidAt ? ' · ' + esc(x.paidAt) : ''}`));
+  // fees
+  if (!due) steps.push(stepHtml('done', 'Fees fully paid', `${inr(x.amount)}${x.emi ? ' in ' + x.schedule.length + ' installments' : ''}`));
+  else steps.push(stepHtml(overdue ? 'bad' : 'now', overdue ? 'Fee overdue' : 'Fee due',
+    `${inr(x.paidSoFar || 0)} of ${inr(x.amount)} paid. Next ${inr(x.next.amount)} ${overdue ? 'was due' : 'due'} ${esc(nice(x.next.due))}${x.next.payBy && !overdue ? ', pay by ' + esc(nice(x.next.payBy)) : ''}.`,
+    `<div class="bar2"><i style="width:${Math.round(100 * (x.paidSoFar || 0) / (x.amount || 1))}%"></i></div><button class="btn sm pri" data-payinst="${esc(x.id)}">Pay ${inr(x.next.amount)} now</button>`));
+  // classes
+  if (g.course === 'Completed') steps.push(stepHtml('done', 'Course completed', g.completedOn ? 'On ' + esc(nice(g.completedOn)) : ''));
+  else if (g.course === 'Discontinued') steps.push(stepHtml('bad', 'Course discontinued', 'Contact us to rejoin a batch.'));
+  else if (!starts && g.course !== 'In progress') steps.push(stepHtml('todo', 'Classes', 'Your batch start date will be announced soon. We will inform you.'));
+  else if (future && g.course !== 'In progress') steps.push(stepHtml('todo', 'Classes', 'Batch starts ' + esc(nice(starts)) + (x.batchTiming ? ', ' + esc(x.batchTiming) : '')));
+  else steps.push(stepHtml('now', 'Classes in progress', starts ? 'Batch started ' + esc(nice(starts)) + (x.batchTiming ? ', ' + esc(x.batchTiming) : '') : ''));
+  // exam
+  if (g.exam === 'Passed') steps.push(stepHtml('done', 'Exam passed', ''));
+  else if (due) steps.push(stepHtml('lock', 'Final exam', 'Clear your pending fees to sit the exam.'));
+  else if (g.exam === 'Failed') steps.push(stepHtml('bad', 'Exam not cleared', 'Contact us to book a re-exam.'));
+  else if (x.examDate) steps.push(stepHtml('now', 'Final exam', (x.examDate >= TODAY ? 'Exam on ' : 'Exam taken on ') + esc(nice(x.examDate)) + (x.examDate < TODAY ? '. Result will be updated soon.' : '.')));
+  else if (g.course === 'Completed') steps.push(stepHtml('now', 'Final exam', 'You can now take the exam. Our team will share the date.'));
+  else steps.push(stepHtml('todo', 'Final exam', 'After you complete the course.'));
+  // certificate
+  if (g.certReady && g.certLink) steps.push(stepHtml('done', 'Certificate ready', g.certNo ? 'Certificate No. ' + esc(g.certNo) : '',
+    `<a class="btn sm pri" href="${esc(g.certLink)}" target="_blank" rel="noopener">Download certificate</a>`));
+  else if (g.certReady) steps.push(stepHtml('now', 'Certificate', 'Being prepared. You will be able to download it here soon.'));
+  else steps.push(stepHtml(due ? 'lock' : 'todo', 'Certificate', 'Given after course completion, passing the exam and paying all fees.'));
+  const sched = x.emi && x.schedule && x.schedule.length > 1 ? `<details class="inst"><summary>Installment schedule</summary><table class="slist">${x.schedule.map(q => `<tr><td>${q.no} of ${x.schedule.length}</td><td>${esc(nice(q.due) || 'At enrollment')}</td><td>${inr(q.amount)}</td><td class="${esc(q.status)}">${esc(q.status)}</td></tr>`).join('')}</table></details>` : '';
+  const when = starts ? `<span class="bwhen">Batch ${future ? 'starts' : 'started'} ${esc(nice(starts))}${x.batchTiming ? ' · ' + esc(x.batchTiming) : ''}</span>` : '<span class="bwhen tba">Batch date: to be announced</span>';
+  const head = `<div><h3>${esc(x.course)}</h3><small>${esc(x.plan)} · ID ${esc(x.id)}</small>${when}</div>`;
+  if (!fold) return `<article class="trk"><header>${head}<span class="chip ${chip[1]}">${chip[0]}</span></header><ol class="steps">${steps.join('')}</ol>${sched}</article>`;
+  return `<article class="trk fold" data-fold><header>${head}<div class="hd"><span class="chip ${chip[1]}">${chip[0]}</span><button type="button" class="tg" aria-expanded="false"><svg viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg><span>See details</span></button></div></header><div class="body"><ol class="steps">${steps.join('')}</ol>${sched}</div></article>`;
+}
+document.addEventListener('click', e => {
+  const h = e.target.closest('.trk.fold header');
+  if (!h || e.target.closest('a,[data-payinst]')) return;
+  const a = h.parentElement, open = !a.classList.contains('open');
+  a.classList.toggle('open', open);
+  const b = a.querySelector('.tg'); b.setAttribute('aria-expanded', String(open)); b.querySelector('span').textContent = open ? 'Hide details' : 'See details';
+});
+const ymdIso = s => { const v = String(s || '').trim(); if (/^\d{4}-\d\d-\d\d$/.test(v)) return v; const m = v.match(/^(\d\d)\/(\d\d)\/(\d{4})$/); return m ? `${m[3]}-${m[2]}-${m[1]}` : ''; };
+function drawLearn(l, fromPhone) {
+  const box = $('#learnList'); if (!box) return;
+  if (!l.length) { if (fromPhone) return; box.innerHTML = '<p class="hint">No paid enrollments found.</p>'; return; }
+  box.innerHTML = l.map((x, i, a) => trackHtml(x, i, a)).join('');
+  $('#learnSum').textContent = 'Find courses enrolled with another phone number';
+  if (!fromPhone) $('#learnLook').open = false;
+}
+$('#lnBtn').addEventListener('click', () => {
+  const id = $('#lnId').value.trim(), ph = $('#lnPh').value.trim(), b = $('#lnBtn');
+  if (!id || ph.replace(/\D/g, '').length < 10) { $('#lnErr').textContent = 'Enter your Enrollment ID and the phone number you enrolled with.'; return; }
+  b.disabled = true; $('#lnErr').textContent = '';
+  post({ action: 'myLearning', id, phone: ph }).then(r => {
+    b.disabled = false;
+    if (!r.ok) { $('#lnErr').textContent = r.error; return; }
+    (r.list || []).forEach(x => { authById[x.id] = { id: x.id, phone: ph }; });
+    drawLearn(r.list || [], false);
+  }).catch(() => { b.disabled = false; $('#lnErr').textContent = 'Could not connect. Check your internet and try again.'; });
+});
+
+/* ---------- Start ---------- */
+const today = new Date(Date.now() - new Date().getTimezoneOffset() * 6e4).toISOString().slice(0, 10);
+$('#f').elements.batch.min = $('#pf').elements.batch.min = today;
+const CACHE = 'mars_app_data_v3';
+const SPLASH_AT = Date.now();
+function hideSplash() {
+  const sp = $('#splash');
+  if (!sp.classList.contains('on')) { if (D) greet(); return; }             // normal day: no opening screen
+  setTimeout(() => { sp.classList.add('gone'); if (D) setTimeout(greet, 300); }, Math.max(0, 1300 - (Date.now() - SPLASH_AT)));
+}
+setTimeout(hideSplash, 3000);                                                 // never keep people waiting on a slow network
+try { const c = localStorage.getItem(CACHE); if (c) { const cd = JSON.parse(c); if (cd.festival && isoOk(cd.festival.end) && cd.festival.end < TODAY) cd.festival = null; render(cd); } } catch (e) {}
+function linkReturn() {
+  const q = new URLSearchParams(location.search), lid = q.get('razorpay_payment_link_id');
+  if (!lid) return;
+  history.replaceState(null, '', location.pathname + '#enroll');
+  show('enroll', false);
+  post({ action: 'syncLink', linkId: lid }).then(r => {
+    if (!r.ok) return toast(r.error);
+    toast(r.paid ? `Installment ${r.no} of ${r.of} paid (${inr(r.amount)}). ${r.fullyPaid ? 'Your fee is fully paid.' : 'Thank you!'}` : 'Payment not completed yet. If money was deducted, it will show here within 15 minutes.');
+    loadMine();
+  }).catch(() => {});
+}
+function fail(msg) {
+  if (D) return;
+  $('#heroT').textContent = 'Could not load the courses';
+  $('#heroS').textContent = msg;
+  $('#courseList').innerHTML = '<div class="empty"><button class="btn pri" onclick="location.reload()">Try again</button></div>';
+}
+if (!API || /PASTE_/.test(API)) { hideSplash(); fail('Add your Apps Script web app link in config.js.'); }
+else fetch(API + '?action=data', { cache: 'no-store' })
+  .then(r => r.text())
+  .then(t => {
+    let d;
+    try { d = JSON.parse(t); } catch (e) {
+      throw new Error(/authori[sz]/i.test(t) ? 'Apps Script needs permission: open Apps Script, run setupSheet, click Allow, then deploy a New version.'
+        : 'The server sent a web page instead of data. In Apps Script check Deploy > Manage deployments: Execute as Me, Who has access Anyone.');
+    }
+    if (d.error) throw new Error(d.error);
+    try { localStorage.setItem(CACHE, JSON.stringify(d)); } catch (e) {}
+    render(d); if (store('mars_pending')) loadMine(true); linkReturn(); hideSplash();
+  })
+  .catch(err => {
+    const msg = (err && err.message) || 'Check your internet connection and try again.';
+    hideSplash();
+    if (D) { $('#ver').className = 'ver old'; $('#ver').textContent = 'Showing saved data. Could not load the latest: ' + msg; }   // old data on screen: say why
+    fail(msg);
+  });
+</script>
+
+<!-- Install the app (opened from the website's "Get the App" button: ?install=1) -->
+<style>
+.ins-bg{position:fixed;inset:0;background:rgba(10,20,40,.45);z-index:9998;opacity:0;transition:opacity .25s}
+.ins{position:fixed;left:50%;bottom:0;transform:translate(-50%,105%);width:min(460px,100%);background:#fff;border-radius:22px 22px 0 0;padding:22px 22px calc(22px + env(safe-area-inset-bottom));z-index:9999;box-shadow:0 -20px 50px rgba(0,0,0,.25);transition:transform .3s cubic-bezier(.2,.8,.2,1);font-family:inherit;color:#0E1A2B}
+.ins.on{transform:translate(-50%,0)}.ins-bg.on{opacity:1}
+.ins .top{display:flex;gap:14px;align-items:center}
+.ins img{width:56px;height:56px;border-radius:14px;box-shadow:0 4px 14px rgba(0,0,0,.15)}
+.ins h3{margin:0;font-size:1.15rem}.ins p{margin:2px 0 0;color:#5B6B7C;font-size:.92rem}
+.ins ol{margin:16px 0 4px;padding-left:20px;line-height:1.7;font-size:.95rem}
+.ins .acts{display:flex;gap:10px;margin-top:18px}
+.ins button{flex:1;min-height:48px;border-radius:14px;border:0;font:700 1rem inherit;cursor:pointer}
+.ins .go{background:#1B4F86;color:#fff}.ins .no{background:#EEF2F7;color:#0E1A2B}
+</style>
+<script>
+(function () {
+  var deferred = null, want = /[?&]install=1/.test(location.search);
+  var standalone = matchMedia('(display-mode: standalone)').matches || navigator.standalone;
+  var ios = /iphone|ipad|ipod/i.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+  addEventListener('beforeinstallprompt', function (e) { e.preventDefault(); deferred = e; if (want && !standalone) render(); });
+  addEventListener('appinstalled', function () { close(); });
+  function close() { var a = document.getElementById('ins'), b = document.getElementById('insbg'); if (a) a.classList.remove('on'); if (b) { b.classList.remove('on'); setTimeout(function () { b.remove(); a && a.remove(); }, 300); } }
+  function render() {
+    if (document.getElementById('ins')) document.getElementById('ins').remove(), document.getElementById('insbg').remove();
+    var body;
+    if (deferred) body = '<p style="margin-top:14px">Add the MARS app to your phone for one-tap access to courses, enquiries and enrollment.</p><div class="acts"><button class="no" data-x>Not now</button><button class="go" data-i>Install app</button></div>';
+    else if (ios) body = '<ol><li>Tap the <b>Share</b> button <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#1B4F86" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px"><path d="M12 15V3M8 7l4-4 4 4"/><path d="M5 11v8a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-8"/></svg> at the bottom of Safari</li><li>Scroll and tap <b>Add to Home Screen</b></li><li>Tap <b>Add</b></li></ol><div class="acts"><button class="go" data-x>OK</button></div>';
+    else body = '<ol><li>Tap the browser menu <b>⋮</b> (top right)</li><li>Tap <b>Install app</b> or <b>Add to Home screen</b></li><li>Tap <b>Install</b></li></ol><div class="acts"><button class="go" data-x>OK</button></div>';
+    var bg = document.createElement('div'); bg.className = 'ins-bg'; bg.id = 'insbg';
+    var el = document.createElement('div'); el.className = 'ins'; el.id = 'ins'; el.setAttribute('role', 'dialog'); el.setAttribute('aria-label', 'Install the MARS app');
+    el.innerHTML = '<div class="top"><img src="icon-192.png" alt=""><div><h3>Get the MARS app</h3><p>Free · works on Android, iPhone and desktop</p></div></div>' + body;
+    document.body.append(bg, el);
+    requestAnimationFrame(function () { bg.classList.add('on'); el.classList.add('on'); });
+    bg.onclick = close;
+    el.querySelectorAll('[data-x]').forEach(function (b) { b.onclick = close; });
+    var i = el.querySelector('[data-i]');
+    if (i) i.onclick = function () { deferred.prompt(); deferred.userChoice.then(function () { deferred = null; close(); }); };
+  }
+  if (want && !standalone) {
+    try { history.replaceState(null, '', location.pathname + location.hash); } catch (e) {}
+    addEventListener('load', function () { setTimeout(function () { if (!document.getElementById('ins')) render(); }, deferred ? 0 : 2500); });
+  }
+})();
+</script>
+</body>
+</html>
