@@ -63,6 +63,49 @@ const COURSES = [
   ["Career Skills", "Career Communication & Interview Skills Program", "A 4-month program to build spoken English, confidence and interview skills for the workplace.", "", "3 months"]
 ].map(([cat, title, desc, badge, dur]) => ({ cat, title, desc, badge, dur }));
 
+/* Programs made of several modules: shown as chips on the course card and in a "Modules" window */
+const MOD_INFO = {
+  'Advanced Excel': ['XL', '#16A34A', 'Formulas, lookups, pivot tables, dashboards and MIS reports'],
+  'Excel VBA': ['VBA', '#0F766E', 'Macros, loops, user forms and one-click report automation'],
+  'Power BI': ['BI', '#CA8A04', 'Power Query, data modelling, DAX and interactive dashboards'],
+  'SQL': ['SQL', '#2563EB', 'Queries, joins, aggregations and analysis in SQL Server'],
+  'Python': ['PY', '#4F46E5', 'Python, NumPy, Pandas and data visualisation'],
+  'Machine Learning': ['ML', '#9333EA', 'Statistics, key algorithms and building predictive models'],
+  'Generative AI': ['AI', '#DB2777', 'ChatGPT, Claude and Copilot for analysis, reports and automation'],
+  'MS Word': ['W', '#1D4ED8', 'Professional documents, styles, tables, templates and mail merge'],
+  'MS PowerPoint': ['P', '#C2410C', 'Impactful presentations with SmartArt, charts and animation'],
+  'MS Excel': ['X', '#15803D', 'Excel from basics to advanced: formulas, lookups and pivots']
+};
+const DA = ['Advanced Excel', 'Excel VBA', 'Power BI', 'SQL', 'Python'], MIS = ['Advanced Excel', 'Excel VBA', 'Power BI'];
+const MODULES = {
+  'data analytics': DA, 'data analytics with ai': DA.concat('Generative AI'),
+  'business analytics': DA.concat('Machine Learning'), 'business analytics with gen ai': DA.concat('Machine Learning', 'Generative AI'),
+  'mis specialist': MIS, 'mis with gen ai': MIS.concat('Generative AI'),
+  'ms office': ['MS Word', 'MS PowerPoint', 'MS Excel']
+};
+const modulesFor = title => MODULES[normT(title)] || null;
+const modChips = l => `<div class="mods">${l.map(m => { const i = MOD_INFO[m] || ['', '#334155']; return `<span style="--mc:${i[1]}">${esc(m)}</span>`; }).join('<i>+</i>')}</div>`;
+function showModules(c) {
+  const l = modulesFor(c.title); if (!l) return;
+  let mw = $('#mw');
+  if (!mw) {
+    mw = document.createElement('div'); mw.className = 'mw'; mw.id = 'mw'; mw.hidden = true;
+    mw.setAttribute('role', 'dialog'); mw.setAttribute('aria-modal', 'true');
+    document.body.appendChild(mw);
+    const close = () => { mw.hidden = true; document.body.style.overflow = ''; };
+    mw.addEventListener('click', e => { if (e.target === mw || e.target.closest('.x')) close(); });
+    addEventListener('keydown', e => { if (e.key === 'Escape' && !mw.hidden) close(); });
+  }
+  const out = outlineFor(c.title);
+  mw.setAttribute('aria-label', c.title + ' modules');
+  mw.innerHTML = `<div class="card"><button type="button" class="x" aria-label="Close">×</button>
+    <small>${esc(c.cat)}${c.dur ? ' · ' + esc(c.dur) : ''}</small><h3>${esc(c.title)}</h3>
+    <p class="sub">${l.length} modules in one program, taught in this order</p>
+    <ol>${l.map((m, k) => { const i = MOD_INFO[m] || ['•', '#334155', '']; return `<li style="--mc:${i[1]}"><b class="ic">${esc(i[0])}</b><div><span class="n">Module ${k + 1}</span><strong>${esc(m)}</strong>${i[2] ? `<em>${esc(i[2])}</em>` : ''}</div></li>`; }).join('')}</ol>
+    <div class="act">${out ? `<a class="btn ghost" href="${esc(out)}" download rel="noopener">Download full outline</a>` : ''}<a class="btn" href="${esc(enquire(c.title))}" target="_blank" rel="noopener">Enquire about this program</a></div></div>`;
+  mw.hidden = false; document.body.style.overflow = 'hidden'; $('.x', mw).focus();
+}
+
 /* ===== Shared behaviour ===== */
 const $ = (s, r = document) => r.querySelector(s), $$ = (s, r = document) => [...r.querySelectorAll(s)];
 const esc = s => String(s == null ? '' : s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
@@ -159,12 +202,13 @@ function coursesPage() {
   chips.innerHTML = cats.map(c => `<button type="button" data-c="${esc(c)}" aria-pressed="${c === cat}">${esc(c)}</button>`).join('');
   chips.addEventListener('click', e => { const b = e.target.closest('button'); if (!b) return; cat = b.dataset.c; $$('button', chips).forEach(x => x.setAttribute('aria-pressed', x === b)); draw(); });
   q.addEventListener('input', draw);
+  list.addEventListener('click', e => { const a = e.target.closest('[data-mods]'); if (!a) return; e.preventDefault(); showModules(COURSES.find(c => c.title === a.dataset.mods)); });
   function draw() {
     const s = q.value.trim().toLowerCase();
     const l = COURSES.filter(c => (cat === 'All' || c.cat === cat) && (!s || (c.title + ' ' + c.cat + ' ' + c.desc).toLowerCase().includes(s)));
     count.textContent = l.length + (l.length === 1 ? ' course' : ' courses');
-    list.innerHTML = l.map(c => `<article class="cc"><small>${esc(c.cat)}${c.badge ? ' · ' + esc(c.badge) : ''}</small><h3>${esc(c.title)}</h3><p>${esc(c.desc)}</p>
-      <div class="row"><span>${c.dur ? esc(c.dur) + ' · ' : ''}Online / Classroom · Certificate</span><div class="ra">${demoFor(c.title) ? `<a class="dm" href="#" data-play="${esc(DEMOS.indexOf(demoFor(c.title)))}" aria-label="Watch a demo class of ${esc(c.title)}"><svg viewBox="0 0 24 24"><path d="M7 4v16l13-8z"/></svg>Demo</a>` : ''}${outlineFor(c.title) ? `<a class="dl" href="${esc(outlineFor(c.title))}" download rel="noopener" aria-label="Download the ${esc(c.title)} course outline (PDF)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4v11m0 0-4-4m4 4 4-4M5 20h14"/></svg>Outline</a>` : ''}<a href="${esc(enquire(c.title))}" target="_blank" rel="noopener">Enquire</a></div></div></article>`).join('')
+    list.innerHTML = l.map(c => `<article class="cc"><small>${esc(c.cat)}${c.badge ? ' · ' + esc(c.badge) : ''}</small><h3>${esc(c.title)}</h3><p>${esc(c.desc)}</p>${modulesFor(c.title) ? modChips(modulesFor(c.title)) : ''}
+      <div class="row"><span>${c.dur ? esc(c.dur) + ' · ' : ''}Online / Classroom · Certificate</span><div class="ra">${modulesFor(c.title) ? `<a class="md" href="#" data-mods="${esc(c.title)}" aria-label="See the modules of ${esc(c.title)}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M4 6h16M4 12h16M4 18h10"/></svg>Modules</a>` : ''}${demoFor(c.title) ? `<a class="dm" href="#" data-play="${esc(DEMOS.indexOf(demoFor(c.title)))}" aria-label="Watch a demo class of ${esc(c.title)}"><svg viewBox="0 0 24 24"><path d="M7 4v16l13-8z"/></svg>Demo</a>` : ''}${outlineFor(c.title) ? `<a class="dl" href="${esc(outlineFor(c.title))}" download rel="noopener" aria-label="Download the ${esc(c.title)} course outline (PDF)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4v11m0 0-4-4m4 4 4-4M5 20h14"/></svg>Outline</a>` : ''}<a href="${esc(enquire(c.title))}" target="_blank" rel="noopener">Enquire</a></div></div></article>`).join('')
       || `<div class="none">No course matches “${esc(q.value)}”. <a href="${esc(wa('Hi MARS, do you teach ' + q.value + '?'))}" target="_blank" rel="noopener">Ask us on WhatsApp</a>; we may still teach it.</div>`;
   }
   draw();
