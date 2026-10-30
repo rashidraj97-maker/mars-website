@@ -2,9 +2,9 @@
 
 /* ===== Settings you may change ===== */
 const SITE = {
-  // Link to your enquiry / enroll app on Netlify (for example 'https://mars-app.netlify.app').
+  // Link to your enquiry / enroll app (hosted on Cloudflare at app.marstraining.in).
   // Leave as it is and the Enquire buttons open WhatsApp instead.
-  enquiryApp: 'https://marstraining.netlify.app',
+  enquiryApp: 'https://app.marstraining.in',
   whatsapp: '919870259245',
   phone: '+91 98702 59245',
   email: 'contactus@marstraining.in',
