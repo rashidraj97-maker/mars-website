@@ -98,6 +98,7 @@ document.addEventListener('DOMContentLoaded', () => {
   if (document.body.dataset.page === 'courses') coursesPage();
   if (document.body.dataset.page === 'gallery') galleryPage();
   if (document.body.dataset.page === 'join') joinPage();
+  if (document.body.dataset.page === 'corporate') corporatePage();
   if (document.body.dataset.page === 'jobs') jobsPage('#jobsAll', 0);
   if (document.body.dataset.page === 'home') jobsPage('#jobsHome', 3);
 });
@@ -312,4 +313,65 @@ function jobsPage(sel, limit) {
     });
     if (lb) { const close = () => { lb.hidden = true; document.body.style.overflow = ''; }; $('#lbx').onclick = close; lb.onclick = e => { if (e.target === lb) close(); }; addEventListener('keydown', e => { if (e.key === 'Escape' && !lb.hidden) close(); }); }
   }).catch(() => { if (!limit) box.innerHTML = '<div class="none">Could not load job openings right now. Please try again later, or <a href="' + esc(wa('Hi MARS, are there any job openings?')) + '" target="_blank" rel="noopener">ask us on WhatsApp</a>.</div>'; });
+}
+
+/* Corporate enquiry: the questions come from the "Corporate Form" tab of the Google Sheet */
+const CORP_FALLBACK = [
+  { q: 'Company / Organisation name', type: 'text', required: true }, { q: 'Contact person', type: 'text', required: true },
+  { q: 'Designation', type: 'text', help: 'e.g. HR Manager, L&D Head' }, { q: 'Work email', type: 'email', required: true },
+  { q: 'Mobile number', type: 'phone', required: true }, { q: 'City / Location', type: 'text', required: true },
+  { q: 'Number of participants', type: 'number', required: true },
+  { q: 'Training required', type: 'multi', required: true, options: COURSES.map(c => c.title) },
+  { q: 'Training mode', type: 'radio', required: true, options: ['On-site at our office', 'Live online', 'At MARS training centre', 'Hybrid'] },
+  { q: 'Preferred start date', type: 'date' }, { q: 'Requirements / message', type: 'textarea' }];
+function corporatePage() {
+  const form = $('#cform'), box = $('#cfields'), err = $('#cerr'), btn = $('#cbtn');
+  let fields = [];
+  const id = i => 'cf' + i;
+  function draw(list) {
+    fields = list;
+    box.innerHTML = list.map((f, i) => {
+      const req = f.required ? ' <em>*</em>' : '', help = f.help ? `<span class="help">${esc(f.help)}</span>` : '', nm = `name="${id(i)}"`;
+      if (f.type === 'multi') return `<fieldset class="wide" data-i="${i}"><legend>${esc(f.q)}${req} <span class="mcount" id="${id(i)}n"></span></legend>${help}
+        ${f.options.length > 8 ? `<input class="mfind" type="search" placeholder="Search…" data-find="${i}">` : ''}
+        <div class="${f.options.length > 8 ? 'mlist' : 'opts'}">${f.options.map(o => `<label class="${f.options.length > 8 ? '' : 'opt'}"><input type="checkbox" ${nm} value="${esc(o)}">${esc(o)}</label>`).join('')}</div></fieldset>`;
+      if (f.type === 'radio') return `<fieldset class="wide" data-i="${i}"><legend>${esc(f.q)}${req}</legend>${help}<div class="opts">${f.options.map(o => `<label class="opt"><input type="radio" ${nm} value="${esc(o)}">${esc(o)}</label>`).join('')}</div></fieldset>`;
+      if (f.type === 'textarea') return `<label class="wide"><span>${esc(f.q)}${req}</span><textarea ${nm} rows="4" placeholder="${esc(f.help || '')}"></textarea></label>`;
+      if (f.type === 'select') return `<label><span>${esc(f.q)}${req}</span><select ${nm}><option value="">Select</option>${f.options.map(o => `<option>${esc(o)}</option>`).join('')}</select>${help}</label>`;
+      const t = { email: 'email', phone: 'tel', number: 'number', date: 'date' }[f.type] || 'text';
+      const extra = f.type === 'phone' ? ' inputmode="tel" autocomplete="tel"' : f.type === 'email' ? ' autocomplete="email"' : f.type === 'number' ? ' min="0" inputmode="numeric"' : '';
+      return `<label><span>${esc(f.q)}${req}</span><input type="${t}" ${nm}${extra} placeholder="${f.type === 'date' ? '' : esc(f.help || '')}"></label>`;
+    }).join('');
+  }
+  box.addEventListener('input', e => {
+    const fi = e.target.dataset.find;
+    if (fi !== undefined) { const q = e.target.value.toLowerCase(); $$('.mlist label', e.target.parentNode).forEach(l => { l.hidden = q && !l.textContent.toLowerCase().includes(q); }); }
+  });
+  box.addEventListener('change', e => { const fs = e.target.closest('fieldset'); if (fs && e.target.type === 'checkbox') { const n = $$('input:checked', fs).length; $('#' + id(fs.dataset.i) + 'n').textContent = n ? n + ' selected' : ''; } });
+  const api = /^https:\/\/script\.google\.com\//.test(SITE.api);
+  (api ? fetch(SITE.api + '?action=corpform').then(r => r.json()) : Promise.reject()).then(d => {
+    if (!d || !d.ok || !d.fields || !d.fields.length) throw 0;
+    if (d.title) $('#ctitle').textContent = d.title; if (d.intro) $('#cintro').textContent = d.intro; if (d.success) $('#cok').textContent = d.success;
+    draw(d.fields);
+  }).catch(() => draw(CORP_FALLBACK));
+  const fail = m => { err.textContent = m; err.hidden = false; btn.disabled = false; btn.textContent = 'Send enquiry'; err.scrollIntoView({ behavior: 'smooth', block: 'center' }); };
+  form.addEventListener('submit', async e => {
+    e.preventDefault(); err.hidden = true;
+    const answers = {};
+    for (let i = 0; i < fields.length; i++) {
+      const f = fields[i], els = $$(`[name="${id(i)}"]`, form);
+      const v = f.type === 'multi' ? els.filter(x => x.checked).map(x => x.value) : f.type === 'radio' ? (els.find(x => x.checked) || {}).value || '' : (els[0] ? els[0].value.trim() : '');
+      if (f.required && (Array.isArray(v) ? !v.length : !v)) return fail('Please fill in: ' + f.q);
+      if (v && f.type === 'email' && !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(v)) return fail('Please enter a valid email address.');
+      if (v && f.type === 'phone' && v.replace(/\D/g, '').length < 10) return fail('Please enter a valid 10-digit mobile number.');
+      answers[f.q] = v;
+    }
+    if (!api) return fail('Online enquiries are not set up yet. Please email contactus@marstraining.in.');
+    btn.disabled = true; btn.textContent = 'Sending…';
+    try {
+      const res = await fetch(SITE.api, { method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: JSON.stringify({ action: 'submitCorporate', answers, website: form.website.value }) }).then(r => r.json());
+      if (!res.ok) return fail(res.error || 'Something went wrong. Please try again.');
+      form.hidden = true; $('#cdone').hidden = false; $('#cdone').scrollIntoView({ behavior: 'smooth', block: 'center' });
+    } catch (x) { fail('Could not send. Check your internet connection, or email contactus@marstraining.in.'); }
+  });
 }

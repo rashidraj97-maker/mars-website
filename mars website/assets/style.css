@@ -646,3 +646,21 @@ html{scroll-padding-top:96px}
 .vp .cap b{color:#fff}
 .vp .x{position:absolute;top:14px;right:14px;width:46px;height:46px;border:0;border-radius:50%;background:rgba(255,255,255,.12);color:#fff;font-size:1.8rem;cursor:pointer}
 .vp .x:hover{background:rgba(255,255,255,.24)}
+
+/* Corporate enquiry form */
+.cfields{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.cfields .wide{grid-column:1/-1}
+.cfields label>em{font-style:normal;color:#B91C1C}
+.cfields .help{font-weight:400;font-size:.82rem;color:var(--muted)}
+.cfields fieldset{border:0;margin:0;padding:0;display:grid;gap:8px}
+.cfields legend{font-weight:600;font-size:.92rem;color:var(--ink);margin-bottom:6px;padding:0}
+.cfields .opts{display:flex;flex-wrap:wrap;gap:8px}
+.cfields .opt{display:inline-flex;align-items:center;gap:8px;padding:9px 14px;border:1px solid #CBD5E1;border-radius:999px;font-weight:500;font-size:.9rem;cursor:pointer;background:#fff;transition:all .15s}
+.cfields .opt input{width:auto;margin:0;accent-color:var(--brand)}
+.cfields .opt:has(input:checked){border-color:var(--brand);background:rgba(42,110,181,.08);color:var(--brand)}
+.cfields .mlist{max-height:240px;overflow:auto;border:1px solid #CBD5E1;border-radius:12px;padding:10px;display:grid;grid-template-columns:1fr 1fr;gap:4px 12px;background:var(--paper)}
+.cfields .mlist label{display:flex;align-items:center;gap:8px;font-weight:500;font-size:.9rem;padding:4px 2px;cursor:pointer}
+.cfields .mlist input{width:auto;accent-color:var(--brand)}
+.cfields .mfind{padding:9px 12px!important;font-size:15px!important}
+.cfields .mcount{font-weight:400;font-size:.82rem;color:var(--brand)}
+@media(max-width:560px){.cfields{grid-template-columns:1fr}.cfields .mlist{grid-template-columns:1fr}}
