@@ -198,7 +198,7 @@ function playDemo(v) {
     addEventListener('keydown', e => { if (e.key === 'Escape' && !vp.hidden) close(); });
   }
   $('.fr', vp).innerHTML = `<iframe src="${esc(embedOf(v))}" title="${esc(v.title)}" allow="autoplay; encrypted-media; picture-in-picture; fullscreen" allowfullscreen referrerpolicy="strict-origin-when-cross-origin"></iframe>`;
-  $('.cap', vp).innerHTML = `<span><b>${esc(v.title)}</b>${v.course ? ' · ' + esc(v.course) : ''}</span><a class="btn pri" href="${esc(bookDemo(v.course))}" target="_blank" rel="noopener">Book a free live demo</a>`;
+  $('.cap', vp).innerHTML = `<span><b>${esc(v.title)}</b>${v.course ? ' · ' + esc(v.course) : ''}</span>`;
   vp.hidden = false; document.body.style.overflow = 'hidden';
 }
 document.addEventListener('click', e => { const b = e.target.closest('[data-play]'); if (!b) return; e.preventDefault(); const v = DEMOS[+b.dataset.play]; if (v) playDemo(v); });
