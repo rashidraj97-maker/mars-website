@@ -106,6 +106,28 @@ function showModules(c) {
   mw.hidden = false; document.body.style.overflow = 'hidden'; $('.x', mw).focus();
 }
 
+/* Scrolling offer line at the top of every page: running offers from the "Offers" tab (same as the app) */
+function offerBar() {
+  if (!/^https:\/\/script\.google\.com\//.test(SITE.api) || $('#obar')) return;
+  const show = list => {
+    const t = (list || []).map(o => String(o.text || '').trim()).filter(Boolean);
+    if (!t.length || $('#obar')) return;
+    const one = t.map(x => `<span>${esc(x)}</span>`).join('<i aria-hidden="true">✦</i>') + '<i aria-hidden="true">✦</i>';
+    const bar = document.createElement('a');
+    bar.className = 'obar'; bar.id = 'obar'; bar.target = '_blank'; bar.rel = 'noopener';
+    bar.href = hasApp ? SITE.enquiryApp.replace(/\/?$/, '/') + '#courses' : wa('Hi MARS, I would like to know about your current offer.');
+    bar.setAttribute('aria-label', 'Current offers: ' + t.join('. ') + '. Open the app to enroll.');
+    bar.innerHTML = `<b class="ol">Offer</b><span class="ow"><span class="ot" style="--n:${t.join(' ').length}">${one}${one}</span></span><span class="oc">Enroll now →</span>`;
+    document.body.insertBefore(bar, document.body.firstChild);
+  };
+  try { const c = JSON.parse(sessionStorage.getItem('mars_offers1') || 'null'); if (c && Date.now() - c.at < 10 * 60e3) return show(c.l); } catch (e) {}
+  fetch(SITE.api + '?action=offers').then(r => r.json()).then(d => {
+    const l = (d && d.ok && d.offers) || [];
+    try { sessionStorage.setItem('mars_offers1', JSON.stringify({ at: Date.now(), l })); } catch (e) {}
+    show(l);
+  }).catch(() => {});
+}
+
 /* ===== Shared behaviour ===== */
 const $ = (s, r = document) => r.querySelector(s), $$ = (s, r = document) => [...r.querySelectorAll(s)];
 const esc = s => String(s == null ? '' : s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
@@ -114,6 +136,7 @@ const wa = msg => `https://wa.me/${SITE.whatsapp}?text=${encodeURIComponent(msg 
 const enquire = course => hasApp ? SITE.enquiryApp.replace(/\/?$/, '/') + '#enquire' : wa(course ? `Hi MARS, I would like to know more about ${course}.` : '');
 
 document.addEventListener('DOMContentLoaded', () => {
+  offerBar();
   // menu on phones
   const nav = $('#nav'), burger = $('#burger');
   if (burger) burger.addEventListener('click', () => { const o = nav.classList.toggle('open'); burger.setAttribute('aria-expanded', o); });
