@@ -133,20 +133,26 @@ function offerBar() {
 /* "Trusted by" strip on the home page: company names, replaced by their logo when one is in the Drive folder "MARS Client Logos" */
 function clientStrip() {
   const tr = $('#track'); if (!tr) return;
-  const base = $$('span', tr).map(s => s.textContent.trim()).filter(Boolean);
+  const base = $$('span', tr).map(s => s.textContent.trim()).filter(Boolean), doms = {};
+  $$('span[data-d]', tr).forEach(s => { doms[s.textContent.trim()] = s.dataset.d; });
   const key = s => normT(s).replace(/\b(ltd|limited|pvt|private|india|group|corp|corporation|co|company|the)\b/g, '').replace(/\s+/g, ' ').trim();
   const alias = { 'iocl': 'indian oil iocl', 'nrl': 'numaligarh refinery', 'indian oil': 'indian oil iocl', 'sbi sg': 'sbi sg global securities' };
   const draw = logos => {
     const left = (logos || []).slice(), items = base.map(n => {
       const k = key(n), i = left.findIndex(l => { const m = key(alias[normT(l.name)] || l.name); return m && (m === k || k.indexOf(m + ' ') === 0 || m.indexOf(k + ' ') === 0 || (m.length > 3 && k.startsWith(m))); });
-      return i >= 0 ? { n, id: left.splice(i, 1)[0].id } : { n };
+      return i >= 0 ? { n, id: left.splice(i, 1)[0].id } : { n, d: doms[n] };
     }).concat(left.map(l => ({ n: l.name, id: l.id })));
     items.sort((a, b) => (b.id ? 1 : 0) - (a.id ? 1 : 0));                        // logos first, names after
-    const one = items.map(x => x.id ? `<span class="lg" title="${esc(x.n)}"><img src="https://drive.google.com/thumbnail?id=${esc(x.id)}&sz=w400" alt="${esc(x.n)}" loading="lazy" referrerpolicy="no-referrer"></span>` : `<span>${esc(x.n)}</span>`).join('');
+    const ini = n => n.replace(/\(.*?\)/g, '').split(/[\s&-]+/).filter(w => /^[A-Za-z]/.test(w)).slice(0, 2).map(w => w[0]).join('').toUpperCase();
+    const hue = n => [...n].reduce((a, c) => a + c.charCodeAt(0), 0) % 360;
+    const mark = x => x.d ? `<img class="ic" src="https://t1.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=https://${esc(x.d)}&size=128" alt="" loading="lazy" referrerpolicy="no-referrer" data-ini="${esc(ini(x.n))}" style="--h:${hue(x.n)}">` : `<b class="ini" style="--h:${hue(x.n)}">${esc(ini(x.n))}</b>`;
+    const one = items.map(x => x.id ? `<span class="lg" title="${esc(x.n)}"><img src="https://drive.google.com/thumbnail?id=${esc(x.id)}&sz=w400" alt="${esc(x.n)}" loading="lazy" referrerpolicy="no-referrer"></span>` : `<span class="co">${mark(x)}${esc(x.n)}</span>`).join('');
     tr.innerHTML = one + one.replace(/<span/g, '<span aria-hidden="true"');
     tr.style.animationDuration = Math.max(40, items.length * 3.2) + 's';
     const c = $('#ccount'); if (c) c.textContent = (items.length >= 10 ? Math.floor(items.length / 5) * 5 : items.length) + '+';
     $$('.lg img', tr).forEach(im => im.addEventListener('error', () => { im.parentNode.className = ''; im.parentNode.textContent = im.alt; }));
+    $$('img.ic', tr).forEach(im => { const bad = () => { const b = document.createElement('b'); b.className = 'ini'; b.style.cssText = im.style.cssText; b.textContent = im.dataset.ini; im.replaceWith(b); };
+      im.addEventListener('error', bad); im.addEventListener('load', () => { if (im.naturalWidth < 24) bad(); }); });
   };
   draw([]);
   if (!/^https:\/\/script\.google\.com\//.test(SITE.api)) return;

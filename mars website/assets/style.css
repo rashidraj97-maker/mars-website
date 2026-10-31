@@ -762,3 +762,10 @@ html{scroll-padding-top:96px}
 .track .lg:hover img{filter:none;opacity:1}
 @media(max-width:560px){.track .lg img{height:38px;max-width:120px}}
 @media(prefers-reduced-motion:reduce){.track{animation:none}}
+
+/* Client names with their logo mark */
+.track .co{display:inline-flex;align-items:center;gap:12px;color:#5E6E86}
+.track .co .ic{width:40px;height:40px;object-fit:contain;border-radius:10px;background:#fff;flex:none}
+.track .co .ini{width:40px;height:40px;border-radius:10px;display:inline-grid;place-items:center;flex:none;font:800 .95rem "Plus Jakarta Sans",sans-serif;letter-spacing:0;color:#fff;background:hsl(var(--h,215) 45% 45%)}
+.track .co:hover{color:var(--ink)}
+@media(max-width:560px){.track .co .ic,.track .co .ini{width:32px;height:32px}.track .co{gap:8px}}
