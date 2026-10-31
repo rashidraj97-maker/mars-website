@@ -168,6 +168,7 @@ document.addEventListener('DOMContentLoaded', () => {
   if (document.body.dataset.page === 'corporate') corporatePage();
   if (document.body.dataset.page === 'jobs') jobsPage('#jobsAll', 0);
   if (document.body.dataset.page === 'home') jobsPage('#jobsHome', 3);
+  if (document.body.dataset.page === 'home') trainersSection();
 });
 
 /* Home: the formula bar types the formula behind the selected cell */
@@ -457,4 +458,52 @@ function corporatePage() {
       form.hidden = true; $('#cdone').hidden = false; $('#cdone').scrollIntoView({ behavior: 'smooth', block: 'center' });
     } catch (x) { fail('Could not send. Check your internet connection, or email contactus@marstraining.in.'); }
   });
+}
+
+
+/* Trainers: filter buttons, and cards read from the "Trainers" tab of the Google Sheet through Apps Script.
+   If the sheet can't be reached, the cards already written in index.html stay as they are. */
+function trainersSection() {
+  const list = $('#trlist'), bar = $('.tr-filters'); if (!list) return;
+  const applyFilter = f => $$('.tr-lead,.trc', list).forEach(e => { e.hidden = !(f === 'all' || (e.dataset.cat || '').split(' ').includes(f)); });
+  if (bar) bar.addEventListener('click', e => {
+    const b = e.target.closest('button[data-f]'); if (!b) return;
+    $$('button', bar).forEach(x => x.setAttribute('aria-pressed', x === b)); applyFilter(b.dataset.f);
+  });
+  if (!/^https:\/\/script\.google\.com\//.test(SITE.api)) return;
+  const photo = u => {
+    u = String(u || '').trim(); if (!u) return '';
+    const m = /drive\.google\.com\/(?:file\/d\/|open\?id=|uc\?(?:export=\w+&)?id=)([\w-]+)/.exec(u) || /[?&]id=([\w-]+)/.exec(/drive\.google\.com/.test(u) ? u : '');
+    return m ? `https://lh3.googleusercontent.com/d/${encodeURIComponent(m[1])}=w600` : u;
+  };
+  const initials = n => String(n || '').replace(/^(prof|dr|mr|mrs|ms)\.?\s+/i, '').split(/\s+/).filter(Boolean).slice(0, 2).map(w => w[0].toUpperCase()).join('');
+  const cats = f => String(f || '').toLowerCase().split(/[,;]/).map(x => x.trim()).filter(Boolean).map(x => x.startsWith('ex') ? 'excel' : x.startsWith('da') || x.includes('power bi') ? 'data' : x.startsWith('ai') || x.includes('autom') ? 'ai' : x.startsWith('erp') || x.includes('soft') || x.includes('proj') ? 'erp' : x).join(' ');
+  const chips = s => String(s || '').split(',').map(x => x.trim()).filter(Boolean).map(x => `<span>${esc(x)}</span>`).join('');
+  const lines = s => String(s || '').split(/\r?\n/).map(x => x.trim()).filter(Boolean);
+  const labelled = s => { const i = String(s || '').indexOf(':'); return i > 0 ? `${esc(s.slice(0, i))} <strong>${esc(s.slice(i + 1).trim())}</strong>` : esc(s); };
+  const av = (t, cls, w, h) => { const src = photo(t.photo); const ini = `<span class="${cls === 'tr-ph' ? 'tr-ph trc-ini' : 'trc-av trc-ini'}" role="img" aria-label="${esc(t.name)}">${esc(initials(t.name))}</span>`;
+    return src ? `<img class="${cls}" src="${esc(src)}" alt="${esc(t.name)}" width="${w}" height="${h}" loading="lazy" referrerpolicy="no-referrer" onerror="this.outerHTML=this.dataset.f" data-f="${esc(ini)}">` : ini; };
+  fetch(SITE.api + '?action=trainers', { cache: 'no-store' }).then(r => r.json()).then(d => {
+    const rows = ((d && d.trainers) || []).filter(t => t && t.name);
+    if (!rows.length) return;
+    const feat = rows.filter(t => /^feat/i.test(t.type)), full = rows.filter(t => !/^(feat|name)/i.test(t.type)), names = rows.filter(t => /^name/i.test(t.type));
+    const lead = t => {
+      const stats = lines(t.stats).map(l => { const [v, ...r] = l.split('|'); return `<div><b>${esc(v.trim())}</b><span>${esc(r.join('|').trim())}</span></div>`; }).join('');
+      const tr = String(t.trusted || ''), i = tr.indexOf(':');
+      return `<article class="tr-lead" data-cat="${esc(cats(t.filters))}">${av(t, 'tr-ph', 350, 450)}
+        <div class="tr-col">${t.exp ? `<span class="tr-tag">${esc(t.exp)}</span>` : ''}<h4>${esc(t.name)}</h4>${t.role ? `<p class="trc-role">${esc(t.role)}</p>` : ''}
+          ${t.skills ? `<div class="trc-chips">${chips(t.skills)}</div>` : ''}${stats ? `<div class="tr-stats">${stats}</div>` : ''}</div>
+        <div class="tr-col">${t.highlights ? `<h5>From the field</h5><ul>${lines(t.highlights).map(l => `<li>${esc(l)}</li>`).join('')}</ul>` : (t.field ? `<h5>From the field</h5><p>${esc(t.field)}</p>` : '')}</div>
+        ${tr ? `<div class="tr-trusted">${i > 0 ? `<h5>${esc(tr.slice(0, i))}</h5><p>${esc(tr.slice(i + 1).trim())}</p>` : `<p>${esc(tr)}</p>`}</div>` : ''}</article>`;
+    };
+    const card = t => `<article class="trc" data-cat="${esc(cats(t.filters))}">
+        <div class="trc-top">${av(t, 'trc-av', 72, 72)}<div><h4>${esc(t.name)}</h4>${t.role ? `<p class="trc-role">${esc(t.role)}</p>` : ''}${t.exp ? `<span class="trc-exp">${esc(t.exp)}</span>` : ''}</div></div>
+        ${t.field ? `<div class="trc-proof"><b>From the field</b>${esc(t.field)}</div>` : ''}
+        ${t.skills ? `<div class="trc-chips">${chips(t.skills)}</div>` : ''}
+        ${t.footer ? `<p class="trc-cl">${labelled(t.footer)}</p>` : ''}</article>`;
+    const more = names.length ? `Including ${names.map(t => esc(t.name)).join(', ').replace(/, ([^,]*)$/, ' and $1')}, with experienced trainers across Excel, data, SAP, programming and more` : 'Experienced trainers across Excel, data, SAP, programming and more';
+    list.innerHTML = feat.map(lead).join('') + (full.length ? `<div class="tr-grid">${full.map(card).join('')}</div>` : '');
+    const mp = $('.faculty .fm.more p'); if (mp) mp.innerHTML = more;
+    const on = bar && $('button[aria-pressed="true"]', bar); applyFilter(on ? on.dataset.f : 'all');
+  }).catch(() => {});
 }
