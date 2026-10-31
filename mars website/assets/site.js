@@ -269,13 +269,107 @@ function coursesPage() {
     const s = q.value.trim().toLowerCase();
     const l = COURSES.filter(c => (cat === 'All' || c.cat === cat) && (!s || (c.title + ' ' + c.cat + ' ' + c.desc).toLowerCase().includes(s)));
     count.textContent = l.length + (l.length === 1 ? ' course' : ' courses');
-    list.innerHTML = l.map(c => `<article class="cc"><small>${esc(c.cat)}${c.badge ? ' · ' + esc(c.badge) : ''}</small><h3>${esc(c.title)}</h3><p>${esc(c.desc)}</p>${modulesFor(c.title) ? modChips(modulesFor(c.title)) : ''}
-      <div class="row"><span>${c.dur ? esc(c.dur) + ' · ' : ''}Online / Classroom · Certificate</span><div class="ra">${modulesFor(c.title) ? `<a class="md" href="#" data-mods="${esc(c.title)}" aria-label="See the modules of ${esc(c.title)}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M4 6h16M4 12h16M4 18h10"/></svg>Modules</a>` : ''}${demoFor(c.title) ? `<a class="dm" href="#" data-play="${esc(DEMOS.indexOf(demoFor(c.title)))}" aria-label="Watch a demo class of ${esc(c.title)}"><svg viewBox="0 0 24 24"><path d="M7 4v16l13-8z"/></svg>Demo</a>` : ''}${outlineFor(c.title) ? `<a class="dl" href="${esc(outlineFor(c.title))}" download rel="noopener" aria-label="Download the ${esc(c.title)} course outline (PDF)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4v11m0 0-4-4m4 4 4-4M5 20h14"/></svg>Outline</a>` : ''}<a href="${esc(enquire(c.title))}" target="_blank" rel="noopener">Enquire</a><a class="en" href="${esc(enroll(c.title))}" target="_blank" rel="noopener" aria-label="Enroll in ${esc(c.title)}">Enroll</a></div></div></article>`).join('')
+    list.innerHTML = l.map(courseCard).join('')
       || `<div class="none">No course matches “${esc(q.value)}”. <a href="${esc(wa('Hi MARS, do you teach ' + q.value + '?'))}" target="_blank" rel="noopener">Ask us on WhatsApp</a>; we may still teach it.</div>`;
   }
   draw();
   loadOutlines().then(draw);
   loadDemos().then(l => { if (l.length) draw(); });
+  loadCatalog().then(ok => { if (ok) draw(); });
+}
+
+/* Course cards ("cover art" style): picture on top, rating, facts, one highlight line, price with offer, Enroll.
+   Prices, offers, installment plans, badges and next batch dates come live from the Google Sheet (?action=data). */
+let CAT = {};
+function loadCatalog() {
+  if (!/^https:\/\/script\.google\.com\//.test(SITE.api)) return Promise.resolve(false);
+  const use = d => {
+    CAT = {}; const inr = n => Number(n) || 0;
+    (d.courses || []).forEach(c => {
+      const t = String(c.Title || '').trim(); if (!t) return;
+      const fee = inr(String(c.Fee).replace(/[^\d.]/g, '')), b = (d.batches || []).find(x => normT(x.course) === normT(t));
+      CAT[normT(t)] = { fee, price: c.Price ? inr(c.Price) : fee, off: c.Offer ? (c.Offer.label || '') : '', badge: String(c.Badge || '').trim(),
+        emi: ((d.emi || {})[t] || []).map(p => p.n), batch: b ? { start: b.start, timing: b.timing, left: b.left, seats: b.seats } : null };
+    });
+    return true;
+  };
+  try { const c = JSON.parse(sessionStorage.getItem('mars_cat1') || 'null'); if (c && Date.now() - c.at < 10 * 60e3) return Promise.resolve(use(c.d)); } catch (e) {}
+  return fetch(SITE.api + '?action=data').then(r => r.json()).then(d => {
+    if (!d || !d.courses) return false;
+    const slim = { courses: d.courses.map(c => ({ Title: c.Title, Fee: c.Fee, Price: c.Price, Offer: c.Offer ? { label: c.Offer.label } : null, Badge: c.Badge })),
+      emi: Object.fromEntries(Object.entries(d.emi || {}).map(([k, v]) => [k, v.map(p => ({ n: p.n }))])), batches: (d.batches || []).map(b => ({ course: b.course, start: b.start, timing: b.timing, left: b.left, seats: b.seats })) };
+    try { sessionStorage.setItem('mars_cat1', JSON.stringify({ at: Date.now(), d: slim })); } catch (e) {}
+    return use(slim);
+  }).catch(() => false);
+}
+const rupee = n => '₹' + Number(n).toLocaleString('en-IN');
+const niceDate = s => { const m = /^(\d{4})-(\d\d)-(\d\d)$/.exec(String(s || '')); if (!m) { const x = /^(\d{1,2})-([A-Za-z]{3})/.exec(String(s || '')); return x ? x[1].replace(/^0/, '') + ' ' + x[2] : ''; } return +m[3] + ' ' + ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'][+m[2] - 1]; };
+/* Cover art from the course name: [background, accent, kind, letters/label] */
+function coverOf(title) {
+  const t = title.toLowerCase(), has = (...w) => w.some(x => t.includes(x));
+  const grid = (bg, ic, fx) => ({ bg, kind: 'grid', ic, fx });
+  if (has('ms office')) return { bg: '#1E3A8A', kind: 'trio', l: [['W', '#2B579A'], ['P', '#C43E1C'], ['X', '#107C41']] };
+  if (has('libre office', 'open office')) { const k = has('calc') ? grid('#1F7A4D', 'C', '=SUMIFS(…)') : has('writer') ? { bg: '#1E4E9A', kind: 'doc', ic: 'W' } : { bg: '#B4471F', kind: 'slide', ic: 'P' }; return k; }
+  if (has('vba', 'macro')) return { bg: '#0F5132', kind: 'code', ic: 'VBA', code: ['Sub MonthlyReport()', '  For Each ws In Sheets', '    ws.Calculate', 'End Sub'] };
+  if (has('power query')) return grid('#0E6B3A', 'PQ', 'Merge · Append');
+  if (has('power pivot')) return grid('#0E6B3A', 'PP', 'CALCULATE(…)');
+  if (has('advanced excel')) return grid('#107C41', 'X', '=XLOOKUP(…)');
+  if (has('basic excel')) return grid('#169552', 'X', '=SUM(A1:A9)');
+  if (has('google sheet', 'google form', 'app script')) return has('looker') ? { bg: '#174EA6', kind: 'bars', ic: 'LS' } : grid('#188038', 'G', has('script') ? 'onEdit(e)' : '=QUERY(…)');
+  if (has('powerpoint')) return { bg: '#B7472A', kind: 'slide', ic: 'P' };
+  if (has('ms word')) return { bg: '#2B579A', kind: 'doc', ic: 'W' };
+  if (has('outlook')) return { bg: '#0F6CBD', kind: 'mail', ic: 'O' };
+  if (has('access')) return { bg: '#A4373A', kind: 'db', ic: 'A' };
+  if (has('project')) return { bg: '#31752F', kind: 'gantt', ic: 'P' };
+  if (has('power bi')) return { bg: '#2B2B2B', kind: 'bars', ic: 'BI', pal: ['#F2C811', '#F2C811', '#E8A33D', '#F2C811', '#E8A33D', '#F2C811'] };
+  if (has('tableau')) return { bg: '#1F3B57', kind: 'bars', ic: 'T', pal: ['#4E79A7', '#F28E2B', '#E15759', '#76B7B2', '#59A14F', '#EDC948'] };
+  if (has('sql')) return { bg: '#0B3B60', kind: 'code', ic: 'SQL', code: ['SELECT region, SUM(sales)', 'FROM orders', 'GROUP BY region', 'ORDER BY 2 DESC;'] };
+  if (has('python', 'machine learning')) return { bg: '#1E2A44', kind: 'code', ic: 'Py', code: ['import pandas as pd', 'df = pd.read_csv("sales.csv")', 'df.groupby("month").sum()', 'model.fit(X, y)'] };
+  if (has('web app')) return { bg: '#111827', kind: 'code', ic: '</>', code: ['<form id="enroll">', '  fetch("/api/save")', '  .then(r => r.json())', '</form>'] };
+  if (has('gen ai', 'claude')) return { bg: '#2E1065', kind: 'ai', ic: 'AI' };
+  if (has('analytics', 'mis')) return { bg: has('business') ? '#0B2E4F' : has('mis') ? '#14324F' : '#1B1340', kind: 'bars', ic: has('mis') ? 'MIS' : has('business') ? 'BA' : 'DA', ai: has(' ai') };
+  if (has('sap', 'netsuite', 'tally')) return { bg: has('tally') ? '#0B5C5C' : has('netsuite') ? '#1F3A5F' : '#0A3D6B', kind: 'ledger', ic: has('tally') ? 'T' : has('netsuite') ? 'NS' : 'SAP' };
+  if (has('computer')) return { bg: '#334155', kind: 'pc', ic: 'PC' };
+  if (has('career', 'interview')) return { bg: '#7C2D12', kind: 'talk', ic: 'Hi' };
+  return { bg: '#1B4F86', kind: 'bars', ic: title.slice(0, 2).toUpperCase() };
+}
+function coverHtml(c) {
+  const k = coverOf(c.title), tile = (x, cls = '') => `<span class="tile ${cls}">${esc(x)}</span>`;
+  let art = '';
+  if (k.kind === 'grid') art = `<span class="gridbg"></span>${tile(k.ic)}<code>${esc(k.fx)}</code>`;
+  else if (k.kind === 'trio') art = `<span class="trio">${k.l.map(([x, col], i) => `<span style="background:${col}">${x}</span>`).join('')}</span>`;
+  else if (k.kind === 'bars') { const pal = k.pal || ['#5AA9FF', '#7B61FF', '#5AA9FF', '#7B61FF', '#FFC23C', '#FFC23C']; art = `<span class="bars">${[30, 48, 40, 66, 82, 100].map((h, i) => `<i style="height:${h}%;background:${pal[i]}"></i>`).join('')}</span>${k.ai ? '<span class="aitag">+ AI</span>' : ''}`; }
+  else if (k.kind === 'code') art = `${tile(k.ic, 'sm')}<span class="codeb">${k.code.map(x => `<span>${esc(x)}</span>`).join('')}</span>`;
+  else if (k.kind === 'doc') art = `${tile(k.ic)}<span class="doc"><i></i><i></i><i class="s"></i><i></i><i class="s"></i></span>`;
+  else if (k.kind === 'slide') art = `${tile(k.ic)}<span class="slide"><i></i><b></b></span>`;
+  else if (k.kind === 'mail') art = `${tile(k.ic)}<span class="mail"><i></i><i></i><i></i></span>`;
+  else if (k.kind === 'db') art = `${tile(k.ic)}<span class="dbt"><i></i><i></i><i></i><i></i></span>`;
+  else if (k.kind === 'gantt') art = `${tile(k.ic)}<span class="gantt"><i style="width:40%;margin-left:0"></i><i style="width:35%;margin-left:25%"></i><i style="width:30%;margin-left:50%"></i><i style="width:25%;margin-left:70%"></i></span>`;
+  else if (k.kind === 'ledger') art = `${tile(k.ic, 'sm')}<span class="ledger"><span><b>Dr</b><b>Cr</b></span><span><i></i><i></i></span><span><i></i><i></i></span><span><i></i><i></i></span></span>`;
+  else if (k.kind === 'ai') art = `<span class="aiorb">AI</span><span class="aisp s1"></span><span class="aisp s2"></span><span class="aisp s3"></span>`;
+  else if (k.kind === 'pc') art = `<span class="pc"><i></i></span>`;
+  else if (k.kind === 'talk') art = `<span class="talk">Tell me about yourself…</span><span class="talk r">I am a…</span>`;
+  return `<div class="cv" style="--cv:${k.bg}" aria-hidden="true">${art}</div>`;
+}
+function courseCard(c) {
+  const d = CAT[normT(c.title)] || CAT[OUTLINE_ALIAS[normT(c.title)]] || null, mods = modulesFor(c.title), hrs = (/(\d+(?:\s*[–-]\s*\d+)?)\s*hours/i.exec(c.desc) || [])[1];
+  const badge = (d && d.badge) || c.badge, off = d && d.fee && d.price < d.fee ? Math.round((1 - d.price / d.fee) * 100) : 0;
+  const facts = [c.dur, mods ? mods.length + ' modules' : hrs ? hrs.replace(/\s+/g, '') + ' hours' : '', 'Certificate'].filter(Boolean);
+  let hl = '';
+  if (mods && mods.length > 2) hl = `<div class="hl v">${mods.map(m => esc(m.replace('Advanced ', 'Adv ').replace('Generative AI', 'AI').replace('Machine Learning', 'ML'))).join(' → ')}</div>`;
+  else if (d && d.batch && d.batch.start) hl = `<div class="hl g"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>Next batch ${esc(niceDate(d.batch.start))}${d.batch.timing ? ' · ' + esc(d.batch.timing.split(/\s+\d/)[0]) : ''}${d.batch.seats && d.batch.left <= 5 ? ` · only ${d.batch.left} seats left` : ''}</div>`;
+  else if (d && d.emi && d.emi.length) hl = `<div class="hl b"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20"/></svg>Pay in ${d.emi.join(' or ')} easy parts</div>`;
+  else hl = `<div class="hl n">Online or classroom · Live trainer</div>`;
+  const loaded = Object.keys(CAT).length > 0, buy = d ? d.fee > 0 : !loaded;
+  const price = d && d.fee ? `<div class="pv"><b>${rupee(d.price)}</b>${off ? `<s>${rupee(d.fee)}</s>` : ''}</div>` : loaded ? `<div class="pv"><span class="ask">Fee on request</span></div>` : '<div class="pv"></div>';
+  const links = [mods ? `<a href="#" data-mods="${esc(c.title)}">Modules</a>` : '', demoFor(c.title) ? `<a href="#" data-play="${esc(DEMOS.indexOf(demoFor(c.title)))}">▶ Demo</a>` : '',
+    outlineFor(c.title) ? `<a href="${esc(outlineFor(c.title))}" download rel="noopener">Outline</a>` : '', `<a href="${esc(enquire(c.title))}" target="_blank" rel="noopener">Enquire</a>`].filter(Boolean).join('');
+  return `<article class="cc4">${coverHtml(c)}${badge ? `<span class="bdg">${esc(badge)}</span>` : ''}${off ? `<span class="offp">${off}% OFF</span>` : ''}
+    <div class="bd"><h3>${esc(c.title)}</h3>
+    <a class="rt" href="https://search.google.com/local/reviews?placeid=ChIJA2Tq7_ax5zsRdXed0byIdqg" target="_blank" rel="noopener"><b>5.0</b><span class="st" aria-hidden="true">★★★★★</span><span>Google rating</span></a>
+    <div class="ft">${facts.map(x => `<span>${esc(x)}</span>`).join('')}</div>${hl}
+    <div class="pr">${price}<a class="eb" href="${esc(buy ? enroll(c.title) : enquire(c.title))}" target="_blank" rel="noopener" style="--cv:${coverOf(c.title).bg}">${buy ? 'Enroll' : 'Enquire'}</a></div>
+    <div class="lk">${links}</div></div></article>`;
 }
 
 /* Demo class videos: rows of the "Demo Videos" tab (YouTube or Google Drive links) */
