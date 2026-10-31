@@ -102,7 +102,7 @@ function showModules(c) {
     <small>${esc(c.cat)}${c.dur ? ' · ' + esc(c.dur) : ''}</small><h3>${esc(c.title)}</h3>
     <p class="sub">${l.length} modules in one program, taught in this order</p>
     <ol>${l.map((m, k) => { const i = MOD_INFO[m] || ['•', '#334155', '']; return `<li style="--mc:${i[1]}"><b class="ic">${esc(i[0])}</b><div><span class="n">Module ${k + 1}</span><strong>${esc(m)}</strong>${i[2] ? `<em>${esc(i[2])}</em>` : ''}</div></li>`; }).join('')}</ol>
-    <div class="act">${out ? `<a class="btn ghost" href="${esc(out)}" download rel="noopener">Download full outline</a>` : ''}<a class="btn" href="${esc(enquire(c.title))}" target="_blank" rel="noopener">Enquire about this program</a></div></div>`;
+    <div class="act">${out ? `<a class="btn ghost" href="${esc(out)}" download rel="noopener">Download full outline</a>` : ''}<a class="btn" href="${esc(enquire(c.title))}" target="_blank" rel="noopener">Enquire about this program</a><a class="btn en" href="${esc(enroll(c.title))}" target="_blank" rel="noopener">Enroll now</a></div></div>`;
   mw.hidden = false; document.body.style.overflow = 'hidden'; $('.x', mw).focus();
 }
 
@@ -134,6 +134,7 @@ const esc = s => String(s == null ? '' : s).replace(/[&<>"']/g, c => ({ '&': '&a
 const hasApp = /^https:\/\//.test(SITE.enquiryApp);
 const wa = msg => `https://wa.me/${SITE.whatsapp}?text=${encodeURIComponent(msg || 'Hi MARS, I would like to know more about your courses.')}`;
 const enquire = course => hasApp ? SITE.enquiryApp.replace(/\/?$/, '/') + '#enquire' : wa(course ? `Hi MARS, I would like to know more about ${course}.` : '');
+const enroll = course => hasApp ? SITE.enquiryApp.replace(/\/?$/, '/') + '#enroll' : wa(course ? `Hi MARS, I would like to enroll in ${course}.` : 'Hi MARS, I would like to enroll in a course.');
 
 document.addEventListener('DOMContentLoaded', () => {
   offerBar();
@@ -231,7 +232,7 @@ function coursesPage() {
     const l = COURSES.filter(c => (cat === 'All' || c.cat === cat) && (!s || (c.title + ' ' + c.cat + ' ' + c.desc).toLowerCase().includes(s)));
     count.textContent = l.length + (l.length === 1 ? ' course' : ' courses');
     list.innerHTML = l.map(c => `<article class="cc"><small>${esc(c.cat)}${c.badge ? ' · ' + esc(c.badge) : ''}</small><h3>${esc(c.title)}</h3><p>${esc(c.desc)}</p>${modulesFor(c.title) ? modChips(modulesFor(c.title)) : ''}
-      <div class="row"><span>${c.dur ? esc(c.dur) + ' · ' : ''}Online / Classroom · Certificate</span><div class="ra">${modulesFor(c.title) ? `<a class="md" href="#" data-mods="${esc(c.title)}" aria-label="See the modules of ${esc(c.title)}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M4 6h16M4 12h16M4 18h10"/></svg>Modules</a>` : ''}${demoFor(c.title) ? `<a class="dm" href="#" data-play="${esc(DEMOS.indexOf(demoFor(c.title)))}" aria-label="Watch a demo class of ${esc(c.title)}"><svg viewBox="0 0 24 24"><path d="M7 4v16l13-8z"/></svg>Demo</a>` : ''}${outlineFor(c.title) ? `<a class="dl" href="${esc(outlineFor(c.title))}" download rel="noopener" aria-label="Download the ${esc(c.title)} course outline (PDF)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4v11m0 0-4-4m4 4 4-4M5 20h14"/></svg>Outline</a>` : ''}<a href="${esc(enquire(c.title))}" target="_blank" rel="noopener">Enquire</a></div></div></article>`).join('')
+      <div class="row"><span>${c.dur ? esc(c.dur) + ' · ' : ''}Online / Classroom · Certificate</span><div class="ra">${modulesFor(c.title) ? `<a class="md" href="#" data-mods="${esc(c.title)}" aria-label="See the modules of ${esc(c.title)}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M4 6h16M4 12h16M4 18h10"/></svg>Modules</a>` : ''}${demoFor(c.title) ? `<a class="dm" href="#" data-play="${esc(DEMOS.indexOf(demoFor(c.title)))}" aria-label="Watch a demo class of ${esc(c.title)}"><svg viewBox="0 0 24 24"><path d="M7 4v16l13-8z"/></svg>Demo</a>` : ''}${outlineFor(c.title) ? `<a class="dl" href="${esc(outlineFor(c.title))}" download rel="noopener" aria-label="Download the ${esc(c.title)} course outline (PDF)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4v11m0 0-4-4m4 4 4-4M5 20h14"/></svg>Outline</a>` : ''}<a href="${esc(enquire(c.title))}" target="_blank" rel="noopener">Enquire</a><a class="en" href="${esc(enroll(c.title))}" target="_blank" rel="noopener" aria-label="Enroll in ${esc(c.title)}">Enroll</a></div></div></article>`).join('')
       || `<div class="none">No course matches “${esc(q.value)}”. <a href="${esc(wa('Hi MARS, do you teach ' + q.value + '?'))}" target="_blank" rel="noopener">Ask us on WhatsApp</a>; we may still teach it.</div>`;
   }
   draw();

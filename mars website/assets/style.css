@@ -330,7 +330,9 @@ svg{flex:none}
 .cc .row a{font-weight:700;text-decoration:none;background:var(--ink);color:#fff;padding:8px 16px;border-radius:999px;font-size:.88rem}
 .cc .row a:hover{background:var(--brand)}
 .cc .row{flex-wrap:wrap}
-.cc .ra{display:flex;gap:8px;align-items:center;margin-left:auto}
+.cc .ra{display:flex;gap:8px;align-items:center;margin-left:auto;flex-wrap:wrap;justify-content:flex-end}
+.cc .row a.en{background:linear-gradient(100deg,#2A6EB5,#7B61FF);color:#fff;box-shadow:0 8px 20px -10px rgba(123,97,255,.8)}
+.cc .row a.en:hover{background:linear-gradient(100deg,#7B61FF,#2A6EB5)}
 .cc .row a.dl{display:inline-flex;align-items:center;gap:6px;background:#fff;color:var(--ink);border:1.5px solid var(--line);padding:7px 14px}
 .cc .row a.dl svg{width:15px;height:15px}
 .cc .row a.dl:hover{background:var(--soft,#EEF3FA);border-color:var(--brand);color:var(--brand)}
@@ -696,6 +698,7 @@ html{scroll-padding-top:96px}
 .mw .act .btn.ghost{background:#fff;color:var(--ink);border:1.5px solid var(--line)}
 @media(max-width:560px){.mw .card{padding:22px 18px 18px}.mw h3{font-size:1.25rem}}
 .mw .act .btn:not(.ghost){background:var(--ink);color:#fff}.mw .act .btn:not(.ghost):hover{background:var(--brand)}.mw .act .btn{min-height:48px;font-size:.95rem}
+.mw .act .btn.en{background:linear-gradient(100deg,#2A6EB5,#7B61FF);color:#fff}.mw .act .btn.en:hover{background:linear-gradient(100deg,#7B61FF,#2A6EB5)}
 
 /* Scrolling offer line (top of every page) */
 .obar{display:flex;align-items:center;gap:12px;background:var(--gold);color:var(--ink);text-decoration:none;font-weight:700;font-size:.9rem;min-height:38px;padding:0 max(16px,env(safe-area-inset-right,0px)) 0 max(16px,env(safe-area-inset-left,0px));overflow:hidden;position:relative;z-index:31}
