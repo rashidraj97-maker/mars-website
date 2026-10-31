@@ -333,7 +333,20 @@ function coverOf(title) {
   if (has('career', 'interview')) return { bg: '#7C2D12', kind: 'talk', ic: 'Hi' };
   return { bg: '#1B4F86', kind: 'bars', ic: title.slice(0, 2).toUpperCase() };
 }
-const ROBOT = (cls = '') => `<svg class="robot ${cls}" viewBox="0 0 120 120" aria-hidden="true"><line x1="60" y1="10" x2="60" y2="24" stroke="#C7D2FE" stroke-width="4" stroke-linecap="round"/><circle cx="60" cy="9" r="6" fill="#FFC23C"/><rect x="10" y="44" width="10" height="26" rx="5" fill="#A5B4FC"/><rect x="100" y="44" width="10" height="26" rx="5" fill="#A5B4FC"/><rect x="20" y="24" width="80" height="66" rx="22" fill="#E0E7FF"/><rect x="30" y="36" width="60" height="38" rx="14" fill="#1E1B4B"/><circle cx="47" cy="54" r="8" fill="#5AA9FF"/><circle cx="73" cy="54" r="8" fill="#5AA9FF"/><circle cx="49" cy="52" r="3" fill="#fff"/><circle cx="75" cy="52" r="3" fill="#fff"/><rect x="46" y="80" width="28" height="4" rx="2" fill="#818CF8"/><rect x="38" y="92" width="44" height="22" rx="8" fill="#C7D2FE"/><circle cx="60" cy="103" r="5" fill="#FFC23C"/></svg>`;
+/* Original "AI head" artwork: glowing profile with a circuit brain and data lines (inline SVG, no image files) */
+const AIHEAD = (cls = '') => {
+  const lines = [[18, 'M0 18 H70 L88 36 H170'], [40, 'M0 40 H110 L124 54 H196'], [62, 'M0 62 H60 L78 80 H150 L160 70 H214'], [84, 'M0 84 H130 L146 100 H222'], [106, 'M0 106 H80 L96 122 H170 L182 110 H226'], [128, 'M0 128 H120 L136 144 H210'], [150, 'M0 150 H70 L86 136 H190']];
+  const nodes = [[262, 52], [282, 40], [304, 44], [318, 58], [296, 62], [274, 70], [292, 80], [312, 76], [264, 88], [286, 98]];
+  const links = [[0, 1], [1, 2], [2, 3], [1, 4], [4, 5], [0, 5], [4, 6], [6, 7], [3, 7], [5, 8], [6, 9], [8, 9], [2, 4]];
+  return `<svg class="aihead ${cls}" viewBox="0 0 400 170" preserveAspectRatio="xMidYMid slice" aria-hidden="true"><defs><radialGradient id="ahg" cx="72%" cy="45%" r="55%"><stop offset="0" stop-color="#1D6FD6" stop-opacity=".55"/><stop offset="1" stop-color="#061733" stop-opacity="0"/></radialGradient><linearGradient id="ahf" x1="0" x2="1"><stop offset="0" stop-color="#7CC4FF" stop-opacity=".10"/><stop offset="1" stop-color="#7CC4FF" stop-opacity=".32"/></linearGradient></defs>
+  <rect width="400" height="170" fill="#061733"/><rect width="400" height="170" fill="url(#ahg)"/>
+  ${lines.map(([y, d], k) => `<path d="${d}" fill="none" stroke="#3AA0FF" stroke-opacity="${.35 + (k % 3) * .2}" stroke-width="1.4"/><circle cx="${d.match(/H(\d+)$/)[1]}" cy="${(d.match(/(\d+) H\d+$/) || [0, y])[1]}" r="3" fill="#8FD3FF"/>`).join('')}
+  <path d="M248 170 C246 150 236 130 236 105 C236 60 268 28 300 30 C330 32 346 52 344 70 C343 76 341 80 346 88 C350 94 346 96 341 97 C342 101 339 103 340 107 C341 112 337 114 333 115 C334 122 330 128 318 128 C308 128 302 132 300 146 L298 170 Z" fill="url(#ahf)" stroke="#9AD7FF" stroke-width="1.6" stroke-opacity=".9"/>
+  ${links.map(([a, b]) => `<line x1="${nodes[a][0]}" y1="${nodes[a][1]}" x2="${nodes[b][0]}" y2="${nodes[b][1]}" stroke="#BDE6FF" stroke-width="1.1" stroke-opacity=".8"/>`).join('')}
+  ${nodes.map(([x, y], k) => `<circle cx="${x}" cy="${y}" r="${k % 3 ? 2.6 : 3.6}" fill="${k % 4 ? '#E6F6FF' : '#FFC23C'}"/>`).join('')}
+  <circle cx="290" cy="64" r="34" fill="#5AB8FF" fill-opacity=".14"/></svg>`;
+};
+const AIBADGE = () => `<span class="aibadge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 3a3 3 0 0 0-3 3 3 3 0 0 0-2 5 3 3 0 0 0 2 5 3 3 0 0 0 3 3h1V3z"/><path d="M15 3a3 3 0 0 1 3 3 3 3 0 0 1 2 5 3 3 0 0 1-2 5 3 3 0 0 1-3 3h-1V3z"/><path d="M10 8h-2M10 12H7M10 16H8M14 8h2M14 12h3M14 16h2"/></svg>AI</span>`;
 function coverHtml(c) {
   const k = coverOf(c.title), tile = (x, cls = '') => `<span class="tile ${cls}">${esc(x)}</span>`, withAi = k.kind !== 'ai' && /\b(ai|gen ai)\b/i.test(c.title);
   let art = '';
@@ -347,10 +360,10 @@ function coverHtml(c) {
   else if (k.kind === 'db') art = `${tile(k.ic)}<span class="dbt"><i></i><i></i><i></i><i></i></span>`;
   else if (k.kind === 'gantt') art = `${tile(k.ic)}<span class="gantt"><i style="width:40%;margin-left:0"></i><i style="width:35%;margin-left:25%"></i><i style="width:30%;margin-left:50%"></i><i style="width:25%;margin-left:70%"></i></span>`;
   else if (k.kind === 'ledger') art = `${tile(k.ic, 'sm')}<span class="ledger"><span><b>Dr</b><b>Cr</b></span><span><i></i><i></i></span><span><i></i><i></i></span><span><i></i><i></i></span></span>`;
-  else if (k.kind === 'ai') art = `<span class="aiglow"></span>${ROBOT('rb-big')}<span class="aisp s1"></span><span class="aisp s2"></span><span class="aisp s3"></span><span class="aibub">${/claude/i.test(c.title) ? 'Hi! How can I help?' : 'Write this formula for me…'}</span>`;
+  else if (k.kind === 'ai') art = AIHEAD();
   else if (k.kind === 'pc') art = `<span class="pc"><i></i></span>`;
   else if (k.kind === 'talk') art = `<span class="talk">Tell me about yourself…</span><span class="talk r">I am a…</span>`;
-  return `<div class="cv${withAi ? ' cvai' : ''}" style="--cv:${k.bg}" aria-hidden="true">${art}${withAi ? ROBOT('rb-mini') : ''}</div>`;
+  return `<div class="cv${''}" style="--cv:${k.bg}" aria-hidden="true">${art}${withAi ? AIBADGE() : ''}</div>`;
 }
 function courseCard(c) {
   const d = CAT[normT(c.title)] || CAT[OUTLINE_ALIAS[normT(c.title)]] || null, mods = modulesFor(c.title), hrs = (/(\d+(?:\s*[–-]\s*\d+)?)\s*hours/i.exec(c.desc) || [])[1];
