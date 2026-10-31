@@ -326,19 +326,20 @@ function coverOf(title) {
   if (has('sql')) return { bg: '#0B3B60', kind: 'code', ic: 'SQL', code: ['SELECT region, SUM(sales)', 'FROM orders', 'GROUP BY region', 'ORDER BY 2 DESC;'] };
   if (has('python', 'machine learning')) return { bg: '#1E2A44', kind: 'code', ic: 'Py', code: ['import pandas as pd', 'df = pd.read_csv("sales.csv")', 'df.groupby("month").sum()', 'model.fit(X, y)'] };
   if (has('web app')) return { bg: '#111827', kind: 'code', ic: '</>', code: ['<form id="enroll">', '  fetch("/api/save")', '  .then(r => r.json())', '</form>'] };
-  if (has('gen ai', 'claude')) return { bg: '#2E1065', kind: 'ai', ic: 'AI' };
+  if (/^(gen ai|claude)/.test(t)) return { bg: '#1E1B4B', kind: 'ai', ic: 'AI' };
   if (has('analytics', 'mis')) return { bg: has('business') ? '#0B2E4F' : has('mis') ? '#14324F' : '#1B1340', kind: 'bars', ic: has('mis') ? 'MIS' : has('business') ? 'BA' : 'DA', ai: has(' ai') };
   if (has('sap', 'netsuite', 'tally')) return { bg: has('tally') ? '#0B5C5C' : has('netsuite') ? '#1F3A5F' : '#0A3D6B', kind: 'ledger', ic: has('tally') ? 'T' : has('netsuite') ? 'NS' : 'SAP' };
   if (has('computer')) return { bg: '#334155', kind: 'pc', ic: 'PC' };
   if (has('career', 'interview')) return { bg: '#7C2D12', kind: 'talk', ic: 'Hi' };
   return { bg: '#1B4F86', kind: 'bars', ic: title.slice(0, 2).toUpperCase() };
 }
+const ROBOT = (cls = '') => `<svg class="robot ${cls}" viewBox="0 0 120 120" aria-hidden="true"><line x1="60" y1="10" x2="60" y2="24" stroke="#C7D2FE" stroke-width="4" stroke-linecap="round"/><circle cx="60" cy="9" r="6" fill="#FFC23C"/><rect x="10" y="44" width="10" height="26" rx="5" fill="#A5B4FC"/><rect x="100" y="44" width="10" height="26" rx="5" fill="#A5B4FC"/><rect x="20" y="24" width="80" height="66" rx="22" fill="#E0E7FF"/><rect x="30" y="36" width="60" height="38" rx="14" fill="#1E1B4B"/><circle cx="47" cy="54" r="8" fill="#5AA9FF"/><circle cx="73" cy="54" r="8" fill="#5AA9FF"/><circle cx="49" cy="52" r="3" fill="#fff"/><circle cx="75" cy="52" r="3" fill="#fff"/><rect x="46" y="80" width="28" height="4" rx="2" fill="#818CF8"/><rect x="38" y="92" width="44" height="22" rx="8" fill="#C7D2FE"/><circle cx="60" cy="103" r="5" fill="#FFC23C"/></svg>`;
 function coverHtml(c) {
-  const k = coverOf(c.title), tile = (x, cls = '') => `<span class="tile ${cls}">${esc(x)}</span>`;
+  const k = coverOf(c.title), tile = (x, cls = '') => `<span class="tile ${cls}">${esc(x)}</span>`, withAi = k.kind !== 'ai' && /\b(ai|gen ai)\b/i.test(c.title);
   let art = '';
   if (k.kind === 'grid') art = `<span class="gridbg"></span>${tile(k.ic)}<code>${esc(k.fx)}</code>`;
   else if (k.kind === 'trio') art = `<span class="trio">${k.l.map(([x, col], i) => `<span style="background:${col}">${x}</span>`).join('')}</span>`;
-  else if (k.kind === 'bars') { const pal = k.pal || ['#5AA9FF', '#7B61FF', '#5AA9FF', '#7B61FF', '#FFC23C', '#FFC23C']; art = `<span class="bars">${[30, 48, 40, 66, 82, 100].map((h, i) => `<i style="height:${h}%;background:${pal[i]}"></i>`).join('')}</span>${k.ai ? '<span class="aitag">+ AI</span>' : ''}`; }
+  else if (k.kind === 'bars') { const pal = k.pal || ['#5AA9FF', '#7B61FF', '#5AA9FF', '#7B61FF', '#FFC23C', '#FFC23C']; art = `<span class="bars">${[30, 48, 40, 66, 82, 100].map((h, i) => `<i style="height:${h}%;background:${pal[i]}"></i>`).join('')}</span>`; }
   else if (k.kind === 'code') art = `${tile(k.ic, 'sm')}<span class="codeb">${k.code.map(x => `<span>${esc(x)}</span>`).join('')}</span>`;
   else if (k.kind === 'doc') art = `${tile(k.ic)}<span class="doc"><i></i><i></i><i class="s"></i><i></i><i class="s"></i></span>`;
   else if (k.kind === 'slide') art = `${tile(k.ic)}<span class="slide"><i></i><b></b></span>`;
@@ -346,10 +347,10 @@ function coverHtml(c) {
   else if (k.kind === 'db') art = `${tile(k.ic)}<span class="dbt"><i></i><i></i><i></i><i></i></span>`;
   else if (k.kind === 'gantt') art = `${tile(k.ic)}<span class="gantt"><i style="width:40%;margin-left:0"></i><i style="width:35%;margin-left:25%"></i><i style="width:30%;margin-left:50%"></i><i style="width:25%;margin-left:70%"></i></span>`;
   else if (k.kind === 'ledger') art = `${tile(k.ic, 'sm')}<span class="ledger"><span><b>Dr</b><b>Cr</b></span><span><i></i><i></i></span><span><i></i><i></i></span><span><i></i><i></i></span></span>`;
-  else if (k.kind === 'ai') art = `<span class="aiorb">AI</span><span class="aisp s1"></span><span class="aisp s2"></span><span class="aisp s3"></span>`;
+  else if (k.kind === 'ai') art = `<span class="aiglow"></span>${ROBOT('rb-big')}<span class="aisp s1"></span><span class="aisp s2"></span><span class="aisp s3"></span><span class="aibub">${/claude/i.test(c.title) ? 'Hi! How can I help?' : 'Write this formula for me…'}</span>`;
   else if (k.kind === 'pc') art = `<span class="pc"><i></i></span>`;
   else if (k.kind === 'talk') art = `<span class="talk">Tell me about yourself…</span><span class="talk r">I am a…</span>`;
-  return `<div class="cv" style="--cv:${k.bg}" aria-hidden="true">${art}</div>`;
+  return `<div class="cv${withAi ? ' cvai' : ''}" style="--cv:${k.bg}" aria-hidden="true">${art}${withAi ? ROBOT('rb-mini') : ''}</div>`;
 }
 function courseCard(c) {
   const d = CAT[normT(c.title)] || CAT[OUTLINE_ALIAS[normT(c.title)]] || null, mods = modulesFor(c.title), hrs = (/(\d+(?:\s*[–-]\s*\d+)?)\s*hours/i.exec(c.desc) || [])[1];
