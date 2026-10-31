@@ -169,8 +169,9 @@ const $ = (s, r = document) => r.querySelector(s), $$ = (s, r = document) => [..
 const esc = s => String(s == null ? '' : s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 const hasApp = /^https:\/\//.test(SITE.enquiryApp);
 const wa = msg => `https://wa.me/${SITE.whatsapp}?text=${encodeURIComponent(msg || 'Hi MARS, I would like to know more about your courses.')}`;
-const enquire = course => hasApp ? SITE.enquiryApp.replace(/\/?$/, '/') + '#enquire' : wa(course ? `Hi MARS, I would like to know more about ${course}.` : '');
-const enroll = course => hasApp ? SITE.enquiryApp.replace(/\/?$/, '/') + '#enroll' : wa(course ? `Hi MARS, I would like to enroll in ${course}.` : 'Hi MARS, I would like to enroll in a course.');
+const appLink = (course, tab) => SITE.enquiryApp.replace(/\/?$/, '/') + (course && !/corporate/i.test(course) ? '?course=' + encodeURIComponent(course) : '') + '#' + tab;   // the app pre-selects ?course=
+const enquire = course => hasApp ? appLink(course, 'enquire') : wa(course ? `Hi MARS, I would like to know more about ${course}.` : '');
+const enroll = course => hasApp ? appLink(course, 'enroll') : wa(course ? `Hi MARS, I would like to enroll in ${course}.` : 'Hi MARS, I would like to enroll in a course.');
 
 document.addEventListener('DOMContentLoaded', () => {
   offerBar();

@@ -984,8 +984,20 @@ function render(d) {
   if (splitSt && !splitResumed) { splitResumed = true; resumeSplit(); }
   $('#noPay').hidden = pays.length > 0; $('#pf').hidden = !pays.length || !$('#paid').hidden;
 
-  if (!shown) { shown = true; route(); }
+  if (!shown) { shown = true; route(); deepCourse(); }
   greet();
+}
+/** Links from the website carry the course: /?course=MS%20Office#enroll or #enquire. Pre-select it once the courses are loaded. */
+function deepCourse() {
+  const q = new URLSearchParams(location.search), raw = q.get('course');
+  if (!raw || !D) return;
+  q.delete('course');
+  try { history.replaceState(null, '', location.pathname + (q.toString() ? '?' + q : '') + location.hash); } catch (e) {}
+  const n = s => String(s || '').toLowerCase().replace(/[^a-z0-9]+/g, ' ').trim(), c = D.courses.find(x => n(x.Title) === n(raw));
+  if (!c) return;
+  const canBuy = () => [...$('#pcourse').options].some(o => o.value === c.Title);
+  if (location.hash === '#enroll' && (canBuy() || (indOn() && Number(c.IndFee)))) { startBuy(c.Title, ''); if ($('#pcourse').value === c.Title) return; }
+  picked.clear(); picked.add(c.Title); drawPicked(); resetEnquiry(); show('enquire');
 }
 function greet() {
   const fe = D.festival;
