@@ -839,3 +839,8 @@ html{scroll-padding-top:96px}
 .cv .aihead{position:absolute;inset:0;width:100%;height:100%}
 .cv .aibadge{position:absolute;right:14px;top:48px;display:inline-flex;align-items:center;gap:6px;padding:6px 11px 6px 8px;border-radius:999px;background:linear-gradient(135deg,#0B2A5B,#1D6FD6);color:#fff;font:800 .78rem "Plus Jakarta Sans",sans-serif;box-shadow:0 6px 16px rgba(0,0,0,.3),0 0 0 1px rgba(143,211,255,.5) inset}
 .cv .aibadge svg{width:18px;height:18px;color:#8FD3FF}
+
+/* Realistic AI photo (Unsplash, free licence), tinted to the site's blue */
+.cv .aiphoto{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:60% 35%;filter:contrast(1.15) brightness(.9)}
+.cv .aitint{position:absolute;inset:0;background:linear-gradient(135deg,#0A3D91,#1D6FD6 60%,#5AB8FF);mix-blend-mode:color}
+.cv .aishade{position:absolute;inset:0;background:linear-gradient(90deg,rgba(6,23,51,.55),transparent 60%)}

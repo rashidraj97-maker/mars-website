@@ -360,7 +360,7 @@ function coverHtml(c) {
   else if (k.kind === 'db') art = `${tile(k.ic)}<span class="dbt"><i></i><i></i><i></i><i></i></span>`;
   else if (k.kind === 'gantt') art = `${tile(k.ic)}<span class="gantt"><i style="width:40%;margin-left:0"></i><i style="width:35%;margin-left:25%"></i><i style="width:30%;margin-left:50%"></i><i style="width:25%;margin-left:70%"></i></span>`;
   else if (k.kind === 'ledger') art = `${tile(k.ic, 'sm')}<span class="ledger"><span><b>Dr</b><b>Cr</b></span><span><i></i><i></i></span><span><i></i><i></i></span><span><i></i><i></i></span></span>`;
-  else if (k.kind === 'ai') art = AIHEAD();
+  else if (k.kind === 'ai') art = `<img class="aiphoto" src="https://images.unsplash.com/photo-1770233621425-5d9ee7a0a700?fm=jpg&q=70&w=800&auto=format&fit=crop" alt="" loading="lazy" onerror="this.parentNode.insertAdjacentHTML('beforeend', AIHEAD()); this.remove()"><span class="aitint"></span><span class="aishade"></span>`;   // photo: Zach M on Unsplash (Unsplash License)
   else if (k.kind === 'pc') art = `<span class="pc"><i></i></span>`;
   else if (k.kind === 'talk') art = `<span class="talk">Tell me about yourself…</span><span class="talk r">I am a…</span>`;
   return `<div class="cv${''}" style="--cv:${k.bg}" aria-hidden="true">${art}${withAi ? AIBADGE() : ''}</div>`;
