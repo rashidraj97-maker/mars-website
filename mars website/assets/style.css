@@ -754,3 +754,11 @@ html{scroll-padding-top:96px}
 @media(max-width:1000px){.tr-grid{grid-template-columns:1fr 1fr}.tr-lead{grid-template-columns:170px 1fr}.tr-lead .tr-col:nth-of-type(2){grid-column:1/-1}.tr-ph{width:170px}.tr-head{grid-template-columns:1fr}}
 @media(max-width:640px){.tr-grid{grid-template-columns:1fr}.tr-lead{grid-template-columns:minmax(0,1fr);padding:20px}.tr-ph{width:160px}.tr-stats{gap:14px 24px}.tr-stats b{font-size:1.35rem}.tr-lead .tr-col:nth-of-type(2){grid-column:auto}}
 @media(prefers-reduced-motion:reduce){.trc{transition:none}.trc:hover{transform:none}}
+
+/* Client logos in the "Trusted by" strip */
+.track{align-items:center}
+.track .lg{display:inline-flex;align-items:center;justify-content:center;height:56px;min-width:96px}
+.track .lg img{height:48px;width:auto;max-width:160px;object-fit:contain;filter:grayscale(1);opacity:.75;transition:filter .25s,opacity .25s}
+.track .lg:hover img{filter:none;opacity:1}
+@media(max-width:560px){.track .lg img{height:38px;max-width:120px}}
+@media(prefers-reduced-motion:reduce){.track{animation:none}}

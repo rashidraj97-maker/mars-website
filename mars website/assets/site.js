@@ -130,6 +130,34 @@ function offerBar() {
   }).catch(() => {});
 }
 
+/* "Trusted by" strip on the home page: company names, replaced by their logo when one is in the Drive folder "MARS Client Logos" */
+function clientStrip() {
+  const tr = $('#track'); if (!tr) return;
+  const base = $$('span', tr).map(s => s.textContent.trim()).filter(Boolean);
+  const key = s => normT(s).replace(/\b(ltd|limited|pvt|private|india|group|corp|corporation|co|company|the)\b/g, '').replace(/\s+/g, ' ').trim();
+  const alias = { 'iocl': 'indian oil iocl', 'nrl': 'numaligarh refinery', 'indian oil': 'indian oil iocl', 'sbi sg': 'sbi sg global securities' };
+  const draw = logos => {
+    const left = (logos || []).slice(), items = base.map(n => {
+      const k = key(n), i = left.findIndex(l => { const m = key(alias[normT(l.name)] || l.name); return m && (m === k || k.indexOf(m + ' ') === 0 || m.indexOf(k + ' ') === 0 || (m.length > 3 && k.startsWith(m))); });
+      return i >= 0 ? { n, id: left.splice(i, 1)[0].id } : { n };
+    }).concat(left.map(l => ({ n: l.name, id: l.id })));
+    items.sort((a, b) => (b.id ? 1 : 0) - (a.id ? 1 : 0));                        // logos first, names after
+    const one = items.map(x => x.id ? `<span class="lg" title="${esc(x.n)}"><img src="https://drive.google.com/thumbnail?id=${esc(x.id)}&sz=w400" alt="${esc(x.n)}" loading="lazy" referrerpolicy="no-referrer"></span>` : `<span>${esc(x.n)}</span>`).join('');
+    tr.innerHTML = one + one.replace(/<span/g, '<span aria-hidden="true"');
+    tr.style.animationDuration = Math.max(40, items.length * 3.2) + 's';
+    const c = $('#ccount'); if (c) c.textContent = (items.length >= 10 ? Math.floor(items.length / 5) * 5 : items.length) + '+';
+    $$('.lg img', tr).forEach(im => im.addEventListener('error', () => { im.parentNode.className = ''; im.parentNode.textContent = im.alt; }));
+  };
+  draw([]);
+  if (!/^https:\/\/script\.google\.com\//.test(SITE.api)) return;
+  try { const c = JSON.parse(sessionStorage.getItem('mars_logos1') || 'null'); if (c && Date.now() - c.at < 30 * 60e3) { if (c.l.length) draw(c.l); return; } } catch (e) {}
+  fetch(SITE.api + '?action=clients').then(r => r.json()).then(d => {
+    const l = ((d && d.ok && d.logos) || []).filter(x => x && /^[\w-]+$/.test(x.id));
+    try { sessionStorage.setItem('mars_logos1', JSON.stringify({ at: Date.now(), l })); } catch (e) {}
+    if (l.length) draw(l);
+  }).catch(() => {});
+}
+
 /* ===== Shared behaviour ===== */
 const $ = (s, r = document) => r.querySelector(s), $$ = (s, r = document) => [...r.querySelectorAll(s)];
 const esc = s => String(s == null ? '' : s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
@@ -180,8 +208,8 @@ function home() {
     let i = 0; f.textContent = '';
     const t = setInterval(() => { f.textContent = text.slice(0, ++i); if (i >= text.length) { clearInterval(t); $$('.grid .later').forEach(c => c.classList.add('fill')); } }, 45);
   } else if (f) f.textContent = text;
-  // client marquee: duplicate the names so the loop is seamless
-  const tr = $('#track'); if (tr) tr.innerHTML += tr.innerHTML;
+  // client marquee: names from the page, real logos from the Drive folder "MARS Client Logos"
+  clientStrip();
   // count-up numbers
   const fmt = n => n.toLocaleString('en-IN');
   const cio = new IntersectionObserver(es => es.forEach(e => {
