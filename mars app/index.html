@@ -420,6 +420,8 @@ textarea{min-height:90px;resize:vertical}
 @keyframes pulse{50%{transform:scale(.6);opacity:.5}}
 .inst summary{cursor:pointer;color:var(--brand);font-weight:700;font-size:.9rem}
 .hint{color:var(--muted);font-size:.86rem;margin-top:8px}
+.locnote{display:flex;gap:8px;align-items:flex-start;margin:-4px 0 4px;padding:10px 12px;border-radius:12px;background:#FFF6E5;color:#92400E;font-size:13px;line-height:1.45}
+.locnote svg{width:16px;height:16px;flex:none;margin-top:1px;fill:none;stroke:currentColor;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
 </style>
 </head>
 <body>
@@ -530,6 +532,7 @@ try { var sp = JSON.parse(localStorage.getItem('mars_splash') || 'null'), td = n
             <label>Level<select name="level"></select></label>
             <label>Preferred batch start date *<input name="batch" type="date"></label>
             <label>Preferred mode<select name="mode"></select></label>
+            <p class="locnote"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 22s7-6.2 7-12a7 7 0 0 0-14 0c0 5.8 7 12 7 12z"/><circle cx="12" cy="10" r="2.5"/></svg><span><b>Classroom classes are held only at our Kolkata centre:</b> P-74, Nani Gopal Roy Chowdhury Avenue, CIT Road, Kolkata 700014. Outside Kolkata? Choose <b>Online</b>, same trainer, live.</span></p>
             <label>Working status<select name="working"></select></label>
             <label>How did you hear about us?<select name="source"></select></label>
             <label>Message (optional)<textarea name="message"></textarea></label>
@@ -580,6 +583,8 @@ try { var sp = JSON.parse(localStorage.getItem('mars_splash') || 'null'), td = n
           <label>Sex *<select name="gender" id="pgender"></select></label>
           <label>Date of birth *<input name="dob" id="pdob" type="date" min="1930-01-01"></label>
           <label>Working status *<select name="working" id="pworking"></select></label>
+          <label>Preferred mode *<select name="mode" id="pmode"></select></label>
+          <p class="locnote"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 22s7-6.2 7-12a7 7 0 0 0-14 0c0 5.8 7 12 7 12z"/><circle cx="12" cy="10" r="2.5"/></svg><span><b>Classroom classes are held only at our Kolkata centre:</b> P-74, Nani Gopal Roy Chowdhury Avenue, CIT Road, Kolkata 700014. Outside Kolkata? Choose <b>Online</b>, same trainer, live.</span></p>
           <label class="hp" aria-hidden="true">Website<input name="website" tabindex="-1" autocomplete="off"></label>
           <label class="chk" id="pTermsWrap"><input type="checkbox" name="terms"><span><span id="pTerms"></span> <a href="#refund">Refund policy</a> and <a href="#terms">terms</a>.</span></label>
           <div id="modeWrap">
@@ -920,7 +925,8 @@ function render(d) {
   $$('.privacy').forEach(p => p.textContent = S.privacy_note || '');
   [['mode', 'Online|Classroom|Either', 0], ['gender', 'Male|Female|Other', 1], ['level', 'Basic|Intermediate|Advance|All levels', 1], ['working', 'Employed|Unemployed|Self-employed|Student', 1],
    ['source', 'Google Search|Social Media|Friend|Flyer/Brochure|YouTube', 1], ['location', 'Mumbai|Delhi|Kolkata|Chennai|Pune|Bangalore|Hyderabad|Kanpur|Gujarat|Ranchi|Jamshedpur|Bokaro|Assam|Guwahati|Kerala|Karnataka|Odisha|Nashik|Siliguri|Punjab|Others', 1]]
-    .forEach(([n, f, ph]) => { const el = $('#f select[name=' + n + ']'), cur = el.value; el.innerHTML = (ph ? '<option value="">Select</option>' : '') + list(n + '_options', f).map(o => `<option>${esc(o)}</option>`).join(''); el.value = cur || el.value; });
+    .forEach(([n, f, ph]) => { const el = $('#f select[name=' + n + ']'), cur = el.value; el.innerHTML = (ph ? '<option value="">Select</option>' : '') + list(n + '_options', f).map(o => `<option value="${esc(o)}">${esc(n === 'mode' ? modeLabel(o) : o)}</option>`).join(''); el.value = cur || el.value; });
+  { const el = $('#pmode'), cur = el.value; el.innerHTML = '<option value="">Select</option>' + list('mode_options', 'Online|Classroom|Either').map(o => `<option value="${esc(o)}">${esc(modeLabel(o))}</option>`).join(''); el.value = cur; }
   [['#pgender', 'gender', 'Male|Female|Other'], ['#pworking', 'working', 'Employed|Unemployed|Self-employed|Student']]
     .forEach(([sel, n, f]) => { const el = $(sel), cur = el.value; el.innerHTML = '<option value="">Select</option>' + list(n + '_options', f).map(o => `<option>${esc(o)}</option>`).join(''); el.value = cur; });
   $('#pdob').max = addDays(TODAY, -3650);
@@ -988,6 +994,8 @@ function render(d) {
   greet();
 }
 /** Links from the website carry the course: /?course=MS%20Office#enroll or #enquire. Pre-select it once the courses are loaded. */
+/** Friendly labels for the Preferred mode choices (the sheet still stores Online / Classroom / Either). */
+function modeLabel(o) { const k = String(o).trim().toLowerCase(); return k === 'online' ? 'Online – live classes, join from anywhere' : k === 'classroom' ? 'Classroom – at our Kolkata centre (CIT Road)' : k === 'either' ? 'Either – I am flexible' : o; }
 function deepCourse() {
   const q = new URLSearchParams(location.search), raw = q.get('course');
   if (!raw || !D) return;
@@ -1402,7 +1410,7 @@ $('#pf').addEventListener('submit', e => {
   const bad = !c || !feeT(c) ? 'Please select a course.' : bs.length && !v('batchId') ? 'Please select a batch.' : !bs.length && !v('batch') ? 'Please choose a preferred batch start date.'
     : v('name').length < 2 ? 'Please enter your full name.' : v('calling').replace(/\D/g, '').length < 10 ? 'Enter a valid phone number (at least 10 digits).'
     : !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(v('email')) ? 'Enter a valid email address.' : !v('gender') ? 'Please select your sex.'
-    : !isoOk(v('dob')) || v('dob') > addDays(TODAY, -3650) ? 'Please enter your date of birth.' : !v('working') ? 'Please select your working status.' : (!$('#pTermsWrap').hidden && !f.terms) ? 'Please accept the payment terms to continue.' : '';
+    : !isoOk(v('dob')) || v('dob') > addDays(TODAY, -3650) ? 'Please enter your date of birth.' : !v('working') ? 'Please select your working status.' : !v('mode') ? 'Please choose online or classroom.' : (!$('#pTermsWrap').hidden && !f.terms) ? 'Please accept the payment terms to continue.' : '';
   if (bad) return err(bad);
   const sd = schedDates();
   if (sd.error) return err(sd.error);
