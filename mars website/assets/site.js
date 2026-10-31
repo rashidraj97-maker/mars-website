@@ -349,7 +349,7 @@ const AIHEAD = (cls = '') => {
 };
 const AIBADGE = () => `<span class="aibadge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 3a3 3 0 0 0-3 3 3 3 0 0 0-2 5 3 3 0 0 0 2 5 3 3 0 0 0 3 3h1V3z"/><path d="M15 3a3 3 0 0 1 3 3 3 3 0 0 1 2 5 3 3 0 0 1-2 5 3 3 0 0 1-3 3h-1V3z"/><path d="M10 8h-2M10 12H7M10 16H8M14 8h2M14 12h3M14 16h2"/></svg>AI</span>`;
 function coverHtml(c) {
-  const k = coverOf(c.title), tile = (x, cls = '') => `<span class="tile ${cls}">${esc(x)}</span>`, withAi = k.kind !== 'ai' && /\b(ai|gen ai)\b/i.test(c.title);
+  const k = coverOf(c.title), tile = (x, cls = '') => `<span class="tile ${cls}">${esc(x)}</span>`, withAi = k.kind !== 'ai' && k.kind !== 'photo' && /\b(ai|gen ai)\b/i.test(c.title);
   let art = '';
   if (k.kind === 'grid') art = `<span class="gridbg"></span>${tile(k.ic)}<code>${esc(k.fx)}</code>`;
   else if (k.kind === 'trio') art = `<span class="trio">${k.l.map(([x, col], i) => `<span style="background:${col}">${x}</span>`).join('')}</span>`;
