@@ -326,6 +326,7 @@ function coverOf(title) {
   if (has('sql')) return { bg: '#0B3B60', kind: 'code', ic: 'SQL', code: ['SELECT region, SUM(sales)', 'FROM orders', 'GROUP BY region', 'ORDER BY 2 DESC;'] };
   if (has('python', 'machine learning')) return { bg: '#1E2A44', kind: 'code', ic: 'Py', code: ['import pandas as pd', 'df = pd.read_csv("sales.csv")', 'df.groupby("month").sum()', 'model.fit(X, y)'] };
   if (has('web app')) return { bg: '#111827', kind: 'code', ic: '</>', code: ['<form id="enroll">', '  fetch("/api/save")', '  .then(r => r.json())', '</form>'] };
+  if (/^gen ai/.test(t)) return { bg: '#061733', kind: 'photo', src: 'https://cdn.pixabay.com/photo/2024/02/09/15/22/ai-generated-8563259_1280.jpg', pos: '60% 35%' };   // Pixabay, free licence
   if (/^(gen ai|claude)/.test(t)) return { bg: '#1E1B4B', kind: 'ai', ic: 'AI' };
   if (has('analytics', 'mis')) return { bg: has('business') ? '#0B2E4F' : has('mis') ? '#14324F' : '#1B1340', kind: 'bars', ic: has('mis') ? 'MIS' : has('business') ? 'BA' : 'DA', ai: has(' ai') };
   if (has('sap', 'netsuite', 'tally')) return { bg: has('tally') ? '#0B5C5C' : has('netsuite') ? '#1F3A5F' : '#0A3D6B', kind: 'ledger', ic: has('tally') ? 'T' : has('netsuite') ? 'NS' : 'SAP' };
@@ -360,6 +361,7 @@ function coverHtml(c) {
   else if (k.kind === 'db') art = `${tile(k.ic)}<span class="dbt"><i></i><i></i><i></i><i></i></span>`;
   else if (k.kind === 'gantt') art = `${tile(k.ic)}<span class="gantt"><i style="width:40%;margin-left:0"></i><i style="width:35%;margin-left:25%"></i><i style="width:30%;margin-left:50%"></i><i style="width:25%;margin-left:70%"></i></span>`;
   else if (k.kind === 'ledger') art = `${tile(k.ic, 'sm')}<span class="ledger"><span><b>Dr</b><b>Cr</b></span><span><i></i><i></i></span><span><i></i><i></i></span><span><i></i><i></i></span></span>`;
+  else if (k.kind === 'photo') art = `<img class="cphoto" src="${k.src}" alt="" loading="lazy" style="object-position:${k.pos || 'center'}" onerror="this.parentNode.insertAdjacentHTML('beforeend', AIHEAD()); this.remove()">`;
   else if (k.kind === 'ai') art = `<img class="aiphoto" src="https://images.unsplash.com/photo-1770233621425-5d9ee7a0a700?fm=jpg&q=70&w=800&auto=format&fit=crop" alt="" loading="lazy" onerror="this.parentNode.insertAdjacentHTML('beforeend', AIHEAD()); this.remove()"><span class="aitint"></span><span class="aishade"></span>`;   // photo: Zach M on Unsplash (Unsplash License)
   else if (k.kind === 'pc') art = `<span class="pc"><i></i></span>`;
   else if (k.kind === 'talk') art = `<span class="talk">Tell me about yourself…</span><span class="talk r">I am a…</span>`;
