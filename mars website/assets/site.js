@@ -375,7 +375,9 @@ function courseCard(c) {
   if (mods && mods.length > 2) hl = `<div class="hl v">${mods.map(m => esc(m.replace('Advanced ', 'Adv ').replace('Generative AI', 'AI').replace('Machine Learning', 'ML'))).join(' → ')}</div>`;
   else if (d && d.batch && d.batch.start) hl = `<div class="hl g"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>Next batch ${esc(niceDate(d.batch.start))}${d.batch.timing ? ' · ' + esc(d.batch.timing.split(/\s+\d/)[0]) : ''}${d.batch.seats && d.batch.left <= 5 ? ` · only ${d.batch.left} seats left` : ''}</div>`;
   else if (d && d.emi && d.emi.length) hl = `<div class="hl b"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20"/></svg>Pay in ${d.emi.join(' or ')} easy parts</div>`;
-  else hl = `<div class="hl n">Online or classroom · Live trainer</div>`;
+  else hl = '';
+  const PIN = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 22s7-6.2 7-12a7 7 0 0 0-14 0c0 5.8 7 12 7 12z"/><circle cx="12" cy="10" r="2.5"/></svg>';
+  const loc = hl ? `<div class="loc">${PIN}<span>Live online · or classroom in Kolkata</span></div>` : `<div class="hl k">${PIN}<span><b>Live online</b> · or <b>classroom in Kolkata</b></span></div>`;
   const loaded = Object.keys(CAT).length > 0, buy = d ? d.fee > 0 : !loaded;
   const price = d && d.fee ? `<div class="pv"><b>${rupee(d.price)}</b>${off ? `<s>${rupee(d.fee)}</s>` : ''}</div>` : loaded ? `<div class="pv"><span class="ask">Fee on request</span></div>` : '<div class="pv"></div>';
   const links = [mods ? `<a href="#" data-mods="${esc(c.title)}">Modules</a>` : '', demoFor(c.title) ? `<a href="#" data-play="${esc(DEMOS.indexOf(demoFor(c.title)))}">▶ Demo</a>` : '',
@@ -383,7 +385,7 @@ function courseCard(c) {
   return `<article class="cc4">${coverHtml(c)}${badge ? `<span class="bdg">${esc(badge)}</span>` : ''}${off ? `<span class="offp">${off}% OFF</span>` : ''}
     <div class="bd"><h3>${esc(c.title)}</h3>
     <a class="rt" href="https://search.google.com/local/reviews?placeid=ChIJA2Tq7_ax5zsRdXed0byIdqg" target="_blank" rel="noopener"><b>5.0</b><span class="st" aria-hidden="true">★★★★★</span><span>Google rating</span></a>
-    <div class="ft">${facts.map(x => `<span>${esc(x)}</span>`).join('')}</div>${hl}
+    <div class="ft">${facts.map(x => `<span>${esc(x)}</span>`).join('')}</div>${hl ? loc + hl : loc}
     <div class="pr">${price}<a class="eb" href="${esc(buy ? enroll(c.title) : enquire(c.title))}" target="_blank" rel="noopener" style="--cv:${coverOf(c.title).bg}">${buy ? 'Enroll' : 'Enquire'}</a></div>
     <div class="lk">${links}</div></div></article>`;
 }
