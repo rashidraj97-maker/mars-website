@@ -656,3 +656,25 @@ function trainersSection() {
     const on = bar && $('button[aria-pressed="true"]', bar); applyFilter(on ? on.dataset.f : 'all');
   }).catch(() => {});
 }
+
+/* Highlight the menu item for the page (or home-page section) the visitor is on */
+(function navActive() {
+  const links = [...document.querySelectorAll('#nav > a:not(.btn)')];
+  if (!links.length) return;
+  const page = (location.pathname.split('/').pop() || 'index.html').toLowerCase();
+  const set = a => links.forEach(x => { if (x === a) x.setAttribute('aria-current', 'page'); else x.removeAttribute('aria-current'); });
+  const fileOf = a => { const h = a.getAttribute('href') || ''; return h.startsWith('#') ? 'index.html' : (h.split('#')[0] || 'index.html').toLowerCase(); };
+  const hashOf = a => (a.getAttribute('href') || '').split('#')[1] || '';
+  if (page !== 'index.html' && page !== '') { set(links.find(a => fileOf(a) === page && !hashOf(a)) || null); return; }
+  // home page: follow the section on screen
+  const secs = links.map(a => [a, hashOf(a)]).filter(([a, h]) => fileOf(a) === 'index.html' && h && h !== 'top').map(([a, h]) => [a, document.getElementById(h)]).filter(([, el]) => el);
+  const home = links.find(a => fileOf(a) === 'index.html' && (!hashOf(a) || hashOf(a) === 'top'));
+  const spy = () => {
+    const y = scrollY + innerHeight * 0.35; let cur = home;
+    secs.forEach(([a, el]) => { if (el.getBoundingClientRect().top + scrollY <= y) cur = a; });
+    if (innerHeight + scrollY >= document.documentElement.scrollHeight - 4) { const last = secs.find(([a]) => hashOf(a) === 'contact'); if (last) cur = last[0]; }
+    set(cur);
+  };
+  let t = 0; addEventListener('scroll', () => { if (!t) t = requestAnimationFrame(() => { t = 0; spy(); }); }, { passive: true });
+  spy();
+})();
