@@ -1,0 +1,9 @@
+{
+  // marstraining.in: static website + the "Ask MARS AI" chat API (worker.js)
+  "name": "mars-website",
+  "main": "worker.js",
+  "compatibility_date": "2026-10-23",
+  "assets": { "directory": ".", "binding": "ASSETS" },
+  "ai": { "binding": "AI" },
+  "observability": { "enabled": true }
+}
