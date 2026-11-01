@@ -929,7 +929,7 @@ function officeHtml(title) {
   const num = p => { const d = p.replace(/\D/g, ''); return d.length === 10 ? '91' + d : d; };
   const calls = ph.map(p => `<a href="tel:+${num(p)}">${esc(p.replace(/^\+91\s*/, ''))}</a>`).join(' · ');
   return `<div class="hrs">${CLOCK}<div class="hb"><span class="hh">${esc(title || 'Office hours')}</span><ul>${officeRows().map(([d, t]) => `<li${/on call|closed/i.test(t) ? ' class="off"' : ''}><span>${esc(d)}</span><b>${esc(t)}</b></li>`).join('')}</ul>` +
-    `<p class="hn">${esc(S.office_note || 'Please visit by prior appointment only.')}${calls ? ' To book, call ' + calls + '.' : ''}</p>` +
+    `<p class="hn">${S.office_note ? esc(S.office_note) + ' ' : ''}${calls ? 'Call or WhatsApp ' + calls + '.' : ''}</p>` +
     (ph.length ? `<a class="hwa" href="https://wa.me/${num(ph[0])}?text=${msg}" target="_blank" rel="noopener">WhatsApp to book a visit</a>` : '') + `</div></div>`;
 }
 const officeLine = () => officeRows().map(([d, t]) => d ? d + ': ' + t : t).join(' · ');
@@ -1165,7 +1165,7 @@ function render(d) {
   $('#faqList').innerHTML = D.faqs.map(q => `<details class="faq"><summary>${esc(q.Question)}</summary><div class="body"><p>${esc(q.Answer)}</p></div></details>`).join('') || '<p class="empty">No questions yet.</p>';
   $('#policyList').innerHTML = D.policies.map(p => `<details class="faq" id="pol-${esc(p.Key)}"><summary>${esc(p.Title || p.Key)}</summary><div class="body">${String(p.Text).split(/\n+/).map(x => `<p>${esc(x)}</p>`).join('')}</div></details>`).join('');
   $('#policyContact').innerHTML = contactHtml('Contact us');
-  $$('.lochrs').forEach(x => x.innerHTML = `<b>Office hours (visits by prior appointment only):</b> ${esc(officeLine())}. To book, call or WhatsApp ${apptPhones().map(p => { const d = p.replace(/\D/g, ''); return `<a href="tel:+${d.length === 10 ? '91' + d : d}">${esc(p.replace(/^\+91\s*/, ''))}</a>`; }).join(' / ')}.`);
+  $$('.lochrs').forEach(x => x.innerHTML = `<b>Office hours:</b> ${esc(officeLine())}. Call or WhatsApp ${apptPhones().map(p => { const d = p.replace(/\D/g, ''); return `<a href="tel:+${d.length === 10 ? '91' + d : d}">${esc(p.replace(/^\+91\s*/, ''))}</a>`; }).join(' / ')}.`);
   $('#footLinks').innerHTML = D.policies.map(p => `<a href="#${esc(p.Key)}">${esc(p.Title || p.Key)}</a>`).join('');
   $('#foot').textContent = S.footer || '';
   const sv = Number(d.version) || 0, old = sv < MIN_SERVER;
