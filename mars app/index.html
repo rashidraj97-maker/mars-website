@@ -127,6 +127,62 @@ main{padding:0 16px}
 .course.compact .buy{border:0;padding-top:6px}
 .more{grid-column:1/-1}
 .empty{background:#fff;border:1px dashed var(--line);border-radius:var(--r);padding:20px;text-align:center;color:var(--muted)}
+/* Course cards: cover-art style (same look as the website) */
+.cc4{position:relative;background:#fff;border-radius:22px;overflow:hidden;box-shadow:0 10px 28px rgba(11,22,48,.08);border:1px solid var(--line);display:flex;flex-direction:column}
+.cc4 .cv{position:relative;height:150px;background:var(--cv);overflow:hidden;flex:none}
+.cc4 .bdg,.cc4 .offp{position:absolute;top:12px;z-index:2;font-size:.66rem;font-weight:800;letter-spacing:.04em;text-transform:uppercase;padding:5px 10px;border-radius:99px}
+.cc4 .bdg{left:12px;background:var(--accent);color:var(--ink)}
+.cc4 .offp{right:12px;background:#fff;color:#B91C1C}
+.cc4 .bd{padding:14px 16px 16px;display:flex;flex-direction:column;gap:9px;flex:1}
+.cc4 .ccat{font-size:.72rem;font-weight:700;color:var(--brand);letter-spacing:.02em}
+.cc4 h3{font-size:1.12rem;line-height:1.3;margin:-4px 0 0}
+.cc4 .crt{display:flex;align-items:center;gap:6px;font-size:.78rem;color:var(--muted);line-height:1}
+.cc4 .crt b{color:#B45309}.cc4 .crt .stars{color:#F59E0B;letter-spacing:1px}
+.cc4 .ft{display:flex;flex-wrap:wrap;gap:4px 12px;font-size:.8rem;font-weight:600;color:#334155}
+.cc4 .ft span+span:before{content:"·";margin-right:12px;color:#A0AEC0}
+.cc4 .chl{display:flex;margin:0;align-items:center;gap:8px;font-size:.78rem;font-weight:600;padding:8px 11px;border-radius:10px;line-height:1.35}
+.cc4 .chl svg{width:16px;height:16px;flex:none}
+.cc4 .chl.g{background:#EAF7EE;color:#15803D}.cc4 .chl.b{background:#EEF3FD;color:#1D4ED8}.cc4 .chl.v{background:#F3EEFF;color:#6D28D9}.cc4 .chl.k{background:#FFF6E5;color:#92400E}
+.cc4 .loc{display:flex;align-items:center;gap:6px;font-size:.76rem;font-weight:600;color:#92400E}
+.cc4 .loc svg{width:15px;height:15px;flex:none}
+.cc4 .pr{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:auto;padding-top:4px}
+.cc4 .pv{display:flex;align-items:baseline;gap:8px;flex-wrap:wrap}
+.cc4 .pv b{font:800 1.4rem Sora,sans-serif;color:var(--ink)}
+.cc4 .pv s{font-size:.84rem;color:#94A3B8}
+.cc4 .pv .ask{font-weight:700;color:var(--muted);font-size:.92rem}
+.cc4 .eb{flex:none;min-height:44px;background:var(--cv);color:#fff;border:0;font:700 .95rem Figtree,sans-serif;padding:0 22px;border-radius:12px;cursor:pointer}
+.cc4 .lk{display:flex;gap:4px 18px;flex-wrap:wrap;font-size:.82rem;font-weight:700;border-top:1px dashed var(--line);padding-top:10px}
+.cc4 .lk button{all:unset;cursor:pointer;color:var(--brand);min-height:28px;display:inline-flex;align-items:center}
+.cc4 .lk button:focus-visible,.cc4 .eb:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+.cv .tile{position:absolute;left:16px;bottom:16px;width:54px;height:54px;border-radius:15px;background:#fff;color:var(--cv);display:grid;place-items:center;font:800 1.5rem Sora,sans-serif;box-shadow:0 8px 20px rgba(0,0,0,.22)}
+.cv .tile.sm{font-size:.95rem}
+.cv .gridbg{position:absolute;inset:0;opacity:.2;background-image:linear-gradient(#fff 1px,transparent 1px),linear-gradient(90deg,#fff 1px,transparent 1px);background-size:46px 34px}
+.cv code{position:absolute;right:16px;bottom:24px;font:700 .86rem ui-monospace,Consolas,monospace;color:#fff;background:rgba(0,0,0,.24);padding:6px 10px;border-radius:8px}
+.cv .trio{position:absolute;inset:0;display:flex;align-items:center;justify-content:center}
+.cv .trio span{width:64px;height:64px;margin:0 -2px;border-radius:16px;color:#fff;display:grid;place-items:center;font:800 1.7rem Sora,sans-serif;box-shadow:0 10px 24px rgba(0,0,0,.28)}
+.cv .trio span:first-child{transform:rotate(-8deg) translateY(6px)}.cv .trio span:last-child{transform:rotate(8deg) translateY(6px)}.cv .trio span:nth-child(2){width:72px;height:72px;z-index:1}
+.cv .bars{position:absolute;left:22px;right:22px;bottom:18px;height:84px;display:flex;align-items:flex-end;gap:9px}
+.cv .bars i{flex:1;border-radius:6px 6px 0 0}
+.cv .codeb{position:absolute;left:84px;right:14px;bottom:16px;display:flex;flex-direction:column;gap:3px;font:600 .7rem ui-monospace,Consolas,monospace;color:#D7E3F7;background:rgba(0,0,0,.25);padding:9px 11px;border-radius:10px;white-space:nowrap;overflow:hidden}
+.cv .codeb span:first-child{color:#FFC23C}
+.cv .doc,.cv .slide,.cv .mail,.cv .dbt,.cv .gantt,.cv .ledger{position:absolute;right:18px;bottom:16px;width:140px;height:100px;background:#fff;border-radius:10px;box-shadow:0 10px 24px rgba(0,0,0,.25);padding:13px;box-sizing:border-box;display:flex;flex-direction:column;gap:8px}
+.cv .doc i,.cv .mail i{display:block;height:7px;border-radius:4px;background:#CBD5E1}.cv .doc i.s{width:60%}
+.cv .slide b{display:block;flex:1;border-radius:6px;background:linear-gradient(135deg,#FDBA74,#F97316)}.cv .slide i{display:block;height:8px;width:70%;border-radius:4px;background:#CBD5E1}
+.cv .mail i:first-child{width:50%;background:#93C5FD}
+.cv .dbt{display:grid;grid-template-columns:1fr 1fr;gap:6px}.cv .dbt i{border-radius:4px;background:#E2E8F0;border-top:6px solid #A4373A}
+.cv .gantt{gap:10px}.cv .gantt i{display:block;height:10px;border-radius:5px;background:#86EFAC}
+.cv .ledger{gap:6px;width:160px}.cv .ledger span{display:flex;gap:8px}.cv .ledger b{flex:1;font-size:.7rem;color:#475569}.cv .ledger i{flex:1;height:9px;border-radius:4px;background:#CBD5E1}
+.cv .pc{position:absolute;left:50%;top:22px;width:140px;height:90px;margin-left:-70px;border-radius:10px;background:#0F172A;border:6px solid #CBD5E1;box-sizing:border-box}.cv .pc i{position:absolute;inset:10px;border-radius:4px;background:linear-gradient(135deg,#5AA9FF,#7B61FF)}
+.cv .talk{position:absolute;left:18px;top:42px;max-width:70%;background:#fff;color:#7C2D12;font-weight:700;font-size:.82rem;padding:9px 13px;border-radius:14px 14px 14px 4px}
+.cv .talk.r{left:auto;right:18px;top:auto;bottom:20px;background:#FFC23C;color:#0B1630;border-radius:14px 14px 4px 14px}
+.cv .aihead{position:absolute;inset:0;width:100%;height:100%}
+.cv .aibadge{position:absolute;right:12px;top:44px;display:inline-flex;align-items:center;gap:6px;padding:5px 10px 5px 7px;border-radius:99px;background:linear-gradient(135deg,#0B2A5B,#1D6FD6);color:#fff;font:800 .74rem Sora,sans-serif;box-shadow:0 6px 16px rgba(0,0,0,.3),0 0 0 1px rgba(143,211,255,.5) inset}
+.cv .aibadge svg{width:17px;height:17px;color:#8FD3FF}
+.cv .aiphoto,.cv .cphoto{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.cv .aiphoto{object-position:60% 35%;filter:contrast(1.15) brightness(.9)}
+.cv .aitint{position:absolute;inset:0;background:linear-gradient(135deg,#0A3D91,#1D6FD6 60%,#5AB8FF);mix-blend-mode:color}
+.cv .aishade{position:absolute;inset:0;background:linear-gradient(90deg,rgba(6,23,51,.55),transparent 60%)}
+
 
 /* How it works (a real sequence, so it is numbered) */
 .how{list-style:none;margin:0;padding:0;display:grid;gap:10px;counter-reset:s}
@@ -878,15 +934,116 @@ const hay = c => [c.Title, c.Category, c.Description, c.Level].join(' ').toLower
 const batchesOf = title => D.batches.filter(b => b.course === title);
 
 function priceHtml(c) { return !amt(c.Fee) ? `<span>${esc(c.Fee || 'Ask for fee')}</span>` : c.Offer ? `<s>${inr(amt(c.Fee))}</s><b>${inr(price(c))}</b>` : `<b>${inr(amt(c.Fee))}</b>`; }
+
+/* Course cards in the website's cover-art style */
+const normT = s => String(s || '').toLowerCase().replace(/[^a-z0-9]+/g, ' ').trim();
+const MOD_INFO = {
+  'Advanced Excel': ['XL', '#16A34A', 'Formulas, lookups, pivot tables, dashboards and MIS reports'],
+  'Excel VBA': ['VBA', '#0F766E', 'Macros, loops, user forms and one-click report automation'],
+  'Power BI': ['BI', '#CA8A04', 'Power Query, data modelling, DAX and interactive dashboards'],
+  'SQL': ['SQL', '#2563EB', 'Queries, joins, aggregations and analysis in SQL Server'],
+  'Python': ['PY', '#4F46E5', 'Python, NumPy, Pandas and data visualisation'],
+  'Machine Learning': ['ML', '#9333EA', 'Statistics, key algorithms and building predictive models'],
+  'Generative AI': ['AI', '#DB2777', 'ChatGPT, Claude and Copilot for analysis, reports and automation'],
+  'MS Word': ['W', '#1D4ED8', 'Professional documents, styles, tables, templates and mail merge'],
+  'MS PowerPoint': ['P', '#C2410C', 'Impactful presentations with SmartArt, charts and animation'],
+  'MS Excel': ['X', '#15803D', 'Excel from basics to advanced: formulas, lookups and pivots']
+};
+const DA = ['Advanced Excel', 'Excel VBA', 'Power BI', 'SQL', 'Python'], MIS = ['Advanced Excel', 'Excel VBA', 'Power BI'];
+const MODULES = {
+  'data analytics': DA, 'data analytics with ai': DA.concat('Generative AI'),
+  'business analytics': DA.concat('Machine Learning'), 'business analytics with gen ai': DA.concat('Machine Learning', 'Generative AI'),
+  'mis specialist': MIS, 'mis with gen ai': MIS.concat('Generative AI'),
+  'ms office': ['MS Word', 'MS PowerPoint', 'MS Excel'],
+  'advanced excel with ai': ['Advanced Excel', 'Generative AI']
+};
+const modulesFor = title => MODULES[normT(title)] || null;
+/* Cover art from the course name: [background, accent, kind, letters/label] */
+function coverOf(title) {
+  const t = title.toLowerCase(), has = (...w) => w.some(x => t.includes(x));
+  const grid = (bg, ic, fx) => ({ bg, kind: 'grid', ic, fx });
+  if (has('ms office')) return { bg: '#1E3A8A', kind: 'trio', l: [['W', '#2B579A'], ['P', '#C43E1C'], ['X', '#107C41']] };
+  if (has('libre office', 'open office')) { const k = has('calc') ? grid('#1F7A4D', 'C', '=SUMIFS(…)') : has('writer') ? { bg: '#1E4E9A', kind: 'doc', ic: 'W' } : { bg: '#B4471F', kind: 'slide', ic: 'P' }; return k; }
+  if (has('vba', 'macro')) return { bg: '#0F5132', kind: 'code', ic: 'VBA', code: ['Sub MonthlyReport()', '  For Each ws In Sheets', '    ws.Calculate', 'End Sub'] };
+  if (has('power query')) return grid('#0E6B3A', 'PQ', 'Merge · Append');
+  if (has('power pivot')) return grid('#0E6B3A', 'PP', 'CALCULATE(…)');
+  if (has('advanced excel')) return grid('#107C41', 'X', '=XLOOKUP(…)');
+  if (has('basic excel')) return grid('#169552', 'X', '=SUM(A1:A9)');
+  if (has('google sheet', 'google form', 'app script')) return has('looker') ? { bg: '#174EA6', kind: 'bars', ic: 'LS' } : grid('#188038', 'G', has('script') ? 'onEdit(e)' : '=QUERY(…)');
+  if (has('powerpoint')) return { bg: '#B7472A', kind: 'slide', ic: 'P' };
+  if (has('ms word')) return { bg: '#2B579A', kind: 'doc', ic: 'W' };
+  if (has('outlook')) return { bg: '#0F6CBD', kind: 'mail', ic: 'O' };
+  if (has('access')) return { bg: '#A4373A', kind: 'db', ic: 'A' };
+  if (has('project')) return { bg: '#31752F', kind: 'gantt', ic: 'P' };
+  if (has('power bi')) return { bg: '#2B2B2B', kind: 'bars', ic: 'BI', pal: ['#F2C811', '#F2C811', '#E8A33D', '#F2C811', '#E8A33D', '#F2C811'] };
+  if (has('tableau')) return { bg: '#1F3B57', kind: 'bars', ic: 'T', pal: ['#4E79A7', '#F28E2B', '#E15759', '#76B7B2', '#59A14F', '#EDC948'] };
+  if (has('sql')) return { bg: '#0B3B60', kind: 'code', ic: 'SQL', code: ['SELECT region, SUM(sales)', 'FROM orders', 'GROUP BY region', 'ORDER BY 2 DESC;'] };
+  if (has('python', 'machine learning')) return { bg: '#1E2A44', kind: 'code', ic: 'Py', code: ['import pandas as pd', 'df = pd.read_csv("sales.csv")', 'df.groupby("month").sum()', 'model.fit(X, y)'] };
+  if (has('web app')) return { bg: '#111827', kind: 'code', ic: '</>', code: ['<form id="enroll">', '  fetch("/api/save")', '  .then(r => r.json())', '</form>'] };
+  if (/^gen ai/.test(t)) return { bg: '#061733', kind: 'photo', src: 'https://cdn.pixabay.com/photo/2024/02/09/15/22/ai-generated-8563259_1280.jpg', pos: '60% 35%' };   // Pixabay, free licence
+  if (/^(gen ai|claude)/.test(t)) return { bg: '#1E1B4B', kind: 'ai', ic: 'AI' };
+  if (has('analytics', 'mis')) return { bg: has('business') ? '#0B2E4F' : has('mis') ? '#14324F' : '#1B1340', kind: 'bars', ic: has('mis') ? 'MIS' : has('business') ? 'BA' : 'DA', ai: has(' ai') };
+  if (has('sap', 'netsuite', 'tally')) return { bg: has('tally') ? '#0B5C5C' : has('netsuite') ? '#1F3A5F' : '#0A3D6B', kind: 'ledger', ic: has('tally') ? 'T' : has('netsuite') ? 'NS' : 'SAP' };
+  if (has('computer')) return { bg: '#334155', kind: 'pc', ic: 'PC' };
+  if (has('career', 'interview')) return { bg: '#7C2D12', kind: 'talk', ic: 'Hi' };
+  return { bg: '#1B4F86', kind: 'bars', ic: title.slice(0, 2).toUpperCase() };
+}
+/* Original "AI head" artwork: glowing profile with a circuit brain and data lines (inline SVG, no image files) */
+const AIHEAD = (cls = '') => {
+  const lines = [[18, 'M0 18 H70 L88 36 H170'], [40, 'M0 40 H110 L124 54 H196'], [62, 'M0 62 H60 L78 80 H150 L160 70 H214'], [84, 'M0 84 H130 L146 100 H222'], [106, 'M0 106 H80 L96 122 H170 L182 110 H226'], [128, 'M0 128 H120 L136 144 H210'], [150, 'M0 150 H70 L86 136 H190']];
+  const nodes = [[262, 52], [282, 40], [304, 44], [318, 58], [296, 62], [274, 70], [292, 80], [312, 76], [264, 88], [286, 98]];
+  const links = [[0, 1], [1, 2], [2, 3], [1, 4], [4, 5], [0, 5], [4, 6], [6, 7], [3, 7], [5, 8], [6, 9], [8, 9], [2, 4]];
+  return `<svg class="aihead ${cls}" viewBox="0 0 400 170" preserveAspectRatio="xMidYMid slice" aria-hidden="true"><defs><radialGradient id="ahg" cx="72%" cy="45%" r="55%"><stop offset="0" stop-color="#1D6FD6" stop-opacity=".55"/><stop offset="1" stop-color="#061733" stop-opacity="0"/></radialGradient><linearGradient id="ahf" x1="0" x2="1"><stop offset="0" stop-color="#7CC4FF" stop-opacity=".10"/><stop offset="1" stop-color="#7CC4FF" stop-opacity=".32"/></linearGradient></defs>
+  <rect width="400" height="170" fill="#061733"/><rect width="400" height="170" fill="url(#ahg)"/>
+  ${lines.map(([y, d], k) => `<path d="${d}" fill="none" stroke="#3AA0FF" stroke-opacity="${.35 + (k % 3) * .2}" stroke-width="1.4"/><circle cx="${d.match(/H(\d+)$/)[1]}" cy="${(d.match(/(\d+) H\d+$/) || [0, y])[1]}" r="3" fill="#8FD3FF"/>`).join('')}
+  <path d="M248 170 C246 150 236 130 236 105 C236 60 268 28 300 30 C330 32 346 52 344 70 C343 76 341 80 346 88 C350 94 346 96 341 97 C342 101 339 103 340 107 C341 112 337 114 333 115 C334 122 330 128 318 128 C308 128 302 132 300 146 L298 170 Z" fill="url(#ahf)" stroke="#9AD7FF" stroke-width="1.6" stroke-opacity=".9"/>
+  ${links.map(([a, b]) => `<line x1="${nodes[a][0]}" y1="${nodes[a][1]}" x2="${nodes[b][0]}" y2="${nodes[b][1]}" stroke="#BDE6FF" stroke-width="1.1" stroke-opacity=".8"/>`).join('')}
+  ${nodes.map(([x, y], k) => `<circle cx="${x}" cy="${y}" r="${k % 3 ? 2.6 : 3.6}" fill="${k % 4 ? '#E6F6FF' : '#FFC23C'}"/>`).join('')}
+  <circle cx="290" cy="64" r="34" fill="#5AB8FF" fill-opacity=".14"/></svg>`;
+};
+const AIBADGE = () => `<span class="aibadge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 3a3 3 0 0 0-3 3 3 3 0 0 0-2 5 3 3 0 0 0 2 5 3 3 0 0 0 3 3h1V3z"/><path d="M15 3a3 3 0 0 1 3 3 3 3 0 0 1 2 5 3 3 0 0 1-2 5 3 3 0 0 1-3 3h-1V3z"/><path d="M10 8h-2M10 12H7M10 16H8M14 8h2M14 12h3M14 16h2"/></svg>AI</span>`;
+function coverHtml(c) {
+  const k = coverOf(c.title), tile = (x, cls = '') => `<span class="tile ${cls}">${esc(x)}</span>`, withAi = k.kind !== 'ai' && k.kind !== 'photo' && /\b(ai|gen ai)\b/i.test(c.title);
+  let art = '';
+  if (k.kind === 'grid') art = `<span class="gridbg"></span>${tile(k.ic)}<code>${esc(k.fx)}</code>`;
+  else if (k.kind === 'trio') art = `<span class="trio">${k.l.map(([x, col], i) => `<span style="background:${col}">${x}</span>`).join('')}</span>`;
+  else if (k.kind === 'bars') { const pal = k.pal || ['#5AA9FF', '#7B61FF', '#5AA9FF', '#7B61FF', '#FFC23C', '#FFC23C']; art = `<span class="bars">${[30, 48, 40, 66, 82, 100].map((h, i) => `<i style="height:${h}%;background:${pal[i]}"></i>`).join('')}</span>`; }
+  else if (k.kind === 'code') art = `${tile(k.ic, 'sm')}<span class="codeb">${k.code.map(x => `<span>${esc(x)}</span>`).join('')}</span>`;
+  else if (k.kind === 'doc') art = `${tile(k.ic)}<span class="doc"><i></i><i></i><i class="s"></i><i></i><i class="s"></i></span>`;
+  else if (k.kind === 'slide') art = `${tile(k.ic)}<span class="slide"><i></i><b></b></span>`;
+  else if (k.kind === 'mail') art = `${tile(k.ic)}<span class="mail"><i></i><i></i><i></i></span>`;
+  else if (k.kind === 'db') art = `${tile(k.ic)}<span class="dbt"><i></i><i></i><i></i><i></i></span>`;
+  else if (k.kind === 'gantt') art = `${tile(k.ic)}<span class="gantt"><i style="width:40%;margin-left:0"></i><i style="width:35%;margin-left:25%"></i><i style="width:30%;margin-left:50%"></i><i style="width:25%;margin-left:70%"></i></span>`;
+  else if (k.kind === 'ledger') art = `${tile(k.ic, 'sm')}<span class="ledger"><span><b>Dr</b><b>Cr</b></span><span><i></i><i></i></span><span><i></i><i></i></span><span><i></i><i></i></span></span>`;
+  else if (k.kind === 'photo') art = `<img class="cphoto" src="${k.src}" alt="" loading="lazy" style="object-position:${k.pos || 'center'}" onerror="this.parentNode.insertAdjacentHTML('beforeend', AIHEAD()); this.remove()">`;
+  else if (k.kind === 'ai') art = `<img class="aiphoto" src="https://images.unsplash.com/photo-1770233621425-5d9ee7a0a700?fm=jpg&q=70&w=800&auto=format&fit=crop" alt="" loading="lazy" onerror="this.parentNode.insertAdjacentHTML('beforeend', AIHEAD()); this.remove()"><span class="aitint"></span><span class="aishade"></span>`;   // photo: Zach M on Unsplash (Unsplash License)
+  else if (k.kind === 'pc') art = `<span class="pc"><i></i></span>`;
+  else if (k.kind === 'talk') art = `<span class="talk">Tell me about yourself…</span><span class="talk r">I am a…</span>`;
+  return `<div class="cv${''}" style="--cv:${k.bg}" aria-hidden="true">${art}${withAi ? AIBADGE() : ''}</div>`;
+}
+
+const PIN = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 22s7-6.2 7-12a7 7 0 0 0-14 0c0 5.8 7 12 7 12z"/><circle cx="12" cy="10" r="2.5"/></svg>';
+const CAL = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>';
+const CARD = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20"/></svg>';
 function card(c) {
-  const full = c.Description || amt(c.Fee) || c.Duration || c.Outline, pills = [c.Duration, c.Level, c.Mode].filter(Boolean);
-  return `<article class="course${full ? '' : ' compact'}">
-    <div class="c-top"><span class="c-cat">${esc(c.Category || 'Course')}</span>${c.Offer ? `<span class="offer">${esc(c.Offer.name)}: ${esc(c.Offer.label)}</span>` : c.Badge ? `<span class="badge">${esc(c.Badge)}</span>` : ''}</div>
-    <h3><button class="c-title" data-open="${esc(c.Title)}">${esc(c.Title)}</button></h3>
-    ${c.Description ? `<p class="c-desc">${esc(c.Description)}</p>` : ''}
-    ${full && pills.length ? `<div class="pills">${pills.map(p => `<span>${esc(p)}</span>`).join('')}</div>` : ''}
-    <div class="buy"><div class="price">${priceHtml(c)}</div><div class="acts-row">${full ? `<button class="btn sm line" data-open="${esc(c.Title)}">Details</button>` : `<button class="btn sm line" data-ask="${esc(c.Title)}">Enquire</button>`}${buyable(c) ? `<button class="btn sm" data-buy="${esc(c.Title)}">Enroll</button>` : ''}</div></div>
-  </article>`;
+  const mods = modulesFor(c.Title), f = amt(c.Fee), p = price(c), off = c.Offer && f && p < f ? Math.round((1 - p / f) * 100) : 0;
+  const hrs = (/(\d+(?:\s*[–-]\s*\d+)?)\s*hours/i.exec(c.Description || '') || [])[1];
+  const facts = [c.Duration, mods ? mods.length + ' modules' : hrs ? hrs.replace(/\s+/g, '') + ' hours' : '', 'Certificate'].filter(Boolean);
+  const b = batchesOf(c.Title).filter(x => x.left !== 0 && ymd(x.start) && x.start.slice(0, 10) >= TODAY).sort((x, y) => x.start < y.start ? -1 : 1)[0];
+  const emi = (D.emi[c.Title] || []).map(x => x.n).filter((n, i, a) => n > 1 && a.indexOf(n) === i);
+  let hl = '';
+  if (mods && mods.length > 2) hl = `<div class="chl v">${mods.map(m => esc(m.replace('Advanced ', 'Adv ').replace('Generative AI', 'AI').replace('Machine Learning', 'ML'))).join(' → ')}</div>`;
+  else if (b) { const d = ymd(b.start); hl = `<div class="chl g">${CAL}Next batch ${d.d} ${d.m}${b.timing ? ' · ' + esc(b.timing.split(/\s+\d/)[0]) : ''}${b.left && b.left <= 5 ? ` · only ${b.left} seats left` : ''}</div>`; }
+  else if (emi.length) hl = `<div class="chl b">${CARD}Pay in ${emi.join(' or ')} easy parts</div>`;
+  const loc = hl ? `<div class="loc">${PIN}<span>Live online · or classroom in Kolkata</span></div>` : `<div class="chl k">${PIN}<span><b>Live online</b> · or <b>classroom in Kolkata</b></span></div>`;
+  const cv = coverOf(c.Title).bg, buy = buyable(c);
+  return `<article class="cc4">${coverHtml({ title: c.Title })}${c.Badge ? `<span class="bdg">${esc(c.Badge)}</span>` : ''}${off ? `<span class="offp">${off}% OFF</span>` : ''}
+    <div class="bd"><span class="ccat">${esc(c.Category || 'Course')}</span><h3><button class="c-title" data-open="${esc(c.Title)}">${esc(c.Title)}</button></h3>
+    <div class="crt"><b>5.0</b><span class="stars" aria-hidden="true">★★★★★</span><span>Google rating</span></div>
+    <div class="ft">${facts.map(x => `<span>${esc(x)}</span>`).join('')}</div>${hl}${loc}
+    <div class="pr"><div class="pv">${f ? `<b>${inr(p)}</b>${off ? `<s>${inr(f)}</s>` : ''}` : `<span class="ask">${esc(c.Fee || 'Fee on request')}</span>`}</div>
+    <button class="eb" style="--cv:${cv}" ${buy ? `data-buy="${esc(c.Title)}">Enroll` : `data-ask="${esc(c.Title)}">Enquire`}</button></div>
+    <div class="lk"><button data-open="${esc(c.Title)}">${mods ? 'Modules & details' : 'Course details'}</button>${buy ? `<button data-ask="${esc(c.Title)}">Enquire</button>` : ''}</div></div></article>`;
 }
 function batchCard(b, withCourse = true) {
   const p = ymd(b.start), full = b.left === 0, few = b.left > 0 && b.left <= 3, c = D.courses.find(x => x.Title === b.course), pay = c && amt(c.Fee);
