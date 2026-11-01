@@ -291,6 +291,9 @@ textarea{min-height:90px;resize:vertical}
 .slist td{padding:7px 4px;border-bottom:1px solid var(--line)}
 .slist td:last-child{text-align:right;font-weight:700}
 .slist .Paid{color:var(--good)}.slist .Overdue{color:var(--bad)}
+.slist .lfee,.own .lfee{display:block;color:var(--bad);font-size:.74rem;font-weight:600}
+#sched .lfnote{margin-top:6px;padding:8px 10px;border-radius:10px;background:#FFF4E5;color:#7A4B00;font-size:.84rem}
+#sched .lfnote b{font:inherit;font-weight:700}
 
 /* Sheets and dialogs */
 .sheet{position:fixed;inset:0;z-index:30;display:flex;align-items:flex-end;justify-content:center;background:rgba(10,20,40,.5)}
@@ -1192,7 +1195,8 @@ function drawSched() {
   if (!p) { updPay(); return; }
   const ds = dueDates(p.n), g = graceDays();
   $('#sched').innerHTML = p.amounts.map((amount, i) => `<div class="srow"><span class="n">${i + 1}</span><span class="when">${i ? `<b>Due ${esc(nice(ds[i - 1]))}</b>${g ? `<small>Pay by ${esc(nice(addDays(ds[i - 1], g)))}</small>` : ''}` : '<b>Today</b><small>At enrollment</small>'}</span><b>${inr(amount)}</b></div>`).join('') +
-    `<p>Dates are fixed: every ${gapDays()} days from your payment date${g ? `, with ${g} extra days to pay` : ''}. We email you a payment link before each due date.${S.emi_note && !/set automatically from your payment date/.test(S.emi_note) ? ' ' + esc(S.emi_note) : ''}</p>`;
+    `<p>Dates are fixed: every ${gapDays()} days from your payment date${g ? `, with ${g} extra days to pay` : ''}. We email you a payment link before each due date.${S.emi_note && !/set automatically from your payment date/.test(S.emi_note) ? ' ' + esc(S.emi_note) : ''}</p>` +
+    (lateFor(p.total) ? `<p class="lfnote"><b>Late payment:</b> a fine of ${inr(lateFor(p.total))} is added to each installment not paid by its ${g ? '"Pay by"' : 'due'} date.</p>` : '');
   updPay();
 }
 function dueNow() { const x = payCtx(), p = x.plans.find(q => q.n === selPlan), a = x.c && feeT(x.c) ? priceT(x.c) : 0; return p ? p.amounts[0] : a; }
@@ -1285,8 +1289,8 @@ const buys = () => store('mars_buys') || [];
 function saveBuy(b) { store('mars_buys', [b, ...buys().filter(x => x.id !== b.id)].slice(0, 20)); }
 function ownHtml(l) {
   return l.length ? '<h3>Your courses</h3>' + l.map(x => {
-    const emi = x.emi ? `<div class="bar2"><i style="width:${Math.round(100 * (x.paidSoFar || 0) / (x.amount || 1))}%"></i></div><small>${inr(x.paidSoFar || 0)} of ${inr(x.amount)} paid, ${esc(x.plan)}</small>` +
-      (x.next ? `<span class="due${x.next.status === 'Overdue' ? ' late' : ''}">${x.next.status === 'Overdue' ? 'Overdue' : 'Next'}: ${inr(x.next.amount)} ${x.next.status === 'Overdue' ? 'was due' : 'due'} ${esc(nice(x.next.due))}${x.next.payBy && x.next.status !== 'Overdue' ? `, pay by ${esc(nice(x.next.payBy))}` : ''}</span><button class="btn sm pri" data-payinst="${esc(x.id)}">Pay ${inr(x.next.amount)} now</button>` : '<span class="due">Fully paid</span>') : '';
+    const emi = x.emi ? `<div class="bar2"><i style="width:${Math.min(100, Math.round(100 * (x.paidSoFar || 0) / (totalOf(x) || 1)))}%"></i></div><small>${inr(x.paidSoFar || 0)} of ${inr(totalOf(x))} paid, ${esc(x.plan)}</small>` +
+      (x.next ? `<span class="due${x.next.status === 'Overdue' ? ' late' : ''}">${x.next.status === 'Overdue' ? 'Overdue' : 'Next'}: ${inr(x.next.amount)} ${x.next.status === 'Overdue' ? 'was due' : 'due'} ${esc(nice(x.next.due))}${x.next.late || !x.lateFee ? (x.next.payBy && x.next.status !== 'Overdue' ? `, pay by ${esc(nice(x.next.payBy))}` : '') : ''}${nextNote(x)}</span><button class="btn sm pri" data-payinst="${esc(x.id)}">Pay ${inr(x.next.amount)} now</button>` : '<span class="due">Fully paid</span>') : '';
     return `<div class="own"><b>${esc(x.course)}</b><span>Enrolled</span><small>ID ${esc(x.id)}${x.emi ? '' : ', ' + inr(x.amount)}${x.paidAt && !x.emi ? ', paid ' + esc(x.paidAt) : ''}</small>${x.batchStart ? `<small>Batch start: ${esc(nice(x.batchStart))}</small>` : ''}${emi}</div>`;
   }).join('') : '';
 }
@@ -1360,7 +1364,7 @@ function loadMine(quiet) {
     const l = (r.list || []).filter(x => x.paid);
     const dues = l.filter(x => x.next && x.balance > 0);
     $('#mine').innerHTML = l.length ? `<a class="minelink" href="#learn"><b>My courses (${l.length})</b><span>See your fees, classes, exam and certificate</span></a>` +
-      dues.map(x => `<div class="own"><b>${esc(x.course)}</b><span class="due${x.next.status === 'Overdue' ? ' late' : ''}">${x.next.status === 'Overdue' ? 'Overdue' : 'Next'}: ${inr(x.next.amount)} ${x.next.status === 'Overdue' ? 'was due' : 'due'} ${esc(nice(x.next.due))}</span><button class="btn sm pri" data-payinst="${esc(x.id)}">Pay ${inr(x.next.amount)} now</button></div>`).join('') : '';
+      dues.map(x => `<div class="own"><b>${esc(x.course)}</b><span class="due${x.next.status === 'Overdue' ? ' late' : ''}">${x.next.status === 'Overdue' ? 'Overdue' : 'Next'}: ${inr(x.next.amount)} ${x.next.status === 'Overdue' ? 'was due' : 'due'} ${esc(nice(x.next.due))}${nextNote(x)}</span><button class="btn sm pri" data-payinst="${esc(x.id)}">Pay ${inr(x.next.amount)} now</button></div>`).join('') : '';
     drawLearn(l, true);
     const pend = store('mars_pending');
     if (pend && l.some(x => x.id === pend.id)) { store('mars_pending', null); if (quiet) toast('Payment confirmed: ' + l.find(x => x.id === pend.id).course); }
@@ -1371,8 +1375,19 @@ function loadRzp() {
     const s = document.createElement('script'); s.src = 'https://checkout.razorpay.com/v1/checkout.js'; s.onload = ok; s.onerror = no; document.head.appendChild(s);
   });
 }
+/* Late fee: one fine per installment (2nd onwards) paid after its due date + grace days */
+function lateCfg() { const n = (v, d) => { const x = Number(String(v == null ? '' : v).replace(/[^\d.]/g, '')); return x > 0 ? x : d; };
+  return { on: String(S.late_fee_enabled || 'Yes').trim().toLowerCase() !== 'no', small: n(S.late_fee_small, 250), big: n(S.late_fee_big, 500), limit: n(S.late_fee_limit, 10000) }; }
+function lateFor(total) { const c = lateCfg(); return !c.on ? 0 : total > c.limit ? c.big : c.small; }
+const lateTag = q => q && q.late ? `<small class="lfee">incl. ${inr(q.late)} late fee</small>` : '';
+function nextNote(x) {           // extra words after "Next ₹X due <date>"
+  const n = x.next; if (!n) return '';
+  if (n.late) return ` (includes ${inr(n.late)} late fee)`;
+  return n.status !== 'Overdue' && x.lateFee && n.payBy ? `. Pay by ${esc(nice(n.payBy))} to avoid a ${inr(x.lateFee)} late fee` : '';
+}
+const totalOf = x => (Number(x.amount) || 0) + (Number(x.lateFees) || 0);
 function schedTable(s) {
-  return s && s.length > 1 ? `<table class="slist">${s.map(x => `<tr><td>${x.no} of ${s.length}</td><td>${esc(nice(x.due))}</td><td>${inr(x.amount)}</td><td class="${esc(x.status)}">${esc(x.status)}</td></tr>`).join('')}</table>` : '';
+  return s && s.length > 1 ? `<table class="slist">${s.map(x => `<tr><td>${x.no} of ${s.length}</td><td>${esc(nice(x.due))}</td><td>${inr(x.amount)}${lateTag(x)}</td><td class="${esc(x.status)}">${esc(x.status)}</td></tr>`).join('')}</table>` : '';
 }
 function receipt(r, paid, auth) {
   $('#pf').hidden = true; $('#paid').hidden = false; $('#mine').hidden = true;
@@ -1490,10 +1505,10 @@ function trackHtml(x, i, all) {
   const steps = [];
   steps.push(stepHtml('done', 'Enrolled', `ID ${esc(x.id)}${x.paidAt ? ' · ' + esc(x.paidAt) : ''}`));
   // fees
-  if (!due) steps.push(stepHtml('done', 'Fees fully paid', `${inr(x.amount)}${x.emi ? ' in ' + x.schedule.length + ' installments' : ''}`));
+  if (!due) steps.push(stepHtml('done', 'Fees fully paid', `${inr(totalOf(x))}${x.emi ? ' in ' + x.schedule.length + ' installments' : ''}${x.lateFees ? ' (includes ' + inr(x.lateFees) + ' late fee)' : ''}`));
   else steps.push(stepHtml(overdue ? 'bad' : 'now', overdue ? 'Fee overdue' : 'Fee due',
-    `${inr(x.paidSoFar || 0)} of ${inr(x.amount)} paid. Next ${inr(x.next.amount)} ${overdue ? 'was due' : 'due'} ${esc(nice(x.next.due))}${x.next.payBy && !overdue ? ', pay by ' + esc(nice(x.next.payBy)) : ''}.`,
-    `<div class="bar2"><i style="width:${Math.round(100 * (x.paidSoFar || 0) / (x.amount || 1))}%"></i></div><button class="btn sm pri" data-payinst="${esc(x.id)}">Pay ${inr(x.next.amount)} now</button>`));
+    `${inr(x.paidSoFar || 0)} of ${inr(totalOf(x))} paid. Next ${inr(x.next.amount)} ${overdue ? 'was due' : 'due'} ${esc(nice(x.next.due))}${x.next.late || !x.lateFee ? (x.next.payBy && !overdue ? ', pay by ' + esc(nice(x.next.payBy)) : '') : ''}${nextNote(x)}.`,
+    `<div class="bar2"><i style="width:${Math.min(100, Math.round(100 * (x.paidSoFar || 0) / (totalOf(x) || 1)))}%"></i></div><button class="btn sm pri" data-payinst="${esc(x.id)}">Pay ${inr(x.next.amount)} now</button>`));
   // classes
   if (g.course === 'Completed') steps.push(stepHtml('done', 'Course completed', g.completedOn ? 'On ' + esc(nice(g.completedOn)) : ''));
   else if (g.course === 'Discontinued') steps.push(stepHtml('bad', 'Course discontinued', 'Contact us to rejoin a batch.'));
@@ -1512,7 +1527,7 @@ function trackHtml(x, i, all) {
     `<a class="btn sm pri" href="${esc(g.certLink)}" target="_blank" rel="noopener">Download certificate</a>`));
   else if (g.certReady) steps.push(stepHtml('now', 'Certificate', 'Being prepared. You will be able to download it here soon.'));
   else steps.push(stepHtml(due ? 'lock' : 'todo', 'Certificate', 'Given after course completion, passing the exam and paying all fees.'));
-  const sched = x.emi && x.schedule && x.schedule.length > 1 ? `<details class="inst"><summary>Installment schedule</summary><table class="slist">${x.schedule.map(q => `<tr><td>${q.no} of ${x.schedule.length}</td><td>${esc(nice(q.due) || 'At enrollment')}</td><td>${inr(q.amount)}</td><td class="${esc(q.status)}">${esc(q.status)}</td></tr>`).join('')}</table></details>` : '';
+  const sched = x.emi && x.schedule && x.schedule.length > 1 ? `<details class="inst"><summary>Installment schedule</summary><table class="slist">${x.schedule.map(q => `<tr><td>${q.no} of ${x.schedule.length}</td><td>${esc(nice(q.due) || 'At enrollment')}</td><td>${inr(q.amount)}${lateTag(q)}</td><td class="${esc(q.status)}">${esc(q.status)}</td></tr>`).join('')}</table></details>` : '';
   const when = starts ? `<span class="bwhen">Batch ${future ? 'starts' : 'started'} ${esc(nice(starts))}${x.batchTiming ? ' · ' + esc(x.batchTiming) : ''}</span>` : '<span class="bwhen tba">Batch date: to be announced</span>';
   const head = `<div><h3>${esc(x.course)}</h3><small>${esc(x.plan)} · ID ${esc(x.id)}</small>${when}</div>`;
   if (!fold) return `<article class="trk"><header>${head}<span class="chip ${chip[1]}">${chip[0]}</span></header><ol class="steps">${steps.join('')}</ol>${sched}</article>`;
