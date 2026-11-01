@@ -14,25 +14,25 @@ const SITE = {
 
 /* ===== Course catalogue (shown on courses.html and the home page) ===== */
 const COURSES = [
-  ["Office & Productivity", "MS PowerPoint", "Create impactful, professional presentations with templates, SmartArt, charts, multimedia and animation (14 hours).", "", "1.5 months"],
-  ["Office & Productivity", "MS Word", "Work with Microsoft Word professionally: advanced formatting, styles, tables, long documents, templates and mail merge (12 hours).", "", "1.5 months"],
-  ["Office & Productivity", "MS Outlook", "Manage email, calendar, contacts and tasks efficiently in Microsoft Outlook (12 hours).", "", "1.5 months"],
+  ["Office & Productivity", "MS PowerPoint", "Create impactful, professional presentations with templates, SmartArt, charts, multimedia and animation.", "", "1.5 months"],
+  ["Office & Productivity", "MS Word", "Work with Microsoft Word professionally: advanced formatting, styles, tables, long documents, templates and mail merge.", "", "1.5 months"],
+  ["Office & Productivity", "MS Outlook", "Manage email, calendar, contacts and tasks efficiently in Microsoft Outlook.", "", "1.5 months"],
   ["Office & Productivity", "MS Access", "Design and use Access databases: tables, relationships, queries, forms, reports and basic automation.", "", "2.5 months"],
-  ["Office & Productivity", "MS Office", "A complete 6-month (about 56 hours) MS Office program: Excel from basic to advanced, PowerPoint and Word for everyday office work.", "", "5 months"],
-  ["Office & Productivity", "MS Project (MSP)", "Plan, schedule, track and report projects in Microsoft Project, from first plan to progress reports (16 hours).", "", "2.5 months"],
+  ["Office & Productivity", "MS Office", "A complete MS Office program: Excel from basic to advanced, PowerPoint and Word for everyday office work.", "", "5 months"],
+  ["Office & Productivity", "MS Project (MSP)", "Plan, schedule, track and report projects in Microsoft Project, from first plan to progress reports.", "", "2.5 months"],
   ["Office & Productivity", "Libre Office (Calc-Excel)", "Advanced spreadsheets in LibreOffice Calc: formulas, lookups, data cleaning, pivot tables and professional reports.", "", "2.5 months"],
   ["Office & Productivity", "Libre Office (Writer-Word)", "Create professional documents in LibreOffice Writer: styles, tables, long documents, templates and mail merge.", "", "1.5 months"],
   ["Office & Productivity", "Libre Office (Presentation-PPT)", "Build professional presentations in LibreOffice Impress with masters, charts, multimedia and animations.", "", "1.5 months"],
   ["Office & Productivity", "Open Office (Calc-Excel)", "Advanced spreadsheets in OpenOffice Calc: formulas, lookups, data cleaning, pivot tables and professional reports.", "", "2.5 months"],
   ["Office & Productivity", "Open Office (Writer-Word)", "Create professional documents in OpenOffice Writer: styles, tables, long documents, templates and mail merge.", "", "1.5 months"],
   ["Office & Productivity", "Open Office (Presentation-PPT)", "Build professional presentations in OpenOffice Impress with masters, charts, multimedia and animations.", "", "1.5 months"],
-  ["Office & Productivity", "Basics of Computer", "Computer fundamentals for beginners: Windows, files and folders, internet and email, plus basic Word and Excel (24 hours).", "", "2.5 months"],
-  ["Data & Analytics", "Advanced Excel", "Master advanced Excel for analysis and MIS: complex formulas, lookups, dynamic arrays, data cleaning and professional reports and dashboards (24 hours).", "Popular", "2.5 months"],
-  ["Data & Analytics", "Advanced Excel with AI", "Excel from basics to professional MIS reporting, then AI inside Excel to write formulas, analyse data and build reports faster (38 hours).", "New", "4 months"],
-  ["Data & Analytics", "Basic Excel", "Build a strong Excel foundation: worksheets, cell references, everyday formulas, sorting, filtering and formatting (8 hours).", "Popular", "1.5 months"],
-  ["Data & Analytics", "SQL", "Microsoft SQL Server from basics to advanced analytics, with Python integration and AI-assisted query writing (20 hours).", "", "2.5 months"],
-  ["Data & Analytics", "Power BI", "Turn raw data into interactive dashboards with Power BI Desktop and Service: Power Query, data modelling, DAX and sharing (20 hours).", "", "2.5 months"],
-  ["Data & Analytics", "Tableau", "Visual analytics in Tableau Desktop: connect data, build charts, maps and calculations, and design interactive dashboards (24 hours).", "", "2.5 months"],
+  ["Office & Productivity", "Basics of Computer", "Computer fundamentals for beginners: Windows, files and folders, internet and email, plus basic Word and Excel.", "", "2.5 months"],
+  ["Data & Analytics", "Advanced Excel", "Master advanced Excel for analysis and MIS: complex formulas, lookups, dynamic arrays, data cleaning and professional reports and dashboards.", "Popular", "2.5 months"],
+  ["Data & Analytics", "Advanced Excel with AI", "Excel from basics to professional MIS reporting, then AI inside Excel to write formulas, analyse data and build reports faster.", "New", "4 months"],
+  ["Data & Analytics", "Basic Excel", "Build a strong Excel foundation: worksheets, cell references, everyday formulas, sorting, filtering and formatting.", "Popular", "1.5 months"],
+  ["Data & Analytics", "SQL", "Microsoft SQL Server from basics to advanced analytics, with Python integration and AI-assisted query writing.", "", "2.5 months"],
+  ["Data & Analytics", "Power BI", "Turn raw data into interactive dashboards with Power BI Desktop and Service: Power Query, data modelling, DAX and sharing.", "", "2.5 months"],
+  ["Data & Analytics", "Tableau", "Visual analytics in Tableau Desktop: connect data, build charts, maps and calculations, and design interactive dashboards.", "", "2.5 months"],
   ["Data & Analytics", "Data Analytics", "A 10-month career program covering Advanced Excel, VBA, Power BI, SQL, statistics and Python for data analysis, with projects.", "", "10 months"],
   ["Data & Analytics", "Data Analytics with AI", "The Data Analytics career program with AI tools added: Excel, VBA, Power BI, SQL and Python, plus AI for faster analysis and reporting (12 months).", "", "12 months"],
   ["Data & Analytics", "Business Analytics", "A 12-month program: Excel, VBA, Power BI, SQL, Python, statistics and machine learning applied to business decisions.", "", "10 months"],
@@ -41,26 +41,26 @@ const COURSES = [
   ["Data & Analytics", "MIS with Gen AI", "The MIS Specialist program with Generative AI: Excel, VBA and Power BI reports built faster with AI tools (7 months).", "", "7 months"],
   ["Data & Analytics", "Power Query", "Import, clean, combine and automate data in Excel Power Query, the first half of the Power Query & Power Pivot course.", "", "1 month"],
   ["Data & Analytics", "Power Pivot", "Build data models, write DAX and create interactive dashboards with Excel Power Pivot, the second half of the Power Query & Power Pivot course.", "", "1 month"],
-  ["Automation & Google", "Google Sheets with App script (AUTOMATION)", "A job-oriented program (45–50 hours) on Google Sheets, Forms, Apps Script, web apps and Looker Studio, ending with an end-to-end business automation project.", "New", "3.5 months"],
+  ["Automation & Google", "Google Sheets with App script (AUTOMATION)", "A job-oriented program on Google Sheets, Forms, Apps Script, web apps and Looker Studio, ending with an end-to-end business automation project.", "New", "3.5 months"],
   ["Automation & Google", "Google sheets With Looker Studio", "Google Sheets from basic to advanced, connected to Looker Studio for live, shareable dashboards.", "", "3.5 months"],
-  ["Automation & Google", "VBA/Macros", "Automate Excel with VBA: macros, procedures, loops, user forms, ribbon tabs and your own add-ins (20 hours).", "", "2.5 months"],
+  ["Automation & Google", "VBA/Macros", "Automate Excel with VBA: macros, procedures, loops, user forms, ribbon tabs and your own add-ins.", "", "2.5 months"],
   ["Automation & Google", "MS Power Apps", "Build business apps on the Microsoft Power Platform with Power Apps, SharePoint, Dataverse and Power Automate.", "", "2 months"],
   ["Automation & Google", "MS PowerAutomate", "Automate everyday work across Microsoft 365 with Power Automate cloud flows, approvals and Excel/Outlook/Forms automation.", "", "2 months"],
   ["Automation & Google", "Google Sheet", "Google Sheets from basics to advanced: formulas, lookups, QUERY, pivot tables, charts and collaboration.", "", "2.5 months"],
   ["Automation & Google", "Google sheet with Google Form", "Collect data with Google Forms and analyse it in Google Sheets with formulas, pivots and automated reports.", "", "3.5 months"],
-  ["AI & Programming", "Python with AI", "Python for data analytics (24 hours): programming basics, NumPy, Pandas, visualisation and statistics, with AI tools to code faster.", "", "3 months"],
+  ["AI & Programming", "Python with AI", "Python for data analytics: programming basics, NumPy, Pandas, visualisation and statistics, with AI tools to code faster.", "", "3 months"],
   ["AI & Programming", "Gen AI", "Use Generative AI with MS Office: write Excel formulas, analyse data, create presentations and documents in minutes. No coding needed.", "", "1 month"],
-  ["AI & Programming", "Machine Learning (ML)", "Machine learning with Python (20 hours): the maths, key algorithms and the full lifecycle to train, evaluate and use models.", "", "2.5 months"],
+  ["AI & Programming", "Machine Learning (ML)", "Machine learning with Python: the maths, key algorithms and the full lifecycle to train, evaluate and use models.", "", "2.5 months"],
   ["AI & Programming", "Web App Development (Full Stack)", "Build and deploy web applications end to end: HTML, CSS and JavaScript front end, back end, database and hosting.", "", "2 months"],
   ["AI & Programming", "Claude AI", "Practical Generative AI for business teams: Claude, ChatGPT, Gemini and Grok, prompt design, document and data workflows, and responsible use.", "", "2 months"],
   ["ERP & Accounting", "Tally", "Accounting and GST in TallyPrime: company setup, vouchers, inventory, GST returns and financial reports.", "", "2 months"],
   ["ERP & Accounting", "SAP FICO", "SAP Financial Accounting and Controlling in S/4HANA/ECC: configuration, transactions and management reporting.", "", "2 months"],
-  ["ERP & Accounting", "SAP Business One", "SAP Business One ERP for small and mid-size companies: sales, purchasing, inventory, finance and production (20–22 hours). Practice software provided.", "", "2 months"],
-  ["ERP & Accounting", "SAP MM (User Level)", "SAP S/4HANA Materials Management for end users (30 hours): master data, the full procurement cycle and inventory.", "", "2 months"],
-  ["ERP & Accounting", "SAP MM (Consultant Level)", "SAP MM consultant training (60 hours): configuration of enterprise structure, procure-to-pay, inventory, pricing and S/4HANA specifics.", "", "3.5 months"],
-  ["ERP & Accounting", "SAP SD (User Level)", "SAP S/4HANA Sales & Distribution for end users (18–20 hours): the complete order-to-cash process.", "", "2 months"],
-  ["ERP & Accounting", "SAP SD (Consultant Level)", "SAP SD consultant training (30–35 hours): O2C configuration, pricing, shipping, billing and integration with MM and FI.", "", "3.5 months"],
-  ["ERP & Accounting", "NetSuite", "Oracle NetSuite cloud ERP (50 hours): accounting, order-to-cash, procure-to-pay, inventory, CRM, reporting and dashboards.", "", "3 months"],
+  ["ERP & Accounting", "SAP Business One", "SAP Business One ERP for small and mid-size companies: sales, purchasing, inventory, finance and production. Practice software provided.", "", "2 months"],
+  ["ERP & Accounting", "SAP MM (User Level)", "SAP S/4HANA Materials Management for end users: master data, the full procurement cycle and inventory.", "", "2 months"],
+  ["ERP & Accounting", "SAP MM (Consultant Level)", "SAP MM consultant training: configuration of enterprise structure, procure-to-pay, inventory, pricing and S/4HANA specifics.", "", "3.5 months"],
+  ["ERP & Accounting", "SAP SD (User Level)", "SAP S/4HANA Sales & Distribution for end users: the complete order-to-cash process.", "", "2 months"],
+  ["ERP & Accounting", "SAP SD (Consultant Level)", "SAP SD consultant training: O2C configuration, pricing, shipping, billing and integration with MM and FI.", "", "3.5 months"],
+  ["ERP & Accounting", "NetSuite", "Oracle NetSuite cloud ERP: accounting, order-to-cash, procure-to-pay, inventory, CRM, reporting and dashboards.", "", "3 months"],
   ["Career Skills", "Career Communication & Interview Skills Program", "A 4-month program to build spoken English, confidence and interview skills for the workplace.", "", "3 months"]
 ].map(([cat, title, desc, badge, dur]) => ({ cat, title, desc, badge, dur }));
 
@@ -368,9 +368,9 @@ function coverHtml(c) {
   return `<div class="cv${''}" style="--cv:${k.bg}" aria-hidden="true">${art}${withAi ? AIBADGE() : ''}</div>`;
 }
 function courseCard(c) {
-  const d = CAT[normT(c.title)] || CAT[OUTLINE_ALIAS[normT(c.title)]] || null, mods = modulesFor(c.title), hrs = (/(\d+(?:\s*[–-]\s*\d+)?)\s*hours/i.exec(c.desc) || [])[1];
+  const d = CAT[normT(c.title)] || CAT[OUTLINE_ALIAS[normT(c.title)]] || null, mods = modulesFor(c.title);
   const badge = (d && d.badge) || c.badge, off = d && d.fee && d.price < d.fee ? Math.round((1 - d.price / d.fee) * 100) : 0;
-  const facts = [c.dur, mods ? mods.length + ' modules' : hrs ? hrs.replace(/\s+/g, '') + ' hours' : '', 'Certificate'].filter(Boolean);
+  const facts = [c.dur, mods ? mods.length + ' modules' : '', 'Certificate'].filter(Boolean);
   let hl = '';
   if (mods && mods.length > 2) hl = `<div class="hl v">${mods.map(m => esc(m.replace('Advanced ', 'Adv ').replace('Generative AI', 'AI').replace('Machine Learning', 'ML'))).join(' → ')}</div>`;
   else if (d && d.batch && d.batch.start) hl = `<div class="hl g"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>Next batch ${esc(niceDate(d.batch.start))}${d.batch.timing ? ' · ' + esc(d.batch.timing.split(/\s+\d/)[0]) : ''}${d.batch.seats && d.batch.left <= 5 ? ` · only ${d.batch.left} seats left` : ''}</div>`;

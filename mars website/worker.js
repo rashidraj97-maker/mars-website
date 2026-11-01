@@ -38,7 +38,7 @@ async function catalog(ctx) {
   const courses = d.courses.filter(c => c.Title && num(c.Fee) > 0 && !/^test$/i.test(String(c.Title).trim())).map(c => {
     const t = String(c.Title).trim(), fee = num(c.Fee), price = num(c.Price) || fee, o = c.Offer || null;
     return { t, cat: String(c.Category || ''), dur: String(c.Duration || ''), fee, price, off: o ? String(o.label || '') : '', offName: o ? String(o.name || '') : '', offEnd: o ? isoDay(o.end) : '',
-      badge: String(c.Badge || ''), desc: String(c.Description || '').slice(0, 260), hl: String(c['Highlights (separate with |)'] || '').split('|').map(x => x.trim()).filter(Boolean).slice(0, 6),
+      badge: String(c.Badge || ''), desc: String(c.Description || '').replace(/\s*\((?:about\s*)?\d+(?:\s*[–-]\s*\d+)?\s*hours\)/gi, '').slice(0, 260), hl: String(c['Highlights (separate with |)'] || '').split('|').map(x => x.trim()).filter(Boolean).slice(0, 6),
       mods: MODULES[normT(t)] || null, emi: ((d.emi || {})[t] || []).map(p => ({ n: p.n, extra: p.extra, total: p.total, first: (p.amounts || [])[0] || Math.ceil(p.total / p.n) })) };
   });
   const batches = (d.batches || []).map(b => ({ course: String(b.course || ''), start: isoDay(b.start), timing: String(b.timing || ''), mode: String(b.mode || ''), left: b.left }))
@@ -73,6 +73,7 @@ RULES
 - Reply in the same language and script as the visitor (English, Hindi, Hinglish or Bengali).
 - Be short and warm: 2 to 5 sentences, or a short "- " bullet list. Use **bold** for course names and prices. Write natural sentences: never copy the fact lines or use "|" separators. No tables, no headings, no links (buttons and course cards are added for you).
 - Fees: give the offer price when there is one, plus the regular fee and the offer end date. The offer applies to full payment; EMI is on the regular fee plus the EMI extra.
+- Never mention course hours; give the duration in months only.
 - Late fee: an installment paid after its due date + 5 days gets ${inr(D.lateSmall)} added (course total up to ${inr(D.lateLimit)}) or ${inr(D.lateBig)} (above).
 - To enroll, the visitor taps the Enroll button (opens our app). For a human: WhatsApp us or ask for a call back.
 - Finish EVERY reply with one last line exactly like [[courses: Exact Title | Exact Title]] naming at most 2 course titles from the list: only the course the visitor asked about, or the one or two you recommend most (or [[courses: ]] if none). Add [[callback]] ONLY when the visitor explicitly asks to be called or contacted, never on your own.
