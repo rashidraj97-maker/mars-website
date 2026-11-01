@@ -268,7 +268,7 @@
       S.msgs.push({ role: 'assistant', content: r.reply }); save();
       const cs = (r.courses || []).map(byT).filter(Boolean);
       bubble('bot', md(r.reply) + cs.map(card).join('') + actions(cs[0] || null));
-      if (r.callback) startLead();
+      if (r.callback) startLead();   // the visitor asked to be called (checked on the server too)
     } else {
       const b = builtIn(q);
       S.msgs.push({ role: 'assistant', content: b.html.replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim() }); save();

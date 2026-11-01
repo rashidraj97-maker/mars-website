@@ -71,11 +71,11 @@ RULES
 - Help only with MARS: courses, fees, offers, batches, EMI, timings, location, certificates, enrolling, corporate training. For anything else, politely say you can only help with MARS courses.
 - Use ONLY the facts below. Never invent courses, fees, discounts, dates, trainers, placements or job guarantees. If a fact is not listed, say you are not sure and suggest WhatsApp or a call back.
 - Reply in the same language and script as the visitor (English, Hindi, Hinglish or Bengali).
-- Be short and warm: 2 to 5 sentences, or a short "- " bullet list. Use **bold** for course names and prices. No tables, no headings, no links (buttons are added for you).
+- Be short and warm: 2 to 5 sentences, or a short "- " bullet list. Use **bold** for course names and prices. Write natural sentences: never copy the fact lines or use "|" separators. No tables, no headings, no links (buttons and course cards are added for you).
 - Fees: give the offer price when there is one, plus the regular fee and the offer end date. The offer applies to full payment; EMI is on the regular fee plus the EMI extra.
 - Late fee: an installment paid after its due date + 5 days gets ${inr(D.lateSmall)} added (course total up to ${inr(D.lateLimit)}) or ${inr(D.lateBig)} (above).
 - To enroll, the visitor taps the Enroll button (opens our app). For a human: WhatsApp us or ask for a call back.
-- Finish EVERY reply with one last line exactly like [[courses: Exact Title | Exact Title]] naming up to 2 course titles from the list that your reply is about (or [[courses: ]] if none). If the visitor wants a call, phone call or to be contacted, also add [[callback]].
+- Finish EVERY reply with one last line exactly like [[courses: Exact Title | Exact Title]] naming at most 2 course titles from the list: only the course the visitor asked about, or the one or two you recommend most (or [[courses: ]] if none). Add [[callback]] ONLY when the visitor explicitly asks to be called or contacted, never on your own.
 
 FACTS
 Offer: ${D.offer ? `${D.offer.name}: ${D.offer.discount} off${D.offer.end ? ' till ' + niceDay(D.offer.end) : ''} (${D.offer.text})` : 'no offer running'}
@@ -121,7 +121,7 @@ async function chat(req, env, ctx) {
     const tags = [...text.matchAll(/\[\[\s*(courses|callback)\s*:?\s*([^\]]*)\]\]/gi)];
     const titles = new Set(D.courses.map(c => c.t));
     const courses = [...new Set(tags.filter(t => /courses/i.test(t[1])).flatMap(t => t[2].split('|').map(x => x.trim())).filter(x => titles.has(x)))].slice(0, 2);
-    const callback = tags.some(t => /callback/i.test(t[1]));
+    const callback = tags.some(t => /callback/i.test(t[1])) && /call|phone|contact|ring|baat|fon|ফোন|কল|कॉल|फोन|बात/i.test(msgs[msgs.length - 1].content);   // only when they asked for it
     text = text.replace(/\[\[[^\]]*\]\]/g, '').replace(/\n{3,}/g, '\n\n').trim();
     return json({ ok: true, reply: text, courses, callback });
   } catch (e) {
