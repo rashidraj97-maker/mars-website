@@ -17,18 +17,22 @@
 #mai{--mai-ink:#0B1630;--mai-text:#2A3A55;--mai-muted:#5E6E86;--mai-paper:#F4F7FC;--mai-line:#E1E8F2;--mai-brand:#2A6EB5;--mai-violet:#7B61FF;--mai-gold:#FFC23C;
   --mai-grad:linear-gradient(135deg,#2A6EB5 0%,#5B5BEF 60%,#7B61FF 100%);font:15px/1.5 Inter,system-ui,-apple-system,"Segoe UI",sans-serif;color:var(--mai-text)}
 #mai *{box-sizing:border-box}
-#mai .mai-launch{position:fixed;right:calc(20px + env(safe-area-inset-right,0px));bottom:calc(90px + env(safe-area-inset-bottom,0px));z-index:45;display:flex;align-items:center;gap:10px;height:58px;padding:0 20px 0 8px;border:0;border-radius:99px;background:var(--mai-grad);color:#fff;font:700 15px/1.2 "Plus Jakarta Sans",Inter,sans-serif;cursor:pointer;animation:mai-ring 2.4s ease-out infinite}
-@keyframes mai-ring{0%{box-shadow:0 12px 30px rgba(91,91,239,.45),0 0 0 0 rgba(123,97,255,.55)}70%{box-shadow:0 12px 30px rgba(91,91,239,.45),0 0 0 14px rgba(123,97,255,0)}100%{box-shadow:0 12px 30px rgba(91,91,239,.45),0 0 0 0 rgba(123,97,255,0)}}
+#mai .mai-launch{position:fixed;right:calc(20px + env(safe-area-inset-right,0px));bottom:calc(90px + env(safe-area-inset-bottom,0px));z-index:45;width:58px;height:58px;padding:0;border:0;border-radius:50%;background:var(--mai-grad);color:#fff;display:grid;place-items:center;cursor:pointer;animation:mai-ring 2.4s ease-out infinite;transition:transform .2s}
+#mai .mai-launch:hover{transform:scale(1.06)}
+@keyframes mai-ring{0%{box-shadow:0 12px 30px -6px rgba(91,91,239,.6),0 0 0 0 rgba(123,97,255,.55)}70%{box-shadow:0 12px 30px -6px rgba(91,91,239,.6),0 0 0 14px rgba(123,97,255,0)}100%{box-shadow:0 12px 30px -6px rgba(91,91,239,.6),0 0 0 0 rgba(123,97,255,0)}}
 #mai .mai-av{width:42px;height:42px;border-radius:50%;background:#fff;display:grid;place-items:center;position:relative;flex:none}
 #mai .mai-av img{width:36px;height:36px;border-radius:50%;display:block}
 #mai .mai-av i{position:absolute;right:0;bottom:2px;width:11px;height:11px;border-radius:50%;background:#22C55E;border:2px solid #fff}
-#mai .mai-lbl small{display:block;font:500 11px Inter,sans-serif;opacity:.88;text-align:left;margin-top:2px}
+#mai .mai-launch .mai-av{width:48px;height:48px}
+#mai .mai-launch .mai-av img{width:42px;height:42px}
+#mai .mai-ai{position:absolute;top:-5px;right:-7px;background:var(--mai-gold);color:var(--mai-ink);font:800 10px/1 "Plus Jakarta Sans",Inter,sans-serif;letter-spacing:.04em;padding:4px 6px;border-radius:99px;box-shadow:0 0 0 2px #fff}
+#mai .mai-lbl{position:absolute;right:calc(100% + 12px);top:50%;transform:translateY(-50%) translateX(6px);white-space:nowrap;background:var(--mai-ink);color:#fff;font:600 13px/1 Inter,sans-serif;padding:9px 12px;border-radius:10px;box-shadow:0 8px 20px rgba(6,18,42,.25);opacity:0;pointer-events:none;transition:opacity .15s,transform .15s}
+#mai .mai-launch:hover .mai-lbl,#mai .mai-launch:focus-visible .mai-lbl{opacity:1;transform:translateY(-50%)}
 #mai .mai-launch:focus-visible{outline:3px solid var(--mai-gold);outline-offset:4px}
 #mai .mai-x{display:none;font-size:28px;line-height:1}
-#mai .mai-launch[aria-expanded="true"]{padding:0;width:58px;justify-content:center}
-#mai .mai-launch[aria-expanded="true"] .mai-lbl,#mai .mai-launch[aria-expanded="true"] .mai-av{display:none}
+#mai .mai-launch[aria-expanded="true"] .mai-lbl,#mai .mai-launch[aria-expanded="true"] .mai-av,#mai .mai-launch[aria-expanded="true"] .mai-ai{display:none}
 #mai .mai-launch[aria-expanded="true"] .mai-x{display:block}
-@media(max-width:600px){#mai .mai-launch{padding:0;width:58px;justify-content:center}#mai .mai-lbl{display:none}#mai .mai-av{width:50px;height:50px}#mai .mai-av img{width:44px;height:44px}}
+@media(hover:none){#mai .mai-lbl{display:none}}
 #mai .mai-teaser{position:fixed;right:calc(20px + env(safe-area-inset-right,0px));bottom:calc(160px + env(safe-area-inset-bottom,0px));z-index:45;width:250px;max-width:calc(100vw - 40px);background:#fff;border:1px solid var(--mai-line);border-radius:16px 16px 4px 16px;box-shadow:0 14px 34px rgba(6,18,42,.18);padding:12px 34px 12px 14px;font-size:14px;color:var(--mai-ink);cursor:pointer;animation:mai-pop .35s ease both}
 #mai .mai-teaser b{font-family:"Plus Jakarta Sans",Inter,sans-serif}
 #mai .mai-teaser button{position:absolute;top:6px;right:6px;border:0;background:none;color:var(--mai-muted);font-size:18px;cursor:pointer;width:26px;height:26px}
@@ -121,7 +125,7 @@
   };
   const root = document.createElement('div'); root.id = 'mai';
   root.innerHTML = `<style>${css}</style>
-  <button type="button" class="mai-launch" aria-expanded="false" aria-controls="mai-chat" aria-label="Ask MARS AI"><span class="mai-av"><img src="${LOGO}" alt=""><i></i></span><span class="mai-lbl">Ask MARS AI<small>Courses · fees · batches</small></span><span class="mai-x" aria-hidden="true">×</span></button>
+  <button type="button" class="mai-launch" aria-expanded="false" aria-controls="mai-chat" aria-label="Ask MARS AI"><span class="mai-av"><img src="${LOGO}" alt=""></span><span class="mai-ai">AI</span><span class="mai-lbl">Ask MARS AI</span><span class="mai-x" aria-hidden="true">×</span></button>
   <div class="mai-teaser" hidden role="button" tabindex="0"><b>Hi! 👋</b> Not sure which course to pick? Ask me, I reply in seconds.<button type="button" class="mai-tx" aria-label="Hide">×</button></div>
   <section class="mai-chat" id="mai-chat" aria-label="MARS AI assistant" hidden>
     <div class="mai-top"><div class="mai-row1"><span class="mai-av"><img src="${LOGO}" alt=""><i></i></span><div><b>MARS AI Assistant</b><small>Online · replies in seconds</small></div>
