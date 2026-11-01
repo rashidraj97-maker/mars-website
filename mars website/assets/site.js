@@ -334,6 +334,30 @@ function coverOf(title) {
   if (has('career', 'interview')) return { bg: '#7C2D12', kind: 'talk', ic: 'Hi' };
   return { bg: '#1B4F86', kind: 'bars', ic: title.slice(0, 2).toUpperCase() };
 }
+/* Photo covers: free photos from Unsplash (Unsplash License). First match wins; LibreOffice and OpenOffice share one photo per app.
+   If a photo fails to load, the drawn cover underneath shows instead. */
+const PHOTOS = [
+  [['advanced excel with ai'], '1744640326166-433469d102f2'], [['advanced excel'], '1783115259399-3a5a3e0e4592'], [['basic excel'], '1542744173-05336fcc7ad4'],
+  [['app script'], '1498050108023-c5249f4df085'], [['google form'], '1586282023639-dbd68e65a9fe'], [['looker'], '1560472354-b33ff0c44a43'], [['google sheet'], '1599658880436-c61792e70672'],
+  [['sql'], '1580106815433-a5b1d1d53d85'], [['ms access'], '1544383835-bda2bc66a55d'], [['power bi'], '1551288049-bebda4e38f71'], [['tableau'], '1666875753105-c63a6f3bdc86'],
+  [['data analytics with ai'], '1757466762489-52fea38071ad'], [['data analytics'], '1758873268745-dd2cf0d677b5'],
+  [['business analytics with gen ai'], '1765816589173-d87bf0c38e71'], [['business analytics'], '1758873269181-270f5b7fc6aa'],
+  [['mis with gen ai'], '1770347658796-e871e53836d6'], [['mis specialist'], '1628348068343-c6a848d2b6dd'],
+  [['power query'], '1526628953301-3e589a6a8b74'], [['power pivot'], '1669399213378-2853e748f217'], [['vba', 'macro'], '1605379399642-870262d3d051'],
+  [['power apps'], '1551650975-87deedd944c3'], [['powerautomate', 'power automate'], '1646617747563-4f080bddf282'],
+  [['python'], '1587620962725-abab7fe55159'], [['machine learning'], '1677442135703-1787eea5ce01'], [['web app'], '1547658719-da2b51169166'],
+  [['tally'], '1626266061368-46a8f578ddd6'], [['sap fico'], '1762427354051-a9bdb181ae3b'], [['business one'], '1600880292203-757bb62b4baf'],
+  [['sap mm (consultant'], '1553413077-190dd305871c'], [['sap mm'], '1782948603191-065fb15e2e8e'],
+  [['sap sd (consultant'], '1494412519320-aa613dfb7738'], [['sap sd'], '1759272840538-ae4b07214c71'], [['netsuite'], '1667984390553-7f439e6ae401'],
+  [['career', 'interview'], '1698047682091-782b1e5c6536'],
+  [['powerpoint'], '1758691736483-5f600b509962'], [['ms word'], '1586943759341-be5595944989', 'center 22%'], [['outlook'], '1567473030492-533b30c5494c'],
+  [['ms office'], '1535957998253-26ae1ef29506'], [['ms project'], '1649478680984-01586ce84ac0'], [['basics of computer'], '1778489769184-45868633c527'],
+  [['calc'], '1783113938335-ba83ccde7f5f'], [['writer'], '1501504905252-473c47e087f8'], [['presentation'], '1542744173-8e7e53415bb0'],
+  [['libre office', 'open office'], '1783113938335-ba83ccde7f5f'], [['excel'], '1542744173-05336fcc7ad4'], [['computer'], '1778489769184-45868633c527'], [['mis'], '1628348068343-c6a848d2b6dd']   // general names, in case a course is renamed
+];
+const photoOf = title => { const t = String(title || '').toLowerCase(), p = PHOTOS.find(([w]) => w.some(x => t.includes(x))); return p ? { src: `https://images.unsplash.com/photo-${p[1]}?fm=jpg&q=70&w=900&auto=format&fit=crop`, pos: p[2] || 'center' } : null; };
+const photoTile = (title, k) => { const t = title.toLowerCase(), h = (...w) => w.some(x => t.includes(x));
+  return h('ms office') ? 'W·P·X' : h('machine learning') ? 'ML' : h('power apps', 'powerautomate', 'power automate') ? 'PA' : h('career', 'interview') ? 'CI' : k.ic || title.slice(0, 2).toUpperCase(); };
 /* Original "AI head" artwork: glowing profile with a circuit brain and data lines (inline SVG, no image files) */
 const AIHEAD = (cls = '') => {
   const lines = [[18, 'M0 18 H70 L88 36 H170'], [40, 'M0 40 H110 L124 54 H196'], [62, 'M0 62 H60 L78 80 H150 L160 70 H214'], [84, 'M0 84 H130 L146 100 H222'], [106, 'M0 106 H80 L96 122 H170 L182 110 H226'], [128, 'M0 128 H120 L136 144 H210'], [150, 'M0 150 H70 L86 136 H190']];
@@ -365,7 +389,9 @@ function coverHtml(c) {
   else if (k.kind === 'ai') art = `<img class="aiphoto" src="https://images.unsplash.com/photo-1770233621425-5d9ee7a0a700?fm=jpg&q=70&w=800&auto=format&fit=crop" alt="" loading="lazy" onerror="this.parentNode.insertAdjacentHTML('beforeend', AIHEAD()); this.remove()"><span class="aitint"></span><span class="aishade"></span>`;   // photo: Zach M on Unsplash (Unsplash License)
   else if (k.kind === 'pc') art = `<span class="pc"><i></i></span>`;
   else if (k.kind === 'talk') art = `<span class="talk">Tell me about yourself…</span><span class="talk r">I am a…</span>`;
-  return `<div class="cv${''}" style="--cv:${k.bg}" aria-hidden="true">${art}${withAi ? AIBADGE() : ''}</div>`;
+  const ph = k.kind !== 'photo' && k.kind !== 'ai' ? photoOf(c.title) : null;
+  if (ph) { const lab = photoTile(c.title, k); art += `<img class="cimg" src="${ph.src}" alt="" loading="lazy" style="object-position:${ph.pos}" onerror="this.parentNode.classList.remove('hasimg')"><span class="cshade"></span>${tile(lab, 'ctile' + (lab.length > 3 ? ' xs' : lab.length > 2 ? ' sm' : ''))}`; }
+  return `<div class="cv${ph ? ' hasimg' : ''}" style="--cv:${k.bg}" aria-hidden="true">${art}${withAi ? AIBADGE() : ''}</div>`;
 }
 function courseCard(c) {
   const d = CAT[normT(c.title)] || CAT[OUTLINE_ALIAS[normT(c.title)]] || null, mods = modulesFor(c.title);

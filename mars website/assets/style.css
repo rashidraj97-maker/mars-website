@@ -874,3 +874,14 @@ html{scroll-padding-top:96px}
 .nav a:not(.btn)[aria-current="page"]{background:linear-gradient(135deg,#2A6EB5,#7B61FF);color:#fff;font-weight:700;box-shadow:0 6px 16px rgba(91,97,255,.3)}
 .nav a:not(.btn)[aria-current="page"]:hover{background:linear-gradient(135deg,#2A6EB5,#7B61FF);color:#fff}
 @media(max-width:980px){.nav a:not(.btn)[aria-current="page"]{border-radius:12px;padding-left:14px!important;border-bottom-color:transparent}}
+
+/* Photo covers */
+.cv.hasimg{background:#0B1630}
+.cv.hasimg>:not(.cimg):not(.cshade):not(.ctile):not(.aibadge),.cv:not(.hasimg)>.cimg,.cv:not(.hasimg)>.cshade,.cv:not(.hasimg)>.ctile{display:none}
+.cv .cimg{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transition:transform .5s ease}
+.cc4:hover .cv .cimg{transform:scale(1.06)}
+.cv .cshade{position:absolute;inset:0;background:linear-gradient(180deg,rgba(6,18,42,.05) 30%,rgba(6,18,42,.72)),linear-gradient(135deg,var(--cv) 0%,transparent 55%);opacity:.95}
+.cv .tile.ctile{z-index:2;left:18px;bottom:16px;width:52px;height:52px;font-size:1.35rem}
+.cv .tile.ctile.sm{font-size:1.05rem}.cv .tile.ctile.xs{font-size:.8rem}
+.cv.hasimg .aibadge{z-index:2}
+@media(prefers-reduced-motion:reduce){.cc4:hover .cv .cimg{transform:none}}
