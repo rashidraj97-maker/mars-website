@@ -12,7 +12,7 @@ What's in this folder
 
 Settings you can change later (optional)
   Open assets/site.js in Notepad:
-  1. enquiryApp: already set to 'https://marstraining.netlify.app'.
+  1. enquiryApp: already set to 'https://app.marstraining.in' (the app runs on Cloudflare).
      "Enroll Now" opens the app's Enroll tab; every "Enquire" button opens its Enquire tab.
      If the app link ever changes, change it here.
   2. api: already set to your Apps Script web app link (ends in /exec).
