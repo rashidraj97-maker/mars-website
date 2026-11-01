@@ -202,6 +202,21 @@ main{padding:0 16px}
 .contact{background:#fff;border:1px solid var(--line);border-radius:var(--r);padding:16px;margin-top:24px;display:grid;gap:10px}
 .contact h3{font-size:1.05rem}
 .contact p{margin:0;color:var(--muted)}
+/* Office hours (from Settings: office_hours, office_note, appointment_phones) */
+.hrs{display:flex;gap:10px;align-items:flex-start;background:#F1F6FD;border:1px solid #DCE7F5;border-radius:14px;padding:12px 14px;color:var(--ink);font-size:.9rem;line-height:1.45;text-align:left}
+.hrs>svg{width:20px;height:20px;flex:none;margin-top:1px;fill:none;stroke:var(--brand);stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
+.hrs .hb{flex:1;min-width:0}
+.hrs .hh{display:block;font-weight:800;margin-bottom:4px}
+.hrs ul{list-style:none;margin:0 0 6px;padding:0;display:grid;gap:2px}
+.hrs li{display:flex;justify-content:space-between;gap:10px}
+.hrs li span{color:var(--muted)}.hrs li b{font-weight:700;text-align:right}
+.hrs li.off b{color:#B45309}
+.hrs .hn{margin:0;color:#334155;font-size:.84rem}
+.hrs .hn a{color:var(--brand);font-weight:700;text-decoration:none;white-space:nowrap}
+.hrs .hwa{display:inline-flex;align-items:center;min-height:40px;margin-top:8px;padding:0 14px;border-radius:10px;background:#1E8E3E;color:#fff;font-weight:700;font-size:.88rem;text-decoration:none}
+.payhrs{margin:4px 0 12px}
+.locnote .lochrs a{color:inherit;font-weight:700;white-space:nowrap}
+.locnote+.locnote{margin-top:6px}
 .faq{background:#fff;border:1px solid var(--line);border-radius:16px;margin-bottom:10px;padding:0 16px}
 .faq summary{list-style:none;display:flex;justify-content:space-between;gap:12px;align-items:center;min-height:58px;font-weight:700;cursor:pointer}
 .faq summary::-webkit-details-marker{display:none}
@@ -592,6 +607,7 @@ try { var sp = JSON.parse(localStorage.getItem('mars_splash') || 'null'), td = n
             <label>Preferred batch start date *<input name="batch" type="date"></label>
             <label>Preferred mode<select name="mode"></select></label>
             <p class="locnote"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 22s7-6.2 7-12a7 7 0 0 0-14 0c0 5.8 7 12 7 12z"/><circle cx="12" cy="10" r="2.5"/></svg><span><b>Classroom classes are held only at our Kolkata centre:</b> P-74, Nani Gopal Roy Chowdhury Avenue, CIT Road, Kolkata 700014. Outside Kolkata? Choose <b>Online</b>, same trainer, live.</span></p>
+            <p class="locnote"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg><span class="lochrs"></span></p>
             <label>Working status<select name="working"></select></label>
             <label>How did you hear about us?<select name="source"></select></label>
             <label>Message (optional)<textarea name="message"></textarea></label>
@@ -644,6 +660,7 @@ try { var sp = JSON.parse(localStorage.getItem('mars_splash') || 'null'), td = n
           <label>Working status *<select name="working" id="pworking"></select></label>
           <label>Preferred mode *<select name="mode" id="pmode"></select></label>
           <p class="locnote"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 22s7-6.2 7-12a7 7 0 0 0-14 0c0 5.8 7 12 7 12z"/><circle cx="12" cy="10" r="2.5"/></svg><span><b>Classroom classes are held only at our Kolkata centre:</b> P-74, Nani Gopal Roy Chowdhury Avenue, CIT Road, Kolkata 700014. Outside Kolkata? Choose <b>Online</b>, same trainer, live.</span></p>
+            <p class="locnote"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg><span class="lochrs"></span></p>
           <label class="hp" aria-hidden="true">Website<input name="website" tabindex="-1" autocomplete="off"></label>
           <label class="chk" id="pTermsWrap"><input type="checkbox" name="terms"><span><span id="pTerms"></span> <a href="#refund">Refund policy</a> and <a href="#terms">terms</a>.</span></label>
           <div id="modeWrap">
@@ -903,13 +920,26 @@ $('#ticker').addEventListener('click', () => { cat = 'On offer'; show('courses')
 /* ---------- Rendering ---------- */
 const waLink = (msg) => { const n = String(S.whatsapp || '').replace(/\D/g, ''); return n ? `https://wa.me/${n}?text=${encodeURIComponent(msg || S.whatsapp_message || 'Hi, I would like to know more about your courses.')}` : ''; };
 const telLink = () => S.phone ? 'tel:' + String(S.phone).replace(/[^\d+]/g, '') : '';
+const OFFICE_DEF = 'Mon – Thu: 10:30 AM – 7:30 PM|Friday: On call|Sat & Sun: 9:30 AM – 6:30 PM';
+const CLOCK = '<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>';
+const officeRows = () => String(S.office_hours || OFFICE_DEF).split('|').map(x => x.trim()).filter(Boolean).map(r => { const m = r.match(/^([^:]+):\s*(.+)$/); return m ? [m[1].trim(), m[2].trim()] : ['', r]; });
+const apptPhones = () => String(S.appointment_phones || '+91 74396 02303|+91 70444 70064').split('|').map(x => x.trim()).filter(x => x.replace(/\D/g, '').length >= 10);
+function officeHtml(title) {
+  const ph = apptPhones(), msg = encodeURIComponent("Hi MARS, I'd like to book an appointment to visit your office.");
+  const num = p => { const d = p.replace(/\D/g, ''); return d.length === 10 ? '91' + d : d; };
+  const calls = ph.map(p => `<a href="tel:+${num(p)}">${esc(p.replace(/^\+91\s*/, ''))}</a>`).join(' · ');
+  return `<div class="hrs">${CLOCK}<div class="hb"><span class="hh">${esc(title || 'Office hours')}</span><ul>${officeRows().map(([d, t]) => `<li${/on call|closed/i.test(t) ? ' class="off"' : ''}><span>${esc(d)}</span><b>${esc(t)}</b></li>`).join('')}</ul>` +
+    `<p class="hn">${esc(S.office_note || 'Please visit by prior appointment only.')}${calls ? ' To book, call ' + calls + '.' : ''}</p>` +
+    (ph.length ? `<a class="hwa" href="https://wa.me/${num(ph[0])}?text=${msg}" target="_blank" rel="noopener">WhatsApp to book a visit</a>` : '') + `</div></div>`;
+}
+const officeLine = () => officeRows().map(([d, t]) => d ? d + ': ' + t : t).join(' · ');
 function contactHtml(title) {
   const wa = waLink();
   return `<h3>${esc(title || 'Talk to us')}</h3>` +
     (wa ? `<a class="btn pri" target="_blank" rel="noopener" href="${esc(wa)}">Chat on WhatsApp</a>` : '') +
     (S.phone ? `<a class="btn line" href="${esc(telLink())}">Call ${esc(S.phone)}</a>` : '') +
     (S.email ? `<a class="btn line" href="mailto:${esc(S.email)}">${esc(S.email)}</a>` : '') +
-    (S.address ? `<p>${esc(S.address)}</p>` : '');
+    (S.address ? `<p>${esc(S.address)}</p>` : '') + officeHtml();
 }
 const reviewsUrl = () => /^https:\/\//.test(S.google_reviews_url || '') ? S.google_reviews_url : 'https://search.google.com/local/reviews?placeid=ChIJA2Tq7_ax5zsRdXed0byIdqg';
 const statsHtml = () => D.about.filter(a => a.Type === 'Stat').map(a => {
@@ -1135,6 +1165,7 @@ function render(d) {
   $('#faqList').innerHTML = D.faqs.map(q => `<details class="faq"><summary>${esc(q.Question)}</summary><div class="body"><p>${esc(q.Answer)}</p></div></details>`).join('') || '<p class="empty">No questions yet.</p>';
   $('#policyList').innerHTML = D.policies.map(p => `<details class="faq" id="pol-${esc(p.Key)}"><summary>${esc(p.Title || p.Key)}</summary><div class="body">${String(p.Text).split(/\n+/).map(x => `<p>${esc(x)}</p>`).join('')}</div></details>`).join('');
   $('#policyContact').innerHTML = contactHtml('Contact us');
+  $$('.lochrs').forEach(x => x.innerHTML = `<b>Office hours (visits by prior appointment only):</b> ${esc(officeLine())}. To book, call or WhatsApp ${apptPhones().map(p => { const d = p.replace(/\D/g, ''); return `<a href="tel:+${d.length === 10 ? '91' + d : d}">${esc(p.replace(/^\+91\s*/, ''))}</a>`; }).join(' / ')}.`);
   $('#footLinks').innerHTML = D.policies.map(p => `<a href="#${esc(p.Key)}">${esc(p.Title || p.Key)}</a>`).join('');
   $('#foot').textContent = S.footer || '';
   const sv = Number(d.version) || 0, old = sv < MIN_SERVER;
@@ -1485,6 +1516,7 @@ function payCash() {
     if (r.done) { closeWin($('#payWin')); refreshMine(); return toast('Nothing left to pay. Thank you!'); }
     $('#payT').textContent = `Installment ${r.no} of ${r.of}: ${inr(r.amount)} in cash`;
     $('#payBody').innerHTML = `<p>Pay <b>${inr(r.amount)}</b> in cash at our office. Our HOD has the approval code and gives it to you after receiving the cash.</p>
+      <div class="payhrs">${officeHtml('Our office is open')}</div>
       <div class="otpbox"><label>Approval code *<input id="pOtp" inputmode="numeric" maxlength="6" autocomplete="one-time-code" placeholder="••••••"></label></div>
       <p class="err" id="pErr" role="alert"></p>
       <button type="button" class="btn pri block" id="pConfirm">Confirm cash payment</button>

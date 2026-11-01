@@ -851,3 +851,23 @@ html{scroll-padding-top:96px}
 .cc4 .hl.k{background:#FFF6E5;color:#92400E}
 .cc4 .loc{display:flex;align-items:center;gap:6px;font-size:.78rem;font-weight:600;color:#92400E}
 .cc4 .loc svg{width:15px;height:15px;flex:none}
+
+/* Office hours (home contact section + footer) */
+.ohrs{margin-top:16px;display:grid;grid-template-columns:auto minmax(0,2.2fr) auto;gap:18px;align-items:center;background:#fff;border:1px solid var(--line);border-radius:var(--r);padding:22px}
+.ohrs .oh-head{display:flex;gap:14px;align-items:center}
+.ohrs .oh-ic{width:46px;height:46px;flex:none;border-radius:14px;background:#EEF3FD;color:var(--brand);display:grid;place-items:center}
+.ohrs .oh-ic svg{width:24px;height:24px}
+.ohrs h3{margin:0 0 2px;font-size:1.08rem}
+.ohrs .oh-head p{margin:0;color:#92400E;font-weight:600;font-size:.88rem}
+.ohrs .oh-days{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.ohrs .oh-days div{background:var(--paper,#F6F8FC);border-radius:12px;padding:12px 14px}
+.ohrs small{display:block;font-size:.72rem;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-bottom:4px}
+.ohrs .oh-days b{font-size:.98rem;color:var(--ink);white-space:nowrap}
+.ohrs .oh-days .oc b{color:#B45309}
+.ohrs .oh-book{display:flex;flex-direction:column;gap:8px;align-items:flex-start}
+.ohrs .oh-book span{font-size:.88rem;color:var(--muted)}
+.ohrs .oh-book span a{color:var(--ink);font-weight:700;text-decoration:none}
+@media(max-width:900px){.ohrs{grid-template-columns:1fr}.ohrs .oh-book{flex-direction:row;flex-wrap:wrap;align-items:center}}
+@media(max-width:480px){.ohrs .oh-days{grid-template-columns:1fr}.ohrs .oh-days div{display:flex;justify-content:space-between;align-items:baseline;gap:10px}.ohrs .oh-days small{margin:0}}
+.foot a.fhrs em{font-style:normal;opacity:.75;font-size:.86em}
+.foot .fi.s-clk{background:#7C3AED}.foot a.fsoc.fhrs{align-items:flex-start}.foot a.fsoc.fhrs .fi{margin-top:2px}
