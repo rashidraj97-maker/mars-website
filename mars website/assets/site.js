@@ -661,14 +661,15 @@ function trainersSection() {
 (function navActive() {
   const links = [...document.querySelectorAll('#nav > a:not(.btn)')];
   if (!links.length) return;
-  const page = (location.pathname.split('/').pop() || 'index.html').toLowerCase();
+  const norm = f => { f = String(f || '').toLowerCase().replace(/\.html?$/, ''); return f === '' || f === 'index' ? 'index' : f; };
+  const page = norm(location.pathname.replace(/\/+$/, '').split('/').pop());
   const set = a => links.forEach(x => { if (x === a) x.setAttribute('aria-current', 'page'); else x.removeAttribute('aria-current'); });
-  const fileOf = a => { const h = a.getAttribute('href') || ''; return h.startsWith('#') ? 'index.html' : (h.split('#')[0] || 'index.html').toLowerCase(); };
+  const fileOf = a => { const h = a.getAttribute('href') || ''; return h.startsWith('#') ? 'index' : norm(h.split('#')[0].split('/').pop()); };
   const hashOf = a => (a.getAttribute('href') || '').split('#')[1] || '';
-  if (page !== 'index.html' && page !== '') { set(links.find(a => fileOf(a) === page && !hashOf(a)) || null); return; }
+  if (page !== 'index') { set(links.find(a => fileOf(a) === page && !hashOf(a)) || null); return; }
   // home page: follow the section on screen
-  const secs = links.map(a => [a, hashOf(a)]).filter(([a, h]) => fileOf(a) === 'index.html' && h && h !== 'top').map(([a, h]) => [a, document.getElementById(h)]).filter(([, el]) => el);
-  const home = links.find(a => fileOf(a) === 'index.html' && (!hashOf(a) || hashOf(a) === 'top'));
+  const secs = links.map(a => [a, hashOf(a)]).filter(([a, h]) => fileOf(a) === 'index' && h && h !== 'top').map(([a, h]) => [a, document.getElementById(h)]).filter(([, el]) => el);
+  const home = links.find(a => fileOf(a) === 'index' && (!hashOf(a) || hashOf(a) === 'top'));
   const spy = () => {
     const y = scrollY + innerHeight * 0.35; let cur = home;
     secs.forEach(([a, el]) => { if (el.getBoundingClientRect().top + scrollY <= y) cur = a; });
