@@ -213,7 +213,6 @@ main{padding:0 16px}
 .hrs li.off b{color:#B45309}
 .hrs .hn{margin:0;color:#334155;font-size:.84rem}
 .hrs .hn a{color:var(--brand);font-weight:700;text-decoration:none;white-space:nowrap}
-.hrs .hwa{display:inline-flex;align-items:center;min-height:40px;margin-top:8px;padding:0 14px;border-radius:10px;background:#1E8E3E;color:#fff;font-weight:700;font-size:.88rem;text-decoration:none}
 .payhrs{margin:4px 0 12px}
 .locnote .lochrs a{color:inherit;font-weight:700;white-space:nowrap}
 .locnote+.locnote{margin-top:6px}
@@ -925,12 +924,11 @@ const CLOCK = '<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="1
 const officeRows = () => String(S.office_hours || OFFICE_DEF).split('|').map(x => x.trim()).filter(Boolean).map(r => { const m = r.match(/^([^:]+):\s*(.+)$/); return m ? [m[1].trim(), m[2].trim()] : ['', r]; });
 const apptPhones = () => String(S.appointment_phones || '+91 74396 02303|+91 70444 70064').split('|').map(x => x.trim()).filter(x => x.replace(/\D/g, '').length >= 10);
 function officeHtml(title) {
-  const ph = apptPhones(), msg = encodeURIComponent("Hi MARS, I'd like to book an appointment to visit your office.");
+  const ph = apptPhones();
   const num = p => { const d = p.replace(/\D/g, ''); return d.length === 10 ? '91' + d : d; };
   const calls = ph.map(p => `<a href="tel:+${num(p)}">${esc(p.replace(/^\+91\s*/, ''))}</a>`).join(' · ');
   return `<div class="hrs">${CLOCK}<div class="hb"><span class="hh">${esc(title || 'Office hours')}</span><ul>${officeRows().map(([d, t]) => `<li${/on call|closed/i.test(t) ? ' class="off"' : ''}><span>${esc(d)}</span><b>${esc(t)}</b></li>`).join('')}</ul>` +
-    `<p class="hn">${S.office_note ? esc(S.office_note) + ' ' : ''}${calls ? 'Call or WhatsApp ' + calls + '.' : ''}</p>` +
-    (ph.length ? `<a class="hwa" href="https://wa.me/${num(ph[0])}?text=${msg}" target="_blank" rel="noopener">WhatsApp to book a visit</a>` : '') + `</div></div>`;
+    `<p class="hn">${S.office_note ? esc(S.office_note) + ' ' : ''}${calls ? 'Call ' + calls : ''}</p></div></div>`;
 }
 const officeLine = () => officeRows().map(([d, t]) => d ? d + ': ' + t : t).join(' · ');
 function contactHtml(title) {
@@ -1165,7 +1163,7 @@ function render(d) {
   $('#faqList').innerHTML = D.faqs.map(q => `<details class="faq"><summary>${esc(q.Question)}</summary><div class="body"><p>${esc(q.Answer)}</p></div></details>`).join('') || '<p class="empty">No questions yet.</p>';
   $('#policyList').innerHTML = D.policies.map(p => `<details class="faq" id="pol-${esc(p.Key)}"><summary>${esc(p.Title || p.Key)}</summary><div class="body">${String(p.Text).split(/\n+/).map(x => `<p>${esc(x)}</p>`).join('')}</div></details>`).join('');
   $('#policyContact').innerHTML = contactHtml('Contact us');
-  $$('.lochrs').forEach(x => x.innerHTML = `<b>Office hours:</b> ${esc(officeLine())}. Call or WhatsApp ${apptPhones().map(p => { const d = p.replace(/\D/g, ''); return `<a href="tel:+${d.length === 10 ? '91' + d : d}">${esc(p.replace(/^\+91\s*/, ''))}</a>`; }).join(' / ')}.`);
+  $$('.lochrs').forEach(x => x.innerHTML = `<b>Office hours:</b> ${esc(officeLine())}. Call ${apptPhones().map(p => { const d = p.replace(/\D/g, ''); return `<a href="tel:+${d.length === 10 ? '91' + d : d}">${esc(p.replace(/^\+91\s*/, ''))}</a>`; }).join(' / ')}.`);
   $('#footLinks').innerHTML = D.policies.map(p => `<a href="#${esc(p.Key)}">${esc(p.Title || p.Key)}</a>`).join('');
   $('#foot').textContent = S.footer || '';
   const sv = Number(d.version) || 0, old = sv < MIN_SERVER;
