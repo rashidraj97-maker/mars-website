@@ -4,7 +4,7 @@
  "start_url": "./#courses",
  "scope": "./",
  "display": "standalone",
- "background_color": "#286FAD",
+ "background_color": "#FFFFFF",
  "theme_color": "#1B4F86",
  "icons": [
   {
