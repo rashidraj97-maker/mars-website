@@ -922,7 +922,7 @@ const telLink = () => S.phone ? 'tel:' + String(S.phone).replace(/[^\d+]/g, '') 
 const OFFICE_DEF = 'Mon – Thu: 10:30 AM – 7:30 PM|Friday: On call|Sat & Sun: 9:30 AM – 6:30 PM';
 const CLOCK = '<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>';
 const officeRows = () => String(S.office_hours || OFFICE_DEF).split('|').map(x => x.trim()).filter(Boolean).map(r => { const m = r.match(/^([^:]+):\s*(.+)$/); return m ? [m[1].trim(), m[2].trim()] : ['', r]; });
-const apptPhones = () => String(S.appointment_phones || '+91 74396 02303|+91 70444 70064').split('|').map(x => x.trim()).filter(x => x.replace(/\D/g, '').length >= 10);
+const apptPhones = () => { const l = String(S.appointment_phones || '').split('|').map(x => x.trim()).filter(x => x.replace(/\D/g, '').length >= 10); return l.length ? l : ['74396 02303', '70444 70064']; };   // falls back if the Settings cell is blank or broken
 function officeHtml(title) {
   const ph = apptPhones();
   const num = p => { const d = p.replace(/\D/g, ''); return d.length === 10 ? '91' + d : d; };
