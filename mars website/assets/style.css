@@ -922,7 +922,8 @@ html{scroll-padding-top:96px}
 .vok{width:42px;height:42px;border-radius:50%;background:#16A34A;color:#fff;display:grid;place-items:center;font-size:1.3rem;font-weight:800;flex:none}
 .vhead b{display:block;font-size:1.15rem;color:#14532D}.vhead span{color:#166534;font-size:.92rem}
 .vx{margin-left:auto;width:40px;height:40px;border-radius:50%;border:1px solid var(--line);background:#fff;font-size:1.5rem;line-height:1;cursor:pointer;color:var(--ink)}
-.vmeta{display:grid;grid-template-columns:repeat(4,1fr);gap:0;margin:0;border-bottom:1px solid var(--line)}
+.vmeta{display:grid;grid-template-columns:max-content 1fr 1fr max-content;gap:0;margin:0;border-bottom:1px solid var(--line)}
+#vm-no,#vm-date{white-space:nowrap}
 .vmeta div{padding:14px 22px;border-right:1px solid var(--line)}.vmeta div:last-child{border-right:0}
 .vmeta dt{font-size:.75rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}.vmeta dd{margin:4px 0 0;font-weight:700;color:var(--ink)}
 .vframe{padding:16px 22px;background:var(--paper)}
