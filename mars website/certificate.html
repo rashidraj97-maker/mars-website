@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Download Certificate | MARS Training & Solution</title>
-<meta name="description" content="Completed a course with MARS Training & Solution? Download your course completion certificate as a PDF with your Enrollment ID and registered mobile number, or request a printed copy.">
+<title>Certificate Download & Verification | MARS Training & Solution</title>
+<meta name="description" content="Download your MARS Training & Solution course completion certificate as a PDF, request a printed copy, or verify that a MARS certificate is genuine with its certificate ID.">
 <meta property="og:title" content="MARS Training & Solution">
 <meta property="og:description" content="We enhance professionals. Corporate and IT Training in Excel, Power BI, SQL, SAP and more, online and across India.">
 <meta property="og:image" content="assets/logo.png">
@@ -43,11 +43,12 @@
 
 <main>
   <section class="page-hero"><div class="wrap">
-    <span class="pill"><b>Certificates</b> for MARS students</span>
-    <h1>Download your <span class="grad">certificate.</span></h1>
-    <p>Completed your course and passed the exam? Enter your Enrollment ID and the mobile number you registered with to download your MARS course completion certificate as a PDF.</p>
+    <span class="pill"><b>Certificates</b> Download &amp; verification</span>
+    <h1>Download or verify a <span class="grad">certificate.</span></h1>
+    <p>Students can download their MARS course completion certificate as a PDF. Employers and institutes can check that a MARS certificate is genuine.</p>
+    <div class="cta"><a class="btn prime" href="#get">Download my certificate</a><a class="btn glass" href="#verify">Verify a certificate</a></div>
   </div></section>
-  <section class="sec" style="padding-top:60px"><div class="wrap join">
+  <section class="sec" id="get" style="padding-top:60px"><div class="wrap join">
     <aside class="jside">
       <h2>How it works</h2>
       <ul class="why">
@@ -77,12 +78,35 @@
       <button type="button" class="linkbtn" id="cagain">Check another certificate</button>
     </div>
   </div></section>
+  <section class="sec alt" id="verify"><div class="wrap vwrap">
+    <div class="vtext">
+      <span class="eyebrow">For employers &amp; institutes</span>
+      <h2>Verify a MARS certificate.</h2>
+      <p>Check that a certificate presented to you was issued by MARS Training &amp; Solution. Enter the certificate ID printed at the bottom of the certificate.</p>
+      <ul class="vpoints"><li>Instant check against our records</li><li>View the original certificate</li><li>ISO 9001:2015 certified training institute</li></ul>
+    </div>
+    <form class="jform vform" id="verForm" novalidate>
+      <h2>Certificate verification</h2>
+      <label>Certificate ID *<input id="vno" required autocomplete="off" autocapitalize="characters" spellcheck="false" placeholder="e.g. MARS-2026-CL-1540"></label>
+      <p class="err" id="verr" role="alert" hidden></p>
+      <div class="vbad" id="vbad" role="status" hidden></div>
+      <button class="btn prime" type="submit" id="vbtn">Verify certificate</button>
+      <p class="small">Questions about a certificate? Email <a href="mailto:contactus@marstraining.in">contactus@marstraining.in</a> or call <a href="tel:+919870259245">+91 98702 59245</a>.</p>
+    </form>
+  </div></section>
 </main>
+
+<dialog class="vdlg" id="vdlg" aria-labelledby="vdt">
+  <div class="vhead"><span class="vok" aria-hidden="true">✓</span><div><b id="vdt">Verified certificate</b><span>Issued by MARS Training &amp; Solution</span></div><button type="button" class="vx" data-vclose aria-label="Close">&times;</button></div>
+  <dl class="vmeta"><div><dt>Certificate ID</dt><dd id="vm-no"></dd></div><div><dt>Awarded to</dt><dd id="vm-name"></dd></div><div><dt>Course</dt><dd id="vm-course"></dd></div><div><dt>Issued on</dt><dd id="vm-date"></dd></div></dl>
+  <div class="vframe" id="vframe"></div>
+  <div class="vfoot"><a class="btn line" id="vdl" href="#" target="_blank" rel="noopener">Download PDF</a><button type="button" class="btn prime" data-vclose>Close</button></div>
+</dialog>
 
 <footer class="foot"><div class="wrap">
   <div class="cols">
     <div><span class="brand"><img src="assets/logo.png" alt="MARS Training & Solution"></span><p>IT corporate Training and solutions for teams and individuals.</p><a class="fiso" href="assets/iso-certificate.pdf" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l2.4 2.1 3.2-.3.9 3.1 2.8 1.6-1 3 1 3-2.8 1.6-.9 3.1-3.2-.3L12 22l-2.4-2.1-3.2.3-.9-3.1L2.7 15.5l1-3-1-3 2.8-1.6.9-3.1 3.2.3z"/><path d="M8.5 12.2l2.4 2.4 4.6-4.8"/></svg>ISO 9001:2015 Certified · Cert. No. QCCI/25Q/MRN/7721</a><span class="fgst">GSTIN: 19AENPR3824A1ZG</span><div class="soc"><a class="s-li" href="https://www.linkedin.com/company/mars-training-solution/" target="_blank" rel="noopener" aria-label="MARS on LinkedIn"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M20.45 20.45h-3.56v-5.57c0-1.33-.02-3.04-1.85-3.04-1.85 0-2.14 1.45-2.14 2.94v5.67H9.35V9h3.41v1.56h.05c.48-.9 1.64-1.85 3.37-1.85 3.6 0 4.27 2.37 4.27 5.46v6.28zM5.34 7.43a2.06 2.06 0 1 1 0-4.13 2.06 2.06 0 0 1 0 4.13zM7.12 20.45H3.56V9h3.56v11.45zM22.22 0H1.77C.79 0 0 .77 0 1.73v20.54C0 23.23.79 24 1.77 24h20.45c.98 0 1.78-.77 1.78-1.73V1.73C24 .77 23.2 0 22.22 0z"/></svg></a><a class="s-ig" href="https://www.instagram.com/marstrainingandsolution/" target="_blank" rel="noopener" aria-label="MARS on Instagram"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2.5" y="2.5" width="19" height="19" rx="5.5"/><circle cx="12" cy="12" r="4.2"/><circle cx="17.6" cy="6.4" r="1.1" fill="currentColor" stroke="none"/></svg></a><a class="s-fb" href="https://www.facebook.com/MARS.TrainingSolutions/" target="_blank" rel="noopener" aria-label="MARS on Facebook"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M24 12.07C24 5.4 18.63 0 12 0S0 5.4 0 12.07C0 18.1 4.39 23.1 10.13 24v-8.44H7.08v-3.49h3.05V9.41c0-3.02 1.79-4.69 4.53-4.69 1.31 0 2.68.24 2.68.24v2.97h-1.51c-1.49 0-1.96.93-1.96 1.86v2.24h3.33l-.53 3.49h-2.8V24C19.61 23.1 24 18.1 24 12.07z"/></svg></a></div></div>
-    <div><h4>Learn</h4><a href="courses.html">All courses</a><a href="index.html#corporate">Corporate Training</a><a href="gallery.html">Gallery</a><a href="jobs.html">Job openings</a><a href="certificate.html">Download certificate</a></div>
+    <div><h4>Learn</h4><a href="courses.html">All courses</a><a href="index.html#corporate">Corporate Training</a><a href="gallery.html">Gallery</a><a href="jobs.html">Job openings</a><a href="certificate.html">Download certificate</a><a href="certificate.html#verify">Verify a certificate</a></div>
     <div><h4>Company</h4><a href="index.html#about">About</a><a href="index.html#services">Services</a><a href="index.html#clients">Clients</a><a href="gallery.html">Training gallery</a><a href="join.html">Join as a Trainer</a></div>
     <div><h4>Contact</h4><a class="fsoc addr" href="https://www.google.com/maps/search/?api=1&amp;query=MARS%20Training%20%26%20Solution&amp;query_place_id=ChIJA2Tq7_ax5zsRdXed0byIdqg" target="_blank" rel="noopener"><span class="fi s-pin"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s7-6.2 7-12a7 7 0 0 0-14 0c0 5.8 7 12 7 12z"/><circle cx="12" cy="10" r="2.5"/></svg></span><span>Head office: Ground Floor, P-74 Nani Gopal Roy Chowdhury Avenue, CIT Road, Kolkata – 700014</span></a><a class="fsoc" href="tel:+919870259245"><span class="fi s-ph"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1.9.4 1.8.7 2.7a2 2 0 0 1-.5 2.1L8 9.8a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.4c.9.3 1.8.6 2.7.7a2 2 0 0 1 1.7 2z"/></svg></span>+91 98702 59245</a><a class="fsoc" href="tel:+917439602303"><span class="fi s-ph"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1.9.4 1.8.7 2.7a2 2 0 0 1-.5 2.1L8 9.8a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.4c.9.3 1.8.6 2.7.7a2 2 0 0 1 1.7 2z"/></svg></span>+91 74396 02303</a><a class="fsoc" href="tel:+917044470064"><span class="fi s-ph"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1.9.4 1.8.7 2.7a2 2 0 0 1-.5 2.1L8 9.8a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.4c.9.3 1.8.6 2.7.7a2 2 0 0 1 1.7 2z"/></svg></span>+91 70444 70064</a><a class="fsoc" href="mailto:contactus@marstraining.in"><span class="fi s-ml"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M22 6l-10 7L2 6"/></svg></span>contactus@marstraining.in</a><a class="fsoc" href="mailto:mars.admission@gmail.com"><span class="fi s-ml"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M22 6l-10 7L2 6"/></svg></span>mars.admission@gmail.com</a><a class="fsoc" href="https://www.linkedin.com/company/mars-training-solution/" target="_blank" rel="noopener"><span class="fi s-li"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M20.45 20.45h-3.56v-5.57c0-1.33-.02-3.04-1.85-3.04-1.85 0-2.14 1.45-2.14 2.94v5.67H9.35V9h3.41v1.56h.05c.48-.9 1.64-1.85 3.37-1.85 3.6 0 4.27 2.37 4.27 5.46v6.28zM5.34 7.43a2.06 2.06 0 1 1 0-4.13 2.06 2.06 0 0 1 0 4.13zM7.12 20.45H3.56V9h3.56v11.45z"/></svg></span>LinkedIn</a><a class="fsoc" href="https://www.instagram.com/marstrainingandsolution/" target="_blank" rel="noopener"><span class="fi s-ig"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.4" cy="6.6" r="1.1" fill="currentColor" stroke="none"/></svg></span>Instagram</a><a class="fsoc" href="https://www.facebook.com/MARS.TrainingSolutions/" target="_blank" rel="noopener"><span class="fi s-fb"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M14 8.5V6.8c0-.8.5-1 .9-1h2.4V2.1L14 2c-3.7 0-4.5 2.7-4.5 4.5v2H7.3V12h2.2v10H14V12h3l.4-3.5H14z"/></svg></span>Facebook</a></div>
   </div>
@@ -127,6 +151,32 @@
     btn.disabled = false; btn.textContent = 'Get my certificate';
   });
   $('cagain').addEventListener('click', () => { f.reset(); f.hidden = false; $('cdone').hidden = true; $('cid').focus(); });
+
+  // Verify a certificate (employers)
+  const vf = $('verForm'), vbtn = $('vbtn'), dlg = $('vdlg');
+  const fakeV = no => no === 'MARS-2026-CL-1540' ? { ok: true, valid: true, certNo: no, name: 'Demo Student', course: 'Advanced Excel', issued: plus(0), preview: '', sample: 'assets/cert-sample.jpg', download: '#demo' } : /^MARS-\d{4}-CL-\d{3,6}$/.test(no) ? { ok: true, valid: false, certNo: no } : { ok: false, error: 'Please enter the full certificate ID as printed on the certificate, for example MARS-2026-CL-1540.' };
+  const verify = async () => {
+    show($('verr'), ''); show($('vbad'), '');
+    const no = $('vno').value.trim().toUpperCase().replace(/\s+/g, '');
+    if (!no) return show($('verr'), 'Please enter the certificate ID.');
+    vbtn.disabled = true; vbtn.textContent = 'Checking…';
+    try {
+      const r = DEMO ? await new Promise(ok => setTimeout(() => ok(fakeV(no)), 600)) : await fetch(SITE.api, { method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: JSON.stringify({ action: 'certVerify', certNo: no }) }).then(x => x.json());
+      if (!r.ok) show($('verr'), esc(r.error || 'Something went wrong. Please try again.'));
+      else if (!r.valid) show($('vbad'), '<b>No certificate found with ID ' + esc(r.certNo) + '.</b>This ID is not in our records, so the certificate may not be genuine. Please check the ID, or contact us to confirm.');
+      else {
+        $('vm-no').textContent = r.certNo; $('vm-name').textContent = r.name; $('vm-course').textContent = r.course; $('vm-date').textContent = r.issued || '-';
+        $('vframe').innerHTML = r.preview ? '<iframe src="' + esc(r.preview) + '" title="Certificate ' + esc(r.certNo) + '" loading="lazy" allow="autoplay"></iframe>' : '<img src="' + esc(r.sample) + '" alt="Sample certificate">';
+        $('vdl').href = r.download;
+        if (dlg.showModal) dlg.showModal(); else dlg.setAttribute('open', '');
+      }
+    } catch (x) { show($('verr'), 'Could not connect. Please check your internet and try again.'); }
+    vbtn.disabled = false; vbtn.textContent = 'Verify certificate';
+  };
+  vf.addEventListener('submit', ev => { ev.preventDefault(); verify(); });
+  dlg.addEventListener('click', ev => { if (ev.target === dlg || ev.target.closest('[data-vclose]')) { dlg.close ? dlg.close() : dlg.removeAttribute('open'); $('vframe').innerHTML = ''; } });
+  if (DEMO) vf.insertAdjacentHTML('afterbegin', '<p class="cf-demo"><b>Demo mode</b> Try certificate ID <b>MARS-2026-CL-1540</b> (genuine) or <b>MARS-2026-CL-9999</b> (not found).</p>');
+  if (q.get('verify')) { $('vno').value = q.get('verify').toUpperCase(); document.getElementById('verify').scrollIntoView(); verify(); }
 })();
 </script>
 
