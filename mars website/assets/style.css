@@ -853,7 +853,7 @@ html{scroll-padding-top:96px}
 .cc4 .loc svg{width:15px;height:15px;flex:none}
 
 /* Office hours (home contact section + footer) */
-.ohrs{margin-top:16px;display:grid;grid-template-columns:auto minmax(0,2.2fr) auto;gap:18px;align-items:center;background:#fff;border:1px solid var(--line);border-radius:var(--r);padding:22px}
+.ohrs{margin-top:16px;display:grid;grid-template-columns:auto minmax(0,1fr);gap:18px;align-items:center;background:#fff;border:1px solid var(--line);border-radius:var(--r);padding:22px}
 .ohrs .oh-head{display:flex;gap:14px;align-items:center}
 .ohrs .oh-ic{width:46px;height:46px;flex:none;border-radius:14px;background:#EEF3FD;color:var(--brand);display:grid;place-items:center}
 .ohrs .oh-ic svg{width:24px;height:24px}
