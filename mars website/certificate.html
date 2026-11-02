@@ -58,16 +58,23 @@
         <li><b>Want a printed copy?</b><span>Tick the hard copy box and collect it from our office 10 days after your request.</span></li>
       </ul>
       <p class="small">Can't find your Enrollment ID? It is on your payment receipt and in the MARS app. Or call <a href="tel:+919870259245">+91 98702 59245</a>.</p>
+      <p class="small"><b>Got your certificate before November 2026?</b> Choose <b>Certificate ID</b> and enter the ID printed on your certificate with your name.</p>
     </aside>
     <form class="jform" id="certForm" novalidate>
       <h2>Get your certificate</h2>
-      <label>Enrollment ID *<input name="id" id="cid" required autocomplete="off" autocapitalize="characters" spellcheck="false" placeholder="e.g. MARS-2611-0123"></label>
-      <label>Registered mobile number *<input name="phone" id="cph" required inputmode="numeric" autocomplete="tel" placeholder="The 10-digit number you enrolled with"></label>
-      <label class="cf-hc"><input type="checkbox" name="hardcopy" id="chc"><span><b>I also want a hard copy (printed certificate)</b><span>Collect it from our office 10 days after you submit this request. Please bring your Enrollment ID.</span></span></label>
+      <div class="cf-mode" role="radiogroup" aria-label="Find my certificate with">
+        <label><input type="radio" name="cmode" value="enr" checked><span>Enrollment ID<small>with your mobile number</small></span></label>
+        <label><input type="radio" name="cmode" value="cert"><span>Certificate ID<small>with your name · older ones too</small></span></label>
+      </div>
+      <label data-m="enr">Enrollment ID *<input name="id" id="cid" required autocomplete="off" autocapitalize="characters" spellcheck="false" placeholder="e.g. MARS-2611-0123"></label>
+      <label data-m="cert" hidden>Certificate ID *<input name="certNo" id="cno" autocomplete="off" autocapitalize="characters" spellcheck="false" placeholder="As printed, e.g. MARS2023-CL-662"></label>
+      <label data-m="cert" hidden>Your name *<input name="name" id="cname" autocomplete="name" placeholder="As printed on your certificate"></label>
+      <label id="cphl"><span id="cphlt">Registered mobile number *</span><input name="phone" id="cph" required inputmode="numeric" autocomplete="tel" placeholder="The 10-digit number you enrolled with"></label>
+      <label class="cf-hc"><input type="checkbox" name="hardcopy" id="chc"><span><b>I also want a hard copy (printed certificate)</b><span>Collect it from our office 10 days after you submit this request. Please bring your <span class="cf-idw">Enrollment ID</span>.</span></span></label>
       <p class="err" id="cerr" role="alert" hidden></p>
       <div class="cf-wait" id="cwait" role="status" hidden></div>
       <button class="btn prime" type="submit" id="cbtn">Get my certificate</button>
-      <p class="small">We check your Enrollment ID and mobile number before showing the certificate.</p>
+      <p class="small" id="cnote">We check your Enrollment ID and mobile number before showing the certificate.</p>
     </form>
     <div class="jdone cf-done" id="cdone" hidden>
       <span class="tick">✓</span>
@@ -82,7 +89,7 @@
     <div class="vtext">
       <span class="eyebrow">For employers &amp; institutes</span>
       <h2>Verify a MARS certificate.</h2>
-      <p>Check that a certificate presented to you was issued by MARS Training &amp; Solution. Enter the certificate ID printed at the bottom of the certificate and the candidate's name.</p>
+      <p>Check that a certificate presented to you was issued by MARS Training &amp; Solution. Enter the certificate ID printed at the bottom of the certificate and the candidate's name. This works for all MARS certificates, including older ones such as MARS2023-CL-662.</p>
       <ul class="vpoints"><li>Instant check against our records</li><li>View the original certificate</li><li>ISO 9001:2015 certified training institute</li></ul>
     </div>
     <form class="jform vform" id="verForm" novalidate>
@@ -123,39 +130,64 @@
   const f = document.getElementById('certForm'), $ = id => document.getElementById(id), err = $('cerr'), wait = $('cwait'), btn = $('cbtn');
   // Demo mode (certificate?demo): shows every screen without checking real records
   const DEMO = /[?&]demo\b/.test(location.search), plus = d => new Date(Date.now() + d * 864e5).toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' });
-  if (DEMO) f.insertAdjacentHTML('afterbegin', '<p class="cf-demo"><b>Demo mode</b> Nothing is checked against real records. Try Enrollment ID <b>DEMO-READY</b> (certificate ready) or <b>DEMO-WAIT</b> (not ready yet) with any 10-digit mobile number.</p>');
+  if (DEMO) f.insertAdjacentHTML('afterbegin', '<p class="cf-demo"><b>Demo mode</b> Nothing is checked against real records. Try Enrollment ID <b>DEMO-READY</b> (certificate ready) or <b>DEMO-WAIT</b> (not ready yet) with any 10-digit mobile number, or choose Certificate ID and try <b>MARS2023-CL-662</b> with the name <b>Demo Student</b>.</p>');
   const fake = d => d.id === 'DEMO-READY' ? Object.assign({ ok: true, ready: true, name: 'Demo Student', course: 'Advanced Excel', certNo: 'MARS-2026-CL-1540', view: '#demo', download: '#demo' }, d.hardcopy ? { hardcopy: { requested: plus(0), collectFrom: plus(10), again: false } } : {})
+    : d.certNo ? (d.certNo.replace(/[\s-]/g, '') === 'MARS2023CL662' && /\bdemo\b/i.test(d.name) ? Object.assign({ ok: true, ready: true, name: 'Demo Student', course: 'Advanced Excel', certNo: 'MARS-2023-CL-662', issued: '18 Sep 2023', view: '#demo', download: '#demo' }, d.hardcopy ? { hardcopy: { requested: plus(0), collectFrom: plus(10), again: false } } : {})
+      : { ok: false, error: 'We could not find a certificate with this ID and name. Please type both exactly as printed on your certificate, or WhatsApp us.' })
     : d.id === 'DEMO-WAIT' ? { ok: true, ready: false, name: 'Demo Student', course: 'Power BI', reason: 'Your certificate will be available after you pass the exam.' }
     : { ok: false, error: 'We could not find this Enrollment ID with this mobile number. Please check both and try again.' };
   document.addEventListener('click', ev => { const a = ev.target.closest('a[href="#demo"]'); if (a) { ev.preventDefault(); alert('Demo: on the real page this ' + (a.id === 'cdl' ? 'downloads' : 'opens') + ' the student\'s certificate PDF.'); } });
+  // Enrollment ID + mobile, or (older certificates) certificate ID + name; the mobile number is then only needed for a printed copy
+  const mode = () => f.querySelector('[name=cmode]:checked').value;
+  const setMode = () => {
+    const m = mode(), old = m === 'cert';
+    f.querySelectorAll('[data-m]').forEach(el => { el.hidden = el.dataset.m !== m; });
+    $('cphl').hidden = old && !$('chc').checked;
+    $('cphlt').textContent = old ? 'Mobile number * (for the printed copy)' : 'Registered mobile number *';
+    $('cph').placeholder = old ? 'So our office can reach you' : 'The 10-digit number you enrolled with';
+    f.querySelectorAll('.cf-idw').forEach(el => { el.textContent = old ? 'certificate ID' : 'Enrollment ID'; });
+    $('cnote').textContent = old ? 'We check the certificate ID and your name before showing the certificate.' : 'We check your Enrollment ID and mobile number before showing the certificate.';
+  };
+  f.querySelectorAll('[name=cmode]').forEach(r => r.addEventListener('change', () => { setMode(); (mode() === 'cert' ? $('cno') : $('cid')).focus(); }));
+  $('chc').addEventListener('change', setMode);
   const q = new URLSearchParams(location.search); if (q.get('id')) $('cid').value = q.get('id').toUpperCase();
+  if (q.get('cert')) { f.querySelector('[name=cmode][value=cert]').checked = true; $('cno').value = q.get('cert').toUpperCase(); if (q.get('name')) $('cname').value = q.get('name'); }
+  setMode();
   const esc = s => String(s == null ? '' : s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' })[c]);
   const show = (el, html) => { el.innerHTML = html; el.hidden = !html; };
   f.addEventListener('submit', async ev => {
     ev.preventDefault(); show(err, ''); show(wait, '');
-    const id = $('cid').value.trim().toUpperCase(), phone = $('cph').value.replace(/\D/g, '').slice(-10);
-    if (!id) return show(err, 'Please enter your Enrollment ID.');
-    if (phone.length !== 10) return show(err, 'Please enter the 10-digit mobile number you registered with.');
+    const old = mode() === 'cert', id = $('cid').value.trim().toUpperCase(), phone = $('cph').value.replace(/\D/g, '').slice(-10), hard = $('chc').checked;
+    const certNo = $('cno').value.trim().toUpperCase().replace(/\s+/g, ''), name = $('cname').value.trim();
+    if (old) {
+      if (!certNo) return show(err, 'Please enter your certificate ID as printed on your certificate.');
+      if (!name) return show(err, 'Please enter your name as printed on your certificate.');
+      if (hard && phone.length !== 10) return show(err, 'Please enter your 10-digit mobile number for the printed copy.');
+    } else {
+      if (!id) return show(err, 'Please enter your Enrollment ID.');
+      if (phone.length !== 10) return show(err, 'Please enter the 10-digit mobile number you registered with.');
+    }
+    const body = old ? { action: 'certLookup', certNo, name, hardcopy: hard, phone: hard ? phone : '' } : { action: 'certLookup', id, phone, hardcopy: hard };
     btn.disabled = true; btn.textContent = 'Checking…';
     try {
-      const r = DEMO ? await new Promise(ok => setTimeout(() => ok(fake({ id, hardcopy: $('chc').checked })), 600)) : await fetch(SITE.api, { method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: JSON.stringify({ action: 'certLookup', id, phone, hardcopy: $('chc').checked }) }).then(x => x.json());
+      const r = DEMO ? await new Promise(ok => setTimeout(() => ok(fake(body)), 600)) : await fetch(SITE.api, { method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: JSON.stringify(body) }).then(x => x.json());
       if (!r.ok) show(err, esc(r.error || 'Something went wrong. Please try again.'));
       else if (!r.ready) show(wait, '<b>' + esc(r.name) + ', ' + esc(r.course) + '</b>' + esc(r.reason) + (window.SITE && SITE.whatsapp ? ' <a href="https://wa.me/' + SITE.whatsapp + '?text=' + encodeURIComponent('Hi, I want to know about my certificate. Enrollment ID: ' + id) + '" target="_blank" rel="noopener">Ask us on WhatsApp</a>' : ''));
       else {
-        $('cwho').innerHTML = '<b>' + esc(r.name) + '</b><br>' + esc(r.course) + '<br><span class="cf-no">Certificate ID: ' + esc(r.certNo) + '</span>';
+        $('cwho').innerHTML = '<b>' + esc(r.name) + '</b><br>' + esc(r.course) + '<br><span class="cf-no">Certificate ID: ' + esc(r.certNo) + (r.issued ? ' · Issued ' + esc(r.issued) : '') + '</span>';
         $('cdl').href = r.download; $('cview').href = r.view;
         const h = r.hardcopy;
-        show($('chcok'), h ? '<b>' + (h.again ? 'Hard copy already requested' : 'Hard copy requested') + ' on ' + esc(h.requested) + '.</b> Collect it from our office on or after <b>' + esc(h.collectFrom) + '</b>. Please bring your Enrollment ID.' : '');
+        show($('chcok'), h ? '<b>' + (h.again ? 'Hard copy already requested' : 'Hard copy requested') + ' on ' + esc(h.requested) + '.</b> Collect it from our office on or after <b>' + esc(h.collectFrom) + '</b>. Please bring your ' + (old ? 'certificate ID' : 'Enrollment ID') + '.' : '');
         f.hidden = true; $('cdone').hidden = false; $('cdone').scrollIntoView({ behavior: 'smooth', block: 'center' });
       }
     } catch (x) { show(err, 'Could not connect. Please check your internet and try again.'); }
     btn.disabled = false; btn.textContent = 'Get my certificate';
   });
-  $('cagain').addEventListener('click', () => { f.reset(); f.hidden = false; $('cdone').hidden = true; $('cid').focus(); });
+  $('cagain').addEventListener('click', () => { const m = mode(); f.reset(); f.querySelector('[name=cmode][value=' + m + ']').checked = true; setMode(); f.hidden = false; $('cdone').hidden = true; (m === 'cert' ? $('cno') : $('cid')).focus(); });
 
   // Verify a certificate (employers)
   const vf = $('verForm'), vbtn = $('vbtn'), dlg = $('vdlg');
-  const fakeV = (no, nm) => no === 'MARS-2026-CL-1540' && /\bdemo\b/i.test(nm) ? { ok: true, valid: true, certNo: no, name: 'Demo Student', course: 'Advanced Excel', issued: plus(0), preview: '', sample: 'assets/cert-sample.jpg', download: '#demo' } : /^MARS-\d{4}-CL-\d{3,6}$/.test(no) ? { ok: true, valid: false, certNo: no } : { ok: false, error: 'Please enter the full certificate ID as printed on the certificate, for example MARS-2026-CL-1540.' };
+  const fakeV = (no, nm) => no === 'MARS-2026-CL-1540' && /\bdemo\b/i.test(nm) ? { ok: true, valid: true, certNo: no, name: 'Demo Student', course: 'Advanced Excel', issued: plus(0), preview: '', sample: 'assets/cert-sample.jpg', download: '#demo' } : /^MARS-?\d{4}-?[A-Z]{2,3}-?\/?\d{1,6}(\/[A-Z0-9]{1,5})?$/.test(no) ? { ok: true, valid: false, certNo: no } : { ok: false, error: 'Please enter the full certificate ID as printed on the certificate, for example MARS-2026-CL-1540.' };
   const verify = async () => {
     show($('verr'), ''); show($('vbad'), '');
     const no = $('vno').value.trim().toUpperCase().replace(/\s+/g, ''), nm = $('vname').value.trim();

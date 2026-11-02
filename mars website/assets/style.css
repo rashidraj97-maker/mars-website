@@ -905,6 +905,15 @@ html{scroll-padding-top:96px}
 .cf-btns{display:flex;gap:12px;flex-wrap:wrap;justify-content:center}
 .cf-hcok{padding:12px 14px;border-radius:12px;background:#ECFDF5;border:1px solid #A7F3D0;color:#065F46;font-size:.94rem;max-width:46ch}
 .linkbtn{background:none;border:0;color:var(--brand);font:inherit;font-weight:600;cursor:pointer;text-decoration:underline}
+.cf-mode{display:grid;grid-template-columns:1fr 1fr;gap:4px;padding:4px;border-radius:14px;background:var(--paper);border:1px solid var(--line)}
+.jform .cf-mode label{display:block;position:relative;cursor:pointer;gap:0}
+.cf-mode input{position:absolute;inset:0;opacity:0;margin:0;cursor:pointer}
+.cf-mode span{display:block;text-align:center;padding:9px 8px;border-radius:10px;font-weight:700;font-size:.92rem;color:var(--muted);transition:background .15s,color .15s,box-shadow .15s}
+.cf-mode small{display:block;font-weight:500;font-size:.76rem;margin-top:1px;color:var(--muted)}
+.cf-mode input:checked+span{background:#fff;color:var(--brand);box-shadow:0 2px 10px rgba(11,22,48,.12)}
+.cf-mode input:focus-visible+span{outline:2px solid var(--brand);outline-offset:2px}
+.jform [hidden]{display:none!important}
+.cf-hc span .cf-idw{display:inline;margin:0;color:inherit;font-size:inherit}
 .cf-demo{margin:0;padding:12px 14px;border-radius:12px;background:#F5F3FF;border:1px dashed #A78BFA;color:#4C1D95;font-size:.92rem}.cf-demo b:first-child{display:block}
 
 /* Certificate verification (employers) */

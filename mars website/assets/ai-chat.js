@@ -215,13 +215,14 @@
   const MINE = /download|pdf|hard ?copy|soft ?copy|print|lost|\bmy\b|\bmine\b|mera|meri|mere|mujhe|apna|amar|amake|আমার|मेरा|मेरी|मुझे|get (it|mine)|send (it|me)|where (is|can|do)|kahan|kaha|kothay|কোথায়|कहाँ|kab (milega|tak|ayega|aayega)|ready|enrol+ment (id|no|number)/i;
   const VER_W = /verif|genuine|original|fake|authentic|\bvalid|\breal\b|check (a|the|this|his|her|their|candidate|employee)|असली|नकली|আসল|নকল/i;
   const enrId = s => { const m = /\bMARS[\s-]*(\d{4})[\s-]*(\d{3,5})(?!\d)/i.exec(s); return m ? `MARS-${m[1]}-${m[2]}` : ''; };
-  const certNoIn = s => { const m = /\bMARS[\s-]*(\d{4})[\s-]*CL[\s-]*(\d{3,6})(?!\d)/i.exec(s); return m ? `MARS-${m[1]}-CL-${m[2]}` : ''; };
-  const phoneIn = s => { const m = /(?:^|[^\d])(?:\+?91[\s-]*|0)?([6-9]\d{4})[\s-]?(\d{5})(?!\d)/.exec(String(s).replace(/\bMARS[\s-]*\d{4}[\s-]*(CL[\s-]*)?\d{3,6}/gi, ' ')); return m ? m[1] + m[2] : ''; };
+  // certificate ID, e.g. MARS-2026-CL-1540, or older ones as listed before Nov 2026: MARS2023-CL-662, MARS2023-CL-662/A, MARS2024-SPL-1264, MARS2022-MSO/001
+  const certNoIn = s => { const m = /\bMARS[\s-]*(\d{4})[\s-]*(CL|SPL|MSO)[\s-]*(\/?\d{1,6})(\/[A-Z0-9]{1,5})?(?![\dA-Z])/i.exec(s); return m ? `MARS-${m[1]}-${m[2].toUpperCase()}${m[3][0] === '/' ? '' : '-'}${m[3]}${(m[4] || '').toUpperCase()}` : ''; };
+  const phoneIn = s => { const m = /(?:^|[^\d])(?:\+?91[\s-]*|0)?([6-9]\d{4})[\s-]?(\d{5})(?!\d)/.exec(String(s).replace(/\bMARS[\s-]*\d{4}[\s-]*((CL|SPL|MSO)[\s-]*\/?)?\d{1,6}(\/[A-Z0-9]{1,5})?/gi, ' ')); return m ? m[1] + m[2] : ''; };
   const ICC = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="9" r="6"/><path d="M8.5 13.5L7 22l5-3 5 3-1.5-8.5"/></svg>';
   const ICD = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12M7 10l5 5 5-5M5 21h14"/></svg>';
   const certLinks = (id, verify) => `<div class="mai-acts"><a class="mai-pri" href="certificate.html${id ? '?id=' + encodeURIComponent(id) : ''}">${ICC}Certificate page</a>${verify ? `<a href="certificate.html${verify === true ? '' : '?verify=' + encodeURIComponent(verify)}#verify">${IC.list}Verify a certificate</a>` : ''}<a class="mai-wa" href="${esc(waUrl('Hi MARS, I need help with my certificate'))}" target="_blank" rel="noopener">${IC.wa}WhatsApp</a></div>`;
-  const askDetails = intro => `${intro || ''}<p>I can get your certificate right here. Please type your <b>Enrollment ID</b> (for example MARS-2611-0012) and the <b>mobile number</b> you enrolled with.</p><p class="mai-note">Your Enrollment ID is in your enrollment email. You can also download it on our Certificate page.</p>${certLinks('', true)}`;
-  const verifyHtml = no => `<p>Companies and institutes can check any MARS certificate on our <b>Verify a certificate</b> page: enter the certificate ID${no ? ` (<b>${esc(no)}</b>)` : ', like MARS-2026-CL-1540,'} and the candidate's name. If it is genuine, the certificate opens in a preview.</p><div class="mai-acts"><a class="mai-pri" href="certificate.html${no ? '?verify=' + encodeURIComponent(no) : ''}#verify">${IC.list}Verify ${no ? 'this' : 'a'} certificate</a></div>`;
+  const askDetails = intro => `${intro || ''}<p>I can get your certificate right here. Please type your <b>Enrollment ID</b> (for example MARS-2611-0012) and the <b>mobile number</b> you enrolled with.</p><p class="mai-note">Your Enrollment ID is in your enrollment email. Got your certificate before November 2026? Just type the certificate ID printed on it (like MARS2023-CL-662).</p>${certLinks('', true)}`;
+  const verifyHtml = () => `<p>I can check any MARS certificate right here: type the <b>certificate ID</b> printed at the bottom (like MARS-2026-CL-1540 or MARS2023-CL-662) and I'll ask for the candidate's name. You can also use our <b>Verify a certificate</b> page.</p><div class="mai-acts"><a class="mai-pri" href="certificate.html#verify">${IC.list}Verify a certificate</a></div>`;
   const post = b => fetch(LEADS, { method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: JSON.stringify(b) }).then(x => x.json());
   async function certFetch(C) {
     typing(true); send.disabled = true;
@@ -248,16 +249,38 @@
     if (!h) { btn.disabled = false; return bubble('bot', `<p>${esc((r && (r.error || r.reason)) || "I couldn't send that just now. Please try again, or request it on the Certificate page.")}</p>${certLinks(id)}`); }
     bubble('bot', `<p><b>${h.again ? 'Hard copy already requested' : 'Hard copy requested ✓'}</b> on ${esc(h.requested)}.</p><p>Collect it from our office on or after <b>${esc(h.collectFrom)}</b>. Please bring your Enrollment ID.</p>`);
   }
+  // certificate ID + the name on it -> the certificate (students with older certificates, and employers checking one)
+  async function certCheck(no, name, mine) {
+    typing(true); send.disabled = true;
+    let r = null; try { r = await post({ action: 'certVerify', certNo: no, name }); } catch (e) { }
+    typing(false); send.disabled = false;
+    S.cert = null; save();
+    if (!r) return bubble('bot', `<p>I couldn't reach our server just now. Please try again, or use the Certificate page.</p>${certLinks('', true)}`);
+    if (!r.ok) { if (/name/i.test(r.error || '')) { S.cert = { no, mine }; save(); } return bubble('bot', `<p>${esc(r.error || 'Something went wrong.')}</p>`); }
+    if (!r.valid) { S.cert = { no, mine }; save(); return bubble('bot', `<p>I couldn't find certificate <b>${esc(r.certNo)}</b> with the name <b>${esc(name)}</b>. Please type the name exactly as printed on the certificate.</p><div class="mai-acts"><a class="mai-wa" href="${esc(waUrl('Hi MARS, about certificate ' + r.certNo))}" target="_blank" rel="noopener">${IC.wa}WhatsApp us</a></div>`); }
+    const view = r.preview ? r.preview.replace(/\/preview$/, '/view') : r.download;
+    bubble('bot', `${mine ? `<p>Here's your certificate, <b>${esc(r.name)}</b> 🎓</p>` : `<p>✓ <b>Genuine MARS certificate</b></p>`}<p><b>${esc(r.name)}</b><br>${esc(r.course)}<br>Certificate ID: <b>${esc(r.certNo)}</b>${r.issued ? `<br>Issued on ${esc(r.issued)}` : ''}</p>
+      <div class="mai-acts"><a class="mai-pri" href="${esc(r.download)}" target="_blank" rel="noopener">${ICD}Download PDF</a><a href="${esc(view)}" target="_blank" rel="noopener">${ICC}View</a></div>` +
+      (mine ? `<p class="mai-note" style="margin-top:10px">Want a printed copy? Request it on the Certificate page and collect it from our office 10 days later.</p><div class="mai-acts"><a href="certificate.html?cert=${encodeURIComponent(r.certNo)}&amp;name=${encodeURIComponent(name)}#get">${ICC}Request hard copy</a></div>` : ''));
+  }
   // returns true when the message was handled here (it never goes to the AI: it can hold a phone number)
   function certFlow(q) {
     const id = enrId(q), ph = phoneIn(q), no = certNoIn(q), word = CERT_W.test(q);
-    if (no && !id) { S.cert = null; save(); bubble('bot', verifyHtml(no)); return true; }
     if (/^(cancel|no|stop|nahi|nahin|na)$/i.test(q.trim()) && S.cert) { S.cert = null; save(); bubble('bot', '<p>No problem. Ask me anything else.</p>'); return true; }
+    if (no && !id) {   // a certificate ID: ask for the name on it, then show it
+      S.cert = { no, mine: !!(MINE.test(q) || (S.cert && S.cert.want)) }; save();
+      bubble('bot', `<p>Thanks! What is the <b>name</b> printed on certificate <b>${esc(no)}</b>?</p>`); return true;
+    }
+    if (S.cert && S.cert.no && !id && !ph) {   // waiting for that name
+      const nm = q.trim();
+      if (/[\d?]/.test(nm) || nm.split(/\s+/).length > 6 || !/[a-z]{2}/i.test(nm)) { S.cert = null; save(); return false; }   // a question instead: the AI answers it
+      certCheck(S.cert.no, nm, S.cert.mine); return true;
+    }
     if (!id && !ph) {
-      if (word && VER_W.test(q) && !/\b(my|mera|meri|amar)\b/i.test(q)) { S.cert = null; save(); bubble('bot', verifyHtml('')); return true; }
+      if (word && VER_W.test(q) && !/\b(my|mera|meri|amar)\b/i.test(q)) { S.cert = null; save(); bubble('bot', verifyHtml()); return true; }
       if (!(word && MINE.test(q))) { if (S.cert && !word) { S.cert = null; save(); } return false; }   // another question (or a general certificate question): the AI answers it
     }
-    const C = S.cert = Object.assign({}, S.cert, id && { id }, ph && { ph });
+    const C = S.cert = Object.assign({}, S.cert, id && { id }, ph && { ph }); delete C.no; delete C.mine;
     if (!word && !C.want && C.id && C.ph) { C.want = 1; save(); bubble('bot', `<p>Thanks! I can get your <b>certificate</b> right here. For payments, classes and course progress, please open the MARS app.</p><div class="mai-acts"><button type="button" class="mai-pri" data-ask="Get my certificate">${ICC}Get my certificate</button><a href="${esc(((D && D.app) || 'https://app.marstraining.in').replace(/\/$/, ''))}" target="_blank" rel="noopener">${IC.cap}Open MARS app</a></div>`); return true; }
     C.want = 1; save();
     if (C.id && C.ph) { certFetch(C); return true; }
