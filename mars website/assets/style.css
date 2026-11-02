@@ -904,3 +904,4 @@ html{scroll-padding-top:96px}
 .cf-btns{display:flex;gap:12px;flex-wrap:wrap;justify-content:center}
 .cf-hcok{padding:12px 14px;border-radius:12px;background:#ECFDF5;border:1px solid #A7F3D0;color:#065F46;font-size:.94rem;max-width:46ch}
 .linkbtn{background:none;border:0;color:var(--brand);font:inherit;font-weight:600;cursor:pointer;text-decoration:underline}
+.cf-demo{margin:0;padding:12px 14px;border-radius:12px;background:#F5F3FF;border:1px dashed #A78BFA;color:#4C1D95;font-size:.92rem}.cf-demo b:first-child{display:block}

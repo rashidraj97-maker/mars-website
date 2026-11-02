@@ -96,6 +96,13 @@
 <script>
 (() => {
   const f = document.getElementById('certForm'), $ = id => document.getElementById(id), err = $('cerr'), wait = $('cwait'), btn = $('cbtn');
+  // Demo mode (certificate?demo): shows every screen without checking real records
+  const DEMO = /[?&]demo\b/.test(location.search), plus = d => new Date(Date.now() + d * 864e5).toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' });
+  if (DEMO) f.insertAdjacentHTML('afterbegin', '<p class="cf-demo"><b>Demo mode</b> Nothing is checked against real records. Try Enrollment ID <b>DEMO-READY</b> (certificate ready) or <b>DEMO-WAIT</b> (not ready yet) with any 10-digit mobile number.</p>');
+  const fake = d => d.id === 'DEMO-READY' ? Object.assign({ ok: true, ready: true, name: 'Demo Student', course: 'Advanced Excel', certNo: 'MARS-2026-CL-1540', view: '#demo', download: '#demo' }, d.hardcopy ? { hardcopy: { requested: plus(0), collectFrom: plus(10), again: false } } : {})
+    : d.id === 'DEMO-WAIT' ? { ok: true, ready: false, name: 'Demo Student', course: 'Power BI', reason: 'Your certificate will be available after you pass the exam.' }
+    : { ok: false, error: 'We could not find this Enrollment ID with this mobile number. Please check both and try again.' };
+  document.addEventListener('click', ev => { const a = ev.target.closest('a[href="#demo"]'); if (a) { ev.preventDefault(); alert('Demo: on the real page this ' + (a.id === 'cdl' ? 'downloads' : 'opens') + ' the student\'s certificate PDF.'); } });
   const q = new URLSearchParams(location.search); if (q.get('id')) $('cid').value = q.get('id').toUpperCase();
   const esc = s => String(s == null ? '' : s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' })[c]);
   const show = (el, html) => { el.innerHTML = html; el.hidden = !html; };
@@ -106,7 +113,7 @@
     if (phone.length !== 10) return show(err, 'Please enter the 10-digit mobile number you registered with.');
     btn.disabled = true; btn.textContent = 'Checking…';
     try {
-      const r = await fetch(SITE.api, { method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: JSON.stringify({ action: 'certLookup', id, phone, hardcopy: $('chc').checked }) }).then(x => x.json());
+      const r = DEMO ? await new Promise(ok => setTimeout(() => ok(fake({ id, hardcopy: $('chc').checked })), 600)) : await fetch(SITE.api, { method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: JSON.stringify({ action: 'certLookup', id, phone, hardcopy: $('chc').checked }) }).then(x => x.json());
       if (!r.ok) show(err, esc(r.error || 'Something went wrong. Please try again.'));
       else if (!r.ready) show(wait, '<b>' + esc(r.name) + ', ' + esc(r.course) + '</b>' + esc(r.reason) + (window.SITE && SITE.whatsapp ? ' <a href="https://wa.me/' + SITE.whatsapp + '?text=' + encodeURIComponent('Hi, I want to know about my certificate. Enrollment ID: ' + id) + '" target="_blank" rel="noopener">Ask us on WhatsApp</a>' : ''));
       else {
