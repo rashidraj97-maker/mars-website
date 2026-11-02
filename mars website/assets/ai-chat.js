@@ -96,6 +96,7 @@
 #mai .mai-acts .mai-pri{background:var(--mai-grad);color:#fff;border-color:transparent;box-shadow:0 6px 14px rgba(91,91,239,.25)}
 #mai .mai-acts .mai-wa{background:#E8F9EE;color:#0E7A3B;border-color:#BDEBCD}
 #mai .mai-acts svg{width:14px;height:14px}
+#mai .mai-acts button:disabled{opacity:.55;cursor:default}
 #mai .mai-typing{display:flex;gap:4px;padding:12px 14px;background:#fff;border:1px solid var(--mai-line);border-radius:18px;border-bottom-left-radius:6px}
 #mai .mai-typing i{width:7px;height:7px;border-radius:50%;background:var(--mai-violet);opacity:.5;animation:mai-b 1s infinite}
 #mai .mai-typing i:nth-child(2){animation-delay:.15s}#mai .mai-typing i:nth-child(3){animation-delay:.3s}
@@ -201,11 +202,69 @@
     if (has('emi', 'installment', 'instalment', 'kist')) return c && c.emi.length ? { html: `<p><b>${esc(c.t)}</b> can be paid in parts:</p><ul>${c.emi.map(p => `<li><b>${p.n} installments</b>: ${inr(p.first)} today, rest every 30 days (total ${inr(p.total)})</li>`).join('')}</ul>`, course: c }
       : { html: `<p>Most longer courses can be paid in <b>2 or 3 installments</b>, 30 days apart, with a small extra fee. Tell me the course name for exact amounts.</p>`, course: c };
     if (has('batch', 'weekend', 'start', 'when', 'kab')) return { html: D.batches.length ? `<p>Upcoming batches:</p><ul>${D.batches.slice(0, 4).map(b => `<li><b>${esc(b.course)}</b>: ${esc(niceDay(b.start))}, ${esc(b.timing)}</li>`).join('')}</ul><p>For other courses you pick your start date when you enroll.</p>` : `<p>You pick your preferred start date when you enroll; batches usually start within 2–3 weeks.</p>`, course: c };
+    if (CERT_W.test(raw)) return { html: `<p>Every MARS course comes with a <b>MARS Course Completion certificate</b>. You get it after you complete the course, pass the final exam and pay all fees.</p>` + askDetails().replace(/<div class="mai-acts">[\s\S]*$/, ''), course: null, cert: true };
     if (has('office', 'timing', 'open', 'hours')) return { html: `<p>Office hours:</p><ul>${D.hours.map(h => `<li>${esc(h)}</li>`).join('')}</ul><p>Call ${esc(D.phones.join(' / '))}.</p>`, course: null };
     if (has('where', 'address', 'location', 'classroom', 'online', 'offline')) return { html: `<p>Learn <b>live online</b> from anywhere, or in a <b>classroom at our Kolkata centre</b>: Ground Floor, P-74 Nani Gopal Roy Chowdhury Avenue, CIT Road, Kolkata 700014.</p>`, course: c };
     if (c) return { html: `<p><b>${esc(c.t)}</b>: ${offerOn(c) ? `<b>${inr(c.price)}</b> with the current offer (regular ${inr(c.fee)})` : `<b>${inr(c.fee)}</b>`}, ${esc(c.dur)}.</p>${c.desc ? `<p>${esc(c.desc)}</p>` : ''}`, course: c };
     if (has('fee', 'price', 'cost', 'kitna')) return { html: `<p>A few popular courses:</p><ul>${['Advanced Excel', 'Power BI', 'SQL', 'Data Analytics', 'MS Office'].map(byT).filter(Boolean).map(x => `<li>${esc(x.t)}: <b>${inr(x.price)}</b></li>`).join('')}</ul><p>Tell me a course name for full details.</p>`, course: null };
     return { html: `<p>I'm not sure about that one. Our team can help on WhatsApp, or I can ask a counsellor to call you.</p>`, course: null };
+  }
+
+  /* ---------- certificates: the chat fetches them itself (same check as the Certificate page: Enrollment ID + registered mobile) ---------- */
+  const CERT_W = /certi|\bcert\b|सर्टिफिकेट|सर्टिफिकेट|प्रमाण ?पत्र|সার্টিফিকেট|সার্টিফিকেট|সনদ/i;
+  const MINE = /download|pdf|hard ?copy|soft ?copy|print|lost|\bmy\b|\bmine\b|mera|meri|mere|mujhe|apna|amar|amake|আমার|मेरा|मेरी|मुझे|get (it|mine)|send (it|me)|where (is|can|do)|kahan|kaha|kothay|কোথায়|कहाँ|kab (milega|tak|ayega|aayega)|ready|enrol+ment (id|no|number)/i;
+  const VER_W = /verif|genuine|original|fake|authentic|\bvalid|\breal\b|check (a|the|this|his|her|their|candidate|employee)|असली|नकली|আসল|নকল/i;
+  const enrId = s => { const m = /\bMARS[\s-]*(\d{4})[\s-]*(\d{3,5})(?!\d)/i.exec(s); return m ? `MARS-${m[1]}-${m[2]}` : ''; };
+  const certNoIn = s => { const m = /\bMARS[\s-]*(\d{4})[\s-]*CL[\s-]*(\d{3,6})(?!\d)/i.exec(s); return m ? `MARS-${m[1]}-CL-${m[2]}` : ''; };
+  const phoneIn = s => { const m = /(?:^|[^\d])(?:\+?91[\s-]*|0)?([6-9]\d{4})[\s-]?(\d{5})(?!\d)/.exec(String(s).replace(/\bMARS[\s-]*\d{4}[\s-]*(CL[\s-]*)?\d{3,6}/gi, ' ')); return m ? m[1] + m[2] : ''; };
+  const ICC = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="9" r="6"/><path d="M8.5 13.5L7 22l5-3 5 3-1.5-8.5"/></svg>';
+  const ICD = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12M7 10l5 5 5-5M5 21h14"/></svg>';
+  const certLinks = (id, verify) => `<div class="mai-acts"><a class="mai-pri" href="certificate.html${id ? '?id=' + encodeURIComponent(id) : ''}">${ICC}Certificate page</a>${verify ? `<a href="certificate.html${verify === true ? '' : '?verify=' + encodeURIComponent(verify)}#verify">${IC.list}Verify a certificate</a>` : ''}<a class="mai-wa" href="${esc(waUrl('Hi MARS, I need help with my certificate'))}" target="_blank" rel="noopener">${IC.wa}WhatsApp</a></div>`;
+  const askDetails = intro => `${intro || ''}<p>I can get your certificate right here. Please type your <b>Enrollment ID</b> (for example MARS-2611-0012) and the <b>mobile number</b> you enrolled with.</p><p class="mai-note">Your Enrollment ID is in your enrollment email. You can also download it on our Certificate page.</p>${certLinks('', true)}`;
+  const verifyHtml = no => `<p>Companies and institutes can check any MARS certificate on our <b>Verify a certificate</b> page: enter the certificate ID${no ? ` (<b>${esc(no)}</b>)` : ', like MARS-2026-CL-1540,'} and the candidate's name. If it is genuine, the certificate opens in a preview.</p><div class="mai-acts"><a class="mai-pri" href="certificate.html${no ? '?verify=' + encodeURIComponent(no) : ''}#verify">${IC.list}Verify ${no ? 'this' : 'a'} certificate</a></div>`;
+  const post = b => fetch(LEADS, { method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: JSON.stringify(b) }).then(x => x.json());
+  async function certFetch(C) {
+    typing(true); send.disabled = true;
+    let r = null; try { r = await post({ action: 'certLookup', id: C.id, phone: C.ph }); } catch (e) { }
+    typing(false); send.disabled = false;
+    if (!r) return bubble('bot', `<p>I couldn't reach our server just now. Please try again, or download it on the Certificate page.</p>${certLinks(C.id)}`);
+    if (!r.ok) {   // wrong details: let them type them again
+      S.cert = /could not find/i.test(r.error || '') ? { want: 1 } : null; save();
+      return bubble('bot', `<p>${esc(r.error || 'Something went wrong.')}</p>${certLinks(C.id)}`);
+    }
+    S.cert = null; save();
+    const who = `<p>Hi <b>${esc(r.name)}</b>! I found your enrollment for <b>${esc(r.course)}</b>.</p>`;
+    if (!r.ready) return bubble('bot', `${who}<p>${esc(r.reason)}</p><div class="mai-acts"><a class="mai-pri" href="${esc(((D && D.app) || 'https://app.marstraining.in').replace(/\/$/, ''))}" target="_blank" rel="noopener">${IC.cap}Open MARS app</a><a class="mai-wa" href="${esc(waUrl('Hi MARS, about my certificate. Enrollment ID ' + C.id))}" target="_blank" rel="noopener">${IC.wa}WhatsApp</a></div>`);
+    bubble('bot', `<p>Here's your certificate, <b>${esc(r.name)}</b> 🎓</p><p><b>${esc(r.course)}</b><br>Certificate ID: <b>${esc(r.certNo)}</b></p>
+      <div class="mai-acts"><a class="mai-pri" href="${esc(r.download)}" target="_blank" rel="noopener">${ICD}Download PDF</a><a href="${esc(r.view)}" target="_blank" rel="noopener">${ICC}View</a></div>
+      <p class="mai-note" style="margin-top:10px">Want a printed copy? Collect it from our office 10 days after you request it.</p><div class="mai-acts"><button type="button" data-hc="${esc(C.id + '|' + C.ph)}">${ICC}Request hard copy</button></div>`);
+  }
+  async function hardCopy(btn) {
+    const [id, ph] = btn.dataset.hc.split('|'); btn.disabled = true;
+    typing(true); send.disabled = true;
+    let r = null; try { r = await post({ action: 'certLookup', id, phone: ph, hardcopy: true }); } catch (e) { }
+    typing(false); send.disabled = false;
+    const h = r && r.ok && r.hardcopy;
+    if (!h) { btn.disabled = false; return bubble('bot', `<p>${esc((r && (r.error || r.reason)) || "I couldn't send that just now. Please try again, or request it on the Certificate page.")}</p>${certLinks(id)}`); }
+    bubble('bot', `<p><b>${h.again ? 'Hard copy already requested' : 'Hard copy requested ✓'}</b> on ${esc(h.requested)}.</p><p>Collect it from our office on or after <b>${esc(h.collectFrom)}</b>. Please bring your Enrollment ID.</p>`);
+  }
+  // returns true when the message was handled here (it never goes to the AI: it can hold a phone number)
+  function certFlow(q) {
+    const id = enrId(q), ph = phoneIn(q), no = certNoIn(q), word = CERT_W.test(q);
+    if (no && !id) { S.cert = null; save(); bubble('bot', verifyHtml(no)); return true; }
+    if (/^(cancel|no|stop|nahi|nahin|na)$/i.test(q.trim()) && S.cert) { S.cert = null; save(); bubble('bot', '<p>No problem. Ask me anything else.</p>'); return true; }
+    if (!id && !ph) {
+      if (word && VER_W.test(q) && !/\b(my|mera|meri|amar)\b/i.test(q)) { S.cert = null; save(); bubble('bot', verifyHtml('')); return true; }
+      if (!(word && (MINE.test(q) || S.cert))) { if (S.cert) { S.cert = null; save(); } return false; }   // another question: the AI answers it
+    }
+    const C = S.cert = Object.assign({}, S.cert, id && { id }, ph && { ph });
+    if (!word && !C.want && C.id && C.ph) { C.want = 1; save(); bubble('bot', `<p>Thanks! I can get your <b>certificate</b> right here. For payments, classes and course progress, please open the MARS app.</p><div class="mai-acts"><button type="button" class="mai-pri" data-ask="Get my certificate">${ICC}Get my certificate</button><a href="${esc(((D && D.app) || 'https://app.marstraining.in').replace(/\/$/, ''))}" target="_blank" rel="noopener">${IC.cap}Open MARS app</a></div>`); return true; }
+    C.want = 1; save();
+    if (C.id && C.ph) { certFetch(C); return true; }
+    if (C.id) bubble('bot', `<p>Thanks! Now the <b>mobile number</b> you enrolled with?</p>`);
+    else if (C.ph) bubble('bot', `<p>Thanks! Now your <b>Enrollment ID</b>? It looks like MARS-2611-0012 and is in your enrollment email.</p>`);
+    else bubble('bot', askDetails());
+    return true;
   }
 
   /* ---------- conversation ---------- */
@@ -225,7 +284,7 @@
   }
   function welcome() {
     S = { msgs: [], view: [], lead: null }; save();
-    log.innerHTML = `<div class="mai-hello"><div class="mai-h">Hi there 👋<br><span>How can I help you today?</span></div><p>I know every MARS course, fee, batch and EMI plan. Pick a topic or ask in your own words, in English, Hindi or Bengali.</p>
+    log.innerHTML = `<div class="mai-hello"><div class="mai-h">Hi there 👋<br><span>How can I help you today?</span></div><p>I know every MARS course, fee, batch and EMI plan, and I can fetch your certificate. Pick a topic or ask in your own words, in English, Hindi or Bengali.</p>
     <div class="mai-tiles">
       <button type="button" class="mai-tile" data-ask="Which course is best for me?"><span class="mai-ic v"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1"/></svg></span><span>Find my course<small>Based on your goal</small></span></button>
       <button type="button" class="mai-tile" data-ask="What are your course fees and current offers?"><span class="mai-ic g"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 4h12M6 9h12M14 4c3 0 3 5 0 5H6l9 11"/></svg></span><span>Fees &amp; offers<small>Prices and discounts</small></span></button>
@@ -234,7 +293,7 @@
     </div></div>`;
   }
   function restore() { if (!S.view.length) return welcome(); log.innerHTML = ''; S.view.forEach(([w, h]) => bubble(w, h, false)); }
-  const SUG = ['Best course for MIS job', 'Fees for Power BI', 'Weekend batches?', 'EMI for Data Analytics', 'MS Office kitna hai?', 'Office timings', 'Call me back'];
+  const SUG = ['Best course for MIS job', 'Download my certificate', 'Fees for Power BI', 'Weekend batches?', 'EMI for Data Analytics', 'MS Office kitna hai?', 'Office timings', 'Call me back'];
   $('.mai-sugg').innerHTML = SUG.map(s => `<button type="button" data-ask="${esc(s)}">${esc(s)}</button>`).join('');
 
   const CALL = /\b(call me|callback|call back|ring me|contact me|phone me|talk to (a |your )?(person|human|counsel+or|someone)|baat kar|call kar|phone kar)\b/i;
@@ -263,6 +322,7 @@
     q = String(q || '').trim(); if (!q || send.disabled) return;
     bubble('me', `<p>${esc(q)}</p>`);
     if (S.lead) return leadStep(q);
+    if (certFlow(q)) return;
     if (CALL.test(q)) { S.msgs.push({ role: 'user', content: q }); save(); return startLead(); }
     S.msgs.push({ role: 'user', content: q }); save();
     typing(true); send.disabled = true;
@@ -271,12 +331,14 @@
     if (r && r.ok && r.reply) {
       S.msgs.push({ role: 'assistant', content: r.reply }); save();
       const cs = (r.courses || []).map(byT).filter(Boolean);
-      bubble('bot', md(r.reply) + cs.map(card).join('') + actions(cs[0] || null));
+      bubble('bot', md(r.reply) + cs.map(card).join('') + (r.cert ? certLinks('', true) : actions(cs[0] || null)));
+      if (r.cert) { S.cert = { want: 1 }; save(); }   // the AI asked for their Enrollment ID + mobile: the next message is fetched here
       if (r.callback) startLead();   // the visitor asked to be called (checked on the server too)
     } else {
       const b = builtIn(q);
       S.msgs.push({ role: 'assistant', content: b.html.replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim() }); save();
-      bubble('bot', b.html + (b.course ? card(b.course) : '') + actions(b.course) + (r && r.error && /Too many/.test(r.error) ? `<p class="mai-note">${esc(r.error)}</p>` : ''));
+      if (b.cert) { S.cert = { want: 1 }; save(); }
+      bubble('bot', b.html + (b.course ? card(b.course) : '') + (b.cert ? certLinks('', true) : actions(b.course)) + (r && r.error && /Too many/.test(r.error) ? `<p class="mai-note">${esc(r.error)}</p>` : ''));
     }
     input.focus({ preventScroll: true });
   }
@@ -291,7 +353,7 @@
   $('.mai-reset').addEventListener('click', welcome);
   teaser.addEventListener('click', e => { if (e.target.closest('.mai-tx')) { teaser.hidden = true; store('mai_seen', 1); return; } setOpen(true); });
   teaser.addEventListener('keydown', e => { if (e.key === 'Enter') setOpen(true); });
-  root.addEventListener('click', e => { const b = e.target.closest('[data-ask]'); if (b) { e.preventDefault(); ask(b.dataset.ask); } });
+  root.addEventListener('click', e => { const h = e.target.closest('[data-hc]'); if (h && !send.disabled) { e.preventDefault(); return hardCopy(h); } const b = e.target.closest('[data-ask]'); if (b) { e.preventDefault(); ask(b.dataset.ask); } });
   $('form').addEventListener('submit', e => { e.preventDefault(); const q = input.value; input.value = ''; ask(q); });
   document.addEventListener('keydown', e => { if (e.key === 'Escape' && !chat.hidden) setOpen(false); });
   if (!store('mai_seen')) setTimeout(() => { if (chat.hidden && !store('mai_seen')) teaser.hidden = false; }, 7000);

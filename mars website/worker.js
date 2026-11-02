@@ -2,7 +2,7 @@
  * marstraining.in – static website + "Ask MARS AI" chat API.
  * Static files are served straight from the assets; this code only runs for /api/* (and for paths with no file).
  *   GET  /api/catalog  compact course data (fees, offer, batches, EMI, hours) for the chat widget
- *   POST /api/chat     { messages: [{ role: 'user'|'assistant', content }] } -> { ok, reply, courses: [titles], callback }
+ *   POST /api/chat     { messages: [{ role: 'user'|'assistant', content }] } -> { ok, reply, courses: [titles], callback, cert }
  * AI: Cloudflare Workers AI (free daily allowance). If it fails or the allowance is used up, the widget answers from its own rules.
  */
 const DATA_URL = 'https://script.google.com/macros/s/AKfycbyXxbiBJtACn_OVfPzgAOb0vXe2xJJZUjW0ouAekolDCbmyvLh4OVPH4QVZKEcaXm72/exec?action=data';
@@ -76,7 +76,8 @@ RULES
 - Never mention course hours; give the duration in months only.
 - Late fee: an installment paid after its due date + 5 days gets ${inr(D.lateSmall)} added (course total up to ${inr(D.lateLimit)}) or ${inr(D.lateBig)} (above).
 - To enroll, the visitor taps the Enroll button (opens our app). For a human: WhatsApp us or ask for a call back.
-- Finish EVERY reply with one last line exactly like [[courses: Exact Title | Exact Title]] naming at most 2 course titles from the list: only the course the visitor asked about, or the one or two you recommend most (or [[courses: ]] if none). Add [[callback]] ONLY when the visitor explicitly asks to be called or contacted, never on your own.
+- You cannot see student records yourself, but this chat can fetch a certificate. Never say you are not able or not authorized to help with a certificate. If the visitor wants their own certificate (download, copy, hard copy, lost, when ready), ask them to type their Enrollment ID (looks like MARS-2611-0012) and the mobile number they enrolled with, right here in the chat, and add [[certificate]]. Add [[certificate]] also when someone asks how to verify a MARS certificate.
+- Finish EVERY reply with one last line exactly like [[courses: Exact Title | Exact Title]] naming at most 2 course titles from the list: only the course the visitor asked about, or the one or two you recommend most (or [[courses: ]] if none, and always [[courses: ]] for certificate questions). Add [[callback]] ONLY when the visitor explicitly asks to be called or contacted, never on your own.
 
 FACTS
 Offer: ${D.offer ? `${D.offer.name}: ${D.offer.discount} off${D.offer.end ? ' till ' + niceDay(D.offer.end) : ''} (${D.offer.text})` : 'no offer running'}
@@ -87,7 +88,7 @@ ${batches}
 - Other courses: the student picks a preferred start date when enrolling; batches usually start within 2-3 weeks. Weekday and weekend options.
 Mode: live online from anywhere, or classroom at our Kolkata centre (Ground Floor, P-74 Nani Gopal Roy Chowdhury Avenue, CIT Road, Kolkata 700014). Same trainer and certificate.
 Office hours: ${D.hours.join('; ')}. Call ${D.phones.join(' / ')}. WhatsApp +${D.whatsapp}. Email ${D.email}.
-Certificate: exam at the end; certificate after passing and paying all fees, downloadable from My Courses in our app.
+Certificate: every course ends with an exam. After the student completes the course, passes the exam and pays all fees, MARS issues a Course Completion certificate (ID like MARS-2026-CL-1540). It is emailed as a PDF and can be downloaded any time from the Certificate page on this website (Enrollment ID + registered mobile number), from My Courses in our app, or right here in this chat. Hard copy: request it on the Certificate page or in this chat and collect it from our office 10 days later. Employers can verify a certificate on the Certificate page with the certificate ID and the candidate's name.
 Companies: on-site or online corporate training; they can fill the Corporate Training enquiry form.
 ${D.faqs.length ? 'FAQs:\n' + D.faqs.map(f => `Q: ${f.q} A: ${f.a}`).join('\n') : ''}
 ${detail.length ? 'Details of courses being discussed:\n' + detail.join('\n') : ''}`;
@@ -119,12 +120,13 @@ async function chat(req, env, ctx) {
     const out = await Promise.race([run, new Promise((_, no) => setTimeout(() => no(new Error('timeout')), 25000))]);
     let text = String((out && (out.response ?? out.result?.response)) || '').trim();
     if (!text) throw new Error('empty');
-    const tags = [...text.matchAll(/\[\[\s*(courses|callback)\s*:?\s*([^\]]*)\]\]/gi)];
+    const tags = [...text.matchAll(/\[\[\s*(courses|callback|certificate)\s*:?\s*([^\]]*)\]\]/gi)];
     const titles = new Set(D.courses.map(c => c.t));
     const courses = [...new Set(tags.filter(t => /courses/i.test(t[1])).flatMap(t => t[2].split('|').map(x => x.trim())).filter(x => titles.has(x)))].slice(0, 2);
     const callback = tags.some(t => /callback/i.test(t[1])) && /call|phone|contact|ring|baat|fon|ফোন|কল|कॉल|फोन|बात/i.test(msgs[msgs.length - 1].content);   // only when they asked for it
+    const cert = tags.some(t => /certificate/i.test(t[1]));
     text = text.replace(/\[\[[^\]]*\]\]/g, '').replace(/\n{3,}/g, '\n\n').trim();
-    return json({ ok: true, reply: text, courses, callback });
+    return json({ ok: true, reply: text, courses: cert ? [] : courses, callback, cert });
   } catch (e) {
     console.log('AI error', String(e && e.message || e));
     return json({ ok: false, fallback: true, error: 'ai' }, 503);
