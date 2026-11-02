@@ -169,6 +169,7 @@
         $('vframe').innerHTML = r.preview ? '<iframe src="' + esc(r.preview) + '" title="Certificate ' + esc(r.certNo) + '" loading="lazy" allow="autoplay"></iframe>' : '<img src="' + esc(r.sample) + '" alt="Sample certificate">';
         $('vdl').href = r.download;
         if (dlg.showModal) dlg.showModal(); else dlg.setAttribute('open', '');
+        dlg.scrollTop = 0;
       }
     } catch (x) { show($('verr'), 'Could not connect. Please check your internet and try again.'); }
     vbtn.disabled = false; vbtn.textContent = 'Verify certificate';
