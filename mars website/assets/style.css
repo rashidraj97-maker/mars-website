@@ -283,7 +283,7 @@ svg{flex:none}
 
 /* Footer */
 .foot{background:var(--navy);color:#9FB0CC;padding:80px 0 30px;font-size:.94rem}
-.foot .cols{display:grid;grid-template-columns:1.5fr 1fr 1fr 1fr;gap:34px}
+.foot .cols{display:grid;grid-template-columns:1.4fr .9fr .9fr 1.3fr;gap:34px}
 .foot h4{color:#fff;font-size:.95rem;margin-bottom:16px}
 .foot a{display:block;color:#9FB0CC;text-decoration:none;padding:4px 0}
 .foot a:hover{color:#fff}
@@ -885,3 +885,5 @@ html{scroll-padding-top:96px}
 .cv .tile.ctile.sm{font-size:1.05rem}.cv .tile.ctile.xs{font-size:.8rem}
 .cv.hasimg .aibadge{z-index:2}
 @media(prefers-reduced-motion:reduce){.cc4:hover .cv .cimg{transform:none}}
+
+.foot a.fsoc[href^="mailto:"]{overflow-wrap:normal;word-break:keep-all;white-space:nowrap}
