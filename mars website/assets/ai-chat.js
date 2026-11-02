@@ -255,7 +255,7 @@
     if (/^(cancel|no|stop|nahi|nahin|na)$/i.test(q.trim()) && S.cert) { S.cert = null; save(); bubble('bot', '<p>No problem. Ask me anything else.</p>'); return true; }
     if (!id && !ph) {
       if (word && VER_W.test(q) && !/\b(my|mera|meri|amar)\b/i.test(q)) { S.cert = null; save(); bubble('bot', verifyHtml('')); return true; }
-      if (!(word && (MINE.test(q) || S.cert))) { if (S.cert) { S.cert = null; save(); } return false; }   // another question: the AI answers it
+      if (!(word && MINE.test(q))) { if (S.cert && !word) { S.cert = null; save(); } return false; }   // another question (or a general certificate question): the AI answers it
     }
     const C = S.cert = Object.assign({}, S.cert, id && { id }, ph && { ph });
     if (!word && !C.want && C.id && C.ph) { C.want = 1; save(); bubble('bot', `<p>Thanks! I can get your <b>certificate</b> right here. For payments, classes and course progress, please open the MARS app.</p><div class="mai-acts"><button type="button" class="mai-pri" data-ask="Get my certificate">${ICC}Get my certificate</button><a href="${esc(((D && D.app) || 'https://app.marstraining.in').replace(/\/$/, ''))}" target="_blank" rel="noopener">${IC.cap}Open MARS app</a></div>`); return true; }
@@ -332,12 +332,12 @@
       S.msgs.push({ role: 'assistant', content: r.reply }); save();
       const cs = (r.courses || []).map(byT).filter(Boolean);
       bubble('bot', md(r.reply) + cs.map(card).join('') + (r.cert ? certLinks('', true) : actions(cs[0] || null)));
-      if (r.cert) { S.cert = { want: 1 }; save(); }   // the AI asked for their Enrollment ID + mobile: the next message is fetched here
+      if (r.cert) { S.cert = Object.assign({}, S.cert, { want: 1 }); save(); }   // the AI asked for their Enrollment ID + mobile: the next message is fetched here
       if (r.callback) startLead();   // the visitor asked to be called (checked on the server too)
     } else {
       const b = builtIn(q);
       S.msgs.push({ role: 'assistant', content: b.html.replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim() }); save();
-      if (b.cert) { S.cert = { want: 1 }; save(); }
+      if (b.cert) { S.cert = Object.assign({}, S.cert, { want: 1 }); save(); }
       bubble('bot', b.html + (b.course ? card(b.course) : '') + (b.cert ? certLinks('', true) : actions(b.course)) + (r && r.error && /Too many/.test(r.error) ? `<p class="mai-note">${esc(r.error)}</p>` : ''));
     }
     input.focus({ preventScroll: true });

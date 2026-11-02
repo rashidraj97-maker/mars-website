@@ -124,9 +124,10 @@ async function chat(req, env, ctx) {
     const titles = new Set(D.courses.map(c => c.t));
     const courses = [...new Set(tags.filter(t => /courses/i.test(t[1])).flatMap(t => t[2].split('|').map(x => x.trim())).filter(x => titles.has(x)))].slice(0, 2);
     const callback = tags.some(t => /callback/i.test(t[1])) && /call|phone|contact|ring|baat|fon|ফোন|কল|कॉल|फोन|बात/i.test(msgs[msgs.length - 1].content);   // only when they asked for it
-    const cert = tags.some(t => /certificate/i.test(t[1]));
+    // certificate questions get the Certificate page buttons (decided here too, not only by the AI) and only the course cards the visitor named
+    const lastQ = msgs[msgs.length - 1].content, cert = /certi|\bcert\b|सर्टिफिकेट|सर्टिफिकेट|प्रमाण ?पत्र|সার্টিফিকেট|সার্টিফিকেট|সনদ/i.test(lastQ) || tags.some(t => /certificate/i.test(t[1]));
     text = text.replace(/\[\[[^\]]*\]\]/g, '').replace(/\n{3,}/g, '\n\n').trim();
-    return json({ ok: true, reply: text, courses: cert ? [] : courses, callback, cert });
+    return json({ ok: true, reply: text, courses: cert ? courses.filter(t => normT(lastQ).includes(normT(t))) : courses, callback, cert });
   } catch (e) {
     console.log('AI error', String(e && e.message || e));
     return json({ ok: false, fallback: true, error: 'ai' }, 503);
