@@ -211,7 +211,8 @@ document.addEventListener('DOMContentLoaded', () => {
 /* Home: the formula bar types the formula behind the selected cell */
 function home() {
   const f = $('#fx'), text = '=SUMIFS(Sales[Amount],Sales[Region],"East")';
-  if (f && !matchMedia('(prefers-reduced-motion: reduce)').matches) {
+  if (document.querySelector('.dstack')) { /* the changing report card (hero-reports.js) types its own formulas */ }
+  else if (f && !matchMedia('(prefers-reduced-motion: reduce)').matches) {
     let i = 0; f.textContent = '';
     const t = setInterval(() => { f.textContent = text.slice(0, ++i); if (i >= text.length) { clearInterval(t); $$('.grid .later').forEach(c => c.classList.add('fill')); } }, 45);
   } else if (f) f.textContent = text;
