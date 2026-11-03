@@ -112,7 +112,7 @@
     if (!FORCE && store(key) === stamp) return;   // already shown today
     const chat = document.querySelector('#mai .mai-chat');
     if (!FORCE && chat && !chat.hidden) return;   // never on top of an open chat
-    store(key, stamp);
+    if (!FORCE) store(key, stamp);
     let root = document.getElementById('ofp');
     if (!root) { root = document.createElement('div'); root.id = 'ofp'; document.body.appendChild(root); const st = document.createElement('style'); st.textContent = css; document.head.appendChild(st); }
     root.hidden = false; root.innerHTML = html;
