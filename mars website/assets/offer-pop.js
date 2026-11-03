@@ -107,7 +107,8 @@
 
   function open(D) {
     const html = build(D); if (!html) return;
-    const key = 'mars_ofp1', stamp = (D.offer ? D.offer.name + D.offer.end : 'batches') + '|' + D.at;
+    // shown again the same day when the offer changes (name, discount, end date or wording) or a batch is added / moved
+    const key = 'mars_ofp2', stamp = [D.offer ? [D.offer.name, D.offer.discount, D.offer.end, D.offer.text].join('~') : '', (D.batches || []).map(b => b.course + '@' + b.start).join(','), D.at].join('|');
     if (!FORCE && store(key) === stamp) return;   // already shown today
     const chat = document.querySelector('#mai .mai-chat');
     if (!FORCE && chat && !chat.hidden) return;   // never on top of an open chat

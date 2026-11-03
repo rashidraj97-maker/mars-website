@@ -24,13 +24,24 @@ const isoDay = v => { const s = String(v || '').trim(); let m = s.match(/^(\d{4}
 const niceDay = iso => { const m = /^(\d{4})-(\d\d)-(\d\d)$/.exec(iso || ''); return m ? `${+m[3]} ${['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'][+m[2] - 1]} ${m[1]}` : ''; };
 const todayIst = () => new Date(Date.now() + 5.5 * 3600e3).toISOString().slice(0, 10);
 
-/* ---------- course data (from the MARS ENQUIRY sheet via Apps Script), cached ---------- */
-let memo = null;
+/* ---------- course data (from the MARS ENQUIRY sheet via Apps Script), cached ----------
+ * Served from a saved copy so pages stay fast. A copy older than FRESH_SECS is refreshed in the background,
+ * so a change in the sheet (offer, batches, fees) reaches the offer window and the chat within about a minute. */
+let memo = null, refreshing = null;
+const CAT_KEY = 'https://marstraining.in/__ai/catalog-v2', FRESH_SECS = 60;
 async function catalog(ctx) {
-  if (memo && Date.now() - memo.at < CACHE_SECS * 1000) return memo.data;
-  const key = new Request('https://marstraining.in/__ai/catalog-v1'), cache = caches.default;
-  const hit = await cache.match(key);
-  if (hit) { const data = await hit.json(); memo = { at: Date.now(), data }; return data; }
+  if (!memo) {
+    const hit = await caches.default.match(new Request(CAT_KEY));
+    if (hit) { try { const j = await hit.json(); if (j && j.data) memo = { at: j.at, data: j.data }; } catch (e) { /* ignore a bad copy */ } }
+  }
+  if (!memo) return loadCatalog(ctx);
+  if (Date.now() - memo.at > FRESH_SECS * 1000 && !refreshing) {
+    refreshing = loadCatalog(ctx).catch(e => console.log('catalog refresh', String(e && e.message || e))).finally(() => { refreshing = null; });
+    ctx.waitUntil(refreshing);
+  }
+  return memo.data;
+}
+async function loadCatalog(ctx) {
   const r = await fetch(DATA_URL, { redirect: 'follow', cf: { cacheTtl: 0 } });
   const d = await r.json();
   if (!d || !Array.isArray(d.courses)) throw new Error('no course data');
@@ -53,8 +64,8 @@ async function catalog(ctx) {
     lateSmall: num(S.late_fee_small) || 250, lateBig: num(S.late_fee_big) || 500, lateLimit: num(S.late_fee_limit) || 10000,
     faqs: (d.faqs || []).filter(f => f.Question && f.Answer).slice(0, 12).map(f => ({ q: String(f.Question).slice(0, 160), a: String(f.Answer).slice(0, 360) }))
   };
-  memo = { at: Date.now(), data };
-  ctx.waitUntil(cache.put(key, new Response(JSON.stringify(data), { headers: { 'Content-Type': 'application/json', 'Cache-Control': `public, max-age=${CACHE_SECS}` } })));
+  const at = Date.now(); memo = { at, data };
+  ctx.waitUntil(caches.default.put(new Request(CAT_KEY), new Response(JSON.stringify({ at, data }), { headers: { 'Content-Type': 'application/json', 'Cache-Control': `public, max-age=${CACHE_SECS}` } })));
   return data;
 }
 
@@ -138,7 +149,7 @@ export default {
   async fetch(req, env, ctx) {
     const url = new URL(req.url);
     if (url.pathname === '/api/catalog' && req.method === 'GET') {
-      try { return json(await catalog(ctx), 200, { 'Cache-Control': 'public, max-age=300' }); } catch (e) { return json({ ok: false, error: 'data' }, 503); }
+      try { return json(await catalog(ctx), 200, { 'Cache-Control': 'public, max-age=60' }); } catch (e) { return json({ ok: false, error: 'data' }, 503); }
     }
     if (url.pathname === '/api/chat') return req.method === 'POST' ? chat(req, env, ctx) : json({ ok: false, error: 'Use POST' }, 405);
     if (url.pathname.startsWith('/api/')) return json({ ok: false, error: 'Not found' }, 404);
