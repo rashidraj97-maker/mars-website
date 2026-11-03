@@ -33,6 +33,11 @@
 #ofp .of-body{padding:16px 18px 6px;overflow:auto}
 #ofp .of-lab{display:flex;align-items:center;justify-content:space-between;margin:0 2px 10px;font:700 12px/1 Inter,sans-serif;letter-spacing:.07em;text-transform:uppercase;color:#5E6E86}
 #ofp .of-lab span{color:#16A34A;letter-spacing:.02em;text-transform:none;font-weight:700}
+#ofp .of-list{position:relative}
+#ofp .of-list.scroll{overflow-y:auto;overscroll-behavior:contain;margin:0 -6px;padding:0 6px;-webkit-mask-image:linear-gradient(#000 calc(100% - 34px),transparent);mask-image:linear-gradient(#000 calc(100% - 34px),transparent);scrollbar-width:thin}
+#ofp .of-list.scroll.end{-webkit-mask-image:none;mask-image:none}
+#ofp .of-more{text-align:center;font:600 12px/1 Inter,sans-serif;color:#2A6EB5;padding:2px 0 8px;transition:opacity .25s}
+#ofp .of-more.gone{opacity:0}
 #ofp .of-bt{display:grid;grid-template-columns:auto 1fr auto;gap:12px;align-items:center;padding:12px;border:1px solid #E1E8F2;border-radius:16px;margin-bottom:10px;background:#fff;animation:ofp-up .45s cubic-bezier(.2,1,.3,1) both;animation-delay:calc(.15s + var(--i) * .08s)}
 #ofp .of-date{width:54px;border-radius:12px;overflow:hidden;text-align:center;background:#F4F7FC;border:1px solid #E1E8F2}
 #ofp .of-date small{display:block;background:#2A6EB5;color:#fff;font:800 10px/1 Inter,sans-serif;letter-spacing:.08em;padding:5px 0}
@@ -76,8 +81,8 @@
 
   function build(D) {
     const today = D.at, o = D.offer, soonEnd = new Date(day(today).getTime() + SOON_DAYS * 864e5).toISOString().slice(0, 10);
-    const batches = (D.batches || []).filter(b => b.start >= today && b.start <= soonEnd).slice(0, 3);
-    if (!o && !batches.length) return null;
+    const batches = (D.batches || []).filter(b => b.start >= today).slice(0, 12);   // all upcoming; more than 2 scroll inside the window
+    if (!o && !batches.some(b => b.start <= soonEnd)) return null;   // without an offer, only when a batch starts soon
     const app = (D.app || 'https://app.marstraining.in').replace(/\/$/, ''), enroll = t => app + '/?course=' + encodeURIComponent(t) + '#enroll';
     const course = t => D.courses.find(c => c.t === t) || D.courses.find(c => c.t.toLowerCase() === String(t).toLowerCase());
     const end = o && o.end ? new Date(o.end + 'T23:59:59+05:30') : null;
@@ -94,7 +99,7 @@
     const wa = 'https://wa.me/' + (D.whatsapp || '919870259245') + '?text=' + encodeURIComponent(o ? `Hi MARS, I'd like to know more about the ${titleCase(o.name)} offer` : 'Hi MARS, I want to join an upcoming batch');
     return `<div class="of-bg" data-x></div><div class="of-win" tabindex="-1" role="dialog" aria-modal="true" aria-labelledby="ofp-t">
       <div class="of-head"><button type="button" class="of-x" data-x aria-label="Close">×</button>${head.replace('<h2>', '<h2 id="ofp-t">')}</div>
-      ${rows ? `<div class="of-body"><div class="of-lab">Upcoming batches<span>● Enrollment open</span></div>${rows}</div>` : ''}
+      ${rows ? `<div class="of-body"><div class="of-lab">Upcoming batches${batches.length > 2 ? ' (' + batches.length + ')' : ''}<span>● Enrollment open</span></div><div class="of-list">${rows}</div>${batches.length > 2 ? `<div class="of-more">↓ Scroll to see ${batches.length - 2} more batch${batches.length - 2 > 1 ? 'es' : ''}</div>` : ''}</div>` : ''}
       <div class="of-foot"><div class="of-cta"><a class="of-pri" href="${esc(app + '/#enroll')}" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 10L12 5 2 10l10 5 10-5z"/><path d="M6 12v5c3 2 9 2 12 0v-5"/></svg>${o ? 'Enroll now & save ' + esc(o.discount || '') : 'Enroll now'}</a>
       <a class="of-wa" href="${esc(wa)}" target="_blank" rel="noopener" aria-label="Ask on WhatsApp"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2z"/></svg>Ask</a></div>
       <button type="button" class="of-later" data-x>Maybe later</button></div></div>`;
@@ -116,6 +121,13 @@
     const tick = () => { const t = Math.max(0, end - Date.now()) / 1000, p = n => String(Math.floor(n)).padStart(2, '0');
       if (U.d) { U.d.textContent = Math.floor(t / 86400); U.h.textContent = p(t % 86400 / 3600); U.m.textContent = p(t % 3600 / 60); U.s.textContent = p(t % 60); } };
     tick(); const timer = end ? setInterval(tick, 1000) : 0;
+    // more than 2 batches: the list shows 2 (and a peek of the 3rd) and scrolls
+    const list = root.querySelector('.of-list'), cards = list ? list.querySelectorAll('.of-bt') : [], more = root.querySelector('.of-more');
+    if (cards.length > 2) {
+      list.classList.add('scroll'); list.style.maxHeight = (cards[2].offsetTop - cards[0].offsetTop + 30) + 'px';
+      const atEnd = () => { const e = list.scrollTop + list.clientHeight >= list.scrollHeight - 4; list.classList.toggle('end', e); if (more) more.classList.toggle('gone', e); };
+      list.addEventListener('scroll', atEnd, { passive: true }); atEnd();
+    }
     const close = () => { clearInterval(timer); root.hidden = true; root.innerHTML = ''; document.body.style.overflow = prevOverflow; document.removeEventListener('keydown', key2); if (last && last.focus) last.focus({ preventScroll: true }); };
     const key2 = e => {
       if (e.key === 'Escape') close();
