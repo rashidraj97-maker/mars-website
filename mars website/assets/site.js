@@ -475,6 +475,7 @@ function galleryPage() {
       return `<article class="ev"><header><h3>${esc(e.t)}</h3><span>${esc(label(e))}</span><em>${e.p.length} photo${e.p.length > 1 ? 's' : ''}</em></header><div class="phs n${Math.min(e.p.length, 4)}">${items}</div></article>`;
     }).join('');
     count.textContent = ev.length + (ev.length === 1 ? ' programme' : ' programmes');
+    const tot = $('#gtotal'); if (tot) tot.innerHTML = `<b>${G.length}</b> programmes · ${G.reduce((n, e) => n + e.p.length, 0)} photos`;   // top badge: all albums, incl. Drive uploads
   }
   function open(k) { idx = (k + shown.length) % shown.length; const s = shown[idx]; img.src = s.src; img.alt = s.t; cap.innerHTML = `<b>${esc(s.t)}</b> ${esc(s.l)} <i>${idx + 1} / ${shown.length}</i>`; lb.hidden = false; document.body.style.overflow = 'hidden'; }
   function close() { lb.hidden = true; document.body.style.overflow = ''; }
