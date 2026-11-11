@@ -1,5 +1,6 @@
 /* "Share" on every course card: a small window asks for Name, Email and/or WhatsApp number (at least one of the two)
- * and sends the course outline, fee, duration, office address, office hours and contact numbers.
+ * and sends the course details: fee, duration, next batch, payment options, outline PDF link, demo class link (only when the
+ * course has one), the course page link, office address, hours and phone numbers.
  * window.MARS_SHARE_PREVIEW = 1 -> nothing is sent; the window shows exactly what would be sent. */
 (function () {
   if (window.__marsShare) return; window.__marsShare = true;
@@ -21,19 +22,54 @@
   });
   new MutationObserver(addLinks).observe(document.body, { childList: true, subtree: true }); addLinks();
 
+  // demo videos: the website already has them (demoFor); the app fetches the same list from the MARS server
+  let APP_DEMOS = null;
+  const API = window.APP_CONFIG && window.APP_CONFIG.API_URL;
+  if (typeof demoFor !== 'function' && API) fetch(API + '?action=demos').then(r => r.json()).then(d => { APP_DEMOS = (d && d.demos) || []; }).catch(() => {});
+  const demoLink = title => {
+    let v = null;
+    try { if (typeof demoFor === 'function') v = demoFor(title); } catch (e) {}
+    if (!v && APP_DEMOS) v = APP_DEMOS.find(x => x && x.course && norm(x.course) === norm(title));
+    return v && /^[\w-]+$/.test(v.id || '') ? (v.kind === 'yt' ? 'https://youtu.be/' + v.id : 'https://drive.google.com/file/d/' + v.id + '/view') : '';
+  };
+  const day = iso => { const m = /^(\d{4})-(\d\d)-(\d\d)/.exec(iso || ''); return m ? +m[3] + ' ' + MON[+m[2] - 1] : ''; };
+  const nice = t => String(t || '').toLowerCase().replace(/\b(sat|sun|mon|tue|wed|thu|fri)\b/g, w => w[0].toUpperCase() + w.slice(1)).replace(/(\d)\s*(am|pm)\b/g, (m, d, x) => d + ' ' + x.toUpperCase()).replace(/\s*,\s*/g, ', ').replace(/(\d)\s*to\s*(\d)/g, '$1 – $2');
+
+  // everything the message needs for one course (website: its own data; app: MARS_SHARE_INFO)
   function details(title, card) {
     const c = D && D.courses ? D.courses.find(x => norm(x.t) === norm(title)) : null;
+    let w = null; try { if (typeof catOf === 'function') w = catOf(title); } catch (e) {}
+    const app = window.MARS_SHARE_INFO ? window.MARS_SHARE_INFO(title) || {} : {};
     const out = card && card.querySelector('.lk a[download]');
-    const fee = c ? (c.price < c.fee ? `${inr(c.price)} (regular ${inr(c.fee)}${c.offEnd ? ', offer till ' + (+c.offEnd.slice(8)) + ' ' + MON[+c.offEnd.slice(5, 7) - 1] : ''})` : inr(c.fee)) : 'on request';
-    const app = window.MARS_SHARE_INFO ? window.MARS_SHARE_INFO(title) || {} : {};   // the app passes its own course data
-    return { title, fee: app.fee || fee, dur: app.dur || (c && c.dur) || '', outline: app.outline || (out ? out.href : ''), hours: (D && D.hours) || ['Mon – Thu: 10:30 AM – 7:30 PM', 'Friday: On call', 'Sat & Sun: 9:30 AM – 6:30 PM'],
-      phones: (D && D.phones) || ['74396 02303', '70444 70064'], wa: '+91 98702 59245', enroll: 'https://app.marstraining.in/?course=' + encodeURIComponent(title) + '#enroll' };
+    const fee = app.fee || (c ? c.fee : w && w.fee) || 0, price = app.price || (c ? c.price : w && w.price) || fee;
+    const offEnd = app.offEnd || (c && c.offEnd) || '';
+    const batch = app.batch || (D && D.batches || []).find(b => norm(b.course) === norm(title)) || (w && w.batch) || null;
+    const emi = app.emi || (w && w.emi) || (c && c.emi || []).map(p => p.n);
+    return { title, fee, price, offEnd, dur: app.dur || (c && c.dur) || '', batch, emi: [...new Set(emi)].filter(n => n > 1),
+      outline: app.outline || (out ? out.href : ''), demo: demoLink(title),
+      hours: (D && D.hours) || ['Mon – Thu: 10:30 AM – 7:30 PM', 'Friday: On call', 'Sat & Sun: 9:30 AM – 6:30 PM'],
+      phones: (D && D.phones) || ['74396 02303', '70444 70064'] };
   }
   const slug = t => norm(t).replace(/ /g, '-');
   const dl = u => { const m = /\/d\/([\w-]{20,})|[?&]id=([\w-]{20,})/.exec(u || ''); return m ? 'https://drive.google.com/uc?export=download&id=' + (m[1] || m[2]) : u; };
-  // the message: just the two links (as asked)
-  const message = (x, name) => `${name ? 'Hi ' + name + ',\n\n' : ''}*${x.title}* – MARS Training & Solution\n\n` +
-    `*Full Details:* https://marstraining.in/course/${slug(x.title)}\n` + `*Course Outline (PDF):* ${x.outline ? dl(x.outline) : 'available on request'}`;
+  const phone = p => { const d = String(p).replace(/\D/g, '').slice(-10); return d.length === 10 ? '+91 ' + d.slice(0, 5) + ' ' + d.slice(5) : p; };
+
+  /* The message (WhatsApp formatting: *bold*). Only lines that apply to this course are included. */
+  function message(x, name) {
+    const L = [];
+    L.push(name ? `Hi ${name.split(/\s+/)[0]} 👋` : 'Hi 👋', '', `Here are the details of *${x.title}* at *MARS Training & Solution*:`, '');
+    if (x.fee) L.push(x.price < x.fee ? `💰 *Fee:* ${inr(x.price)} ~${inr(x.fee)}~ (${Math.round((1 - x.price / x.fee) * 100)}% off${x.offEnd ? ', offer till ' + day(x.offEnd) : ''})` : `💰 *Fee:* ${inr(x.fee)}`);
+    else L.push('💰 *Fee:* please call us');
+    if (x.dur) L.push(`⏳ *Duration:* ${x.dur}`);
+    if (x.batch && x.batch.start) L.push(`📅 *Next batch:* ${day(x.batch.start)}${x.batch.timing ? ' · ' + nice(x.batch.timing) : ''}${x.batch.left > 0 && x.batch.left <= 5 ? ` (only ${x.batch.left} seats left)` : ''}`);
+    if (x.emi.length) L.push(`💳 *Easy payment:* pay in ${x.emi.join(' or ')} installments`);
+    L.push('🏫 Live online from anywhere, or classroom in Kolkata', '🎓 Certificate on completion', '');
+    L.push(`📄 *Course outline (PDF):*\n${x.outline ? dl(x.outline) : 'ask us and we will send it'}`);
+    if (x.demo) L.push(`▶️ *Watch a demo class:*\n${x.demo}`);
+    L.push(`🌐 *See full course details:*\nhttps://marstraining.in/course/${slug(x.title)}`, '');
+    L.push(`📍 ${ADDRESS}`, `🕘 ${x.hours.join(' · ')}`, `📞 ${x.phones.map(phone).join(' / ')}`, '', 'Reply to this message or call us to book your seat. 🙂');
+    return L.join('\n');
+  }
 
   const css = `#shp{position:fixed;inset:0;z-index:70;display:grid;place-items:center;padding:16px;font:15px/1.45 Inter,system-ui,sans-serif;color:#0B1630}
 #shp[hidden]{display:none}#shp .sc-bg{position:absolute;inset:0;background:rgba(6,14,32,.55);backdrop-filter:blur(3px)}

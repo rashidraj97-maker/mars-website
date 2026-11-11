@@ -1883,8 +1883,9 @@ else fetch(API + '?action=data', { cache: 'no-store' })
 <script>/* preview: Share button */
 window.MARS_SHARE_PREVIEW = 1;
 window.MARS_SHARE_INFO = t => { const c = (typeof D !== 'undefined' && D && D.courses || []).find(x => x.Title === t); if (!c) return null;
-  const f = amt(c.Fee), p = price(c), end = '';
-  return { fee: f ? (p < f ? inr(p) + ' (regular ' + inr(f) + (c.Offer ? ', offer' + end : '') + ')' : inr(f)) : '', dur: c.Duration || '', outline: /^https:/.test(c.Outline || '') ? c.Outline : '' }; };
+  const b = batchesOf(c.Title).filter(x => x.left !== 0 && ymd(x.start) && x.start.slice(0, 10) >= TODAY).sort((x, y) => x.start < y.start ? -1 : 1)[0];
+  return { fee: amt(c.Fee), price: price(c), dur: c.Duration || '', outline: /^https:/.test(c.Outline || '') ? c.Outline : '',
+    batch: b ? { start: String(b.start).slice(0, 10), timing: b.timing, left: b.left } : null, offEnd: (() => { const e = c.Offer && c.Offer.end && new Date(c.Offer.end); return e && !isNaN(e) ? new Date(e.getTime() + 5.5 * 36e5).toISOString().slice(0, 10) : ''; })(), emi: (D.emi[c.Title] || []).map(x => x.n) }; };
 </script>
 <script src="https://marstraining.in/assets/share-course.js" defer></script>
 </body>
