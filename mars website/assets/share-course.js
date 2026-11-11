@@ -32,6 +32,7 @@
     if (!v && APP_DEMOS) v = APP_DEMOS.find(x => x && x.course && norm(x.course) === norm(title));
     return v && /^[\w-]+$/.test(v.id || '') ? (v.kind === 'yt' ? 'https://youtu.be/' + v.id : 'https://drive.google.com/file/d/' + v.id + '/view') : '';
   };
+  const siteOutline = t => { try { return typeof outlineFor === 'function' ? outlineFor(t) || outlineFor(String(t).trim()) : ''; } catch (e) { return ''; } };   // the website's own outline list
   const day = iso => { const m = /^(\d{4})-(\d\d)-(\d\d)/.exec(iso || ''); return m ? +m[3] + ' ' + MON[+m[2] - 1] : ''; };
   const nice = t => String(t || '').toLowerCase().replace(/\b(sat|sun|mon|tue|wed|thu|fri)\b/g, w => w[0].toUpperCase() + w.slice(1)).replace(/(\d)\s*(am|pm)\b/g, (m, d, x) => d + ' ' + x.toUpperCase()).replace(/\s*,\s*/g, ', ').replace(/(\d)\s*to\s*(\d)/g, '$1 – $2');
 
@@ -46,7 +47,7 @@
     const batch = app.batch || (D && D.batches || []).find(b => norm(b.course) === norm(title)) || (w && w.batch) || null;
     const emi = app.emi || (w && w.emi) || (c && c.emi || []).map(p => p.n);
     return { title, fee, price, offEnd, dur: app.dur || (c && c.dur) || '', batch, emi: [...new Set(emi)].filter(n => n > 1),
-      outline: app.outline || (out ? out.href : ''), demo: demoLink(title),
+      outline: app.outline || siteOutline(title) || (out ? out.href : ''), demo: demoLink(title),
       hours: (D && D.hours) || ['Mon – Thu: 10:30 AM – 7:30 PM', 'Friday: On call', 'Sat & Sun: 9:30 AM – 6:30 PM'],
       phones: (D && D.phones) || ['74396 02303', '70444 70064'] };
   }
