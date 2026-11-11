@@ -29,10 +29,11 @@
     return { title, fee: app.fee || fee, dur: app.dur || (c && c.dur) || '', outline: app.outline || (out ? out.href : ''), hours: (D && D.hours) || ['Mon – Thu: 10:30 AM – 7:30 PM', 'Friday: On call', 'Sat & Sun: 9:30 AM – 6:30 PM'],
       phones: (D && D.phones) || ['74396 02303', '70444 70064'], wa: '+91 98702 59245', enroll: 'https://app.marstraining.in/?course=' + encodeURIComponent(title) + '#enroll' };
   }
-  const message = (x, name) => `${name ? 'Hi ' + name + ',\n\n' : ''}Thank you for your interest in *${x.title}* at MARS Training & Solution.\n\n` +
-    `💰 *Fee:* ${x.fee}\n⏳ *Duration:* ${x.dur || '—'}\n📄 *Course outline:* ${x.outline || 'available on request'}\n\n` +
-    `📍 *Office:* ${ADDRESS}\n🕘 *Office hours:* ${x.hours.join(' | ')}\n📞 *Call:* ${x.phones.join(' / ')}\n💬 *WhatsApp:* ${x.wa}\n\n` +
-    `Enroll online: ${x.enroll}\nWebsite: https://marstraining.in`;
+  const slug = t => norm(t).replace(/ /g, '-');
+  const dl = u => { const m = /\/d\/([\w-]{20,})|[?&]id=([\w-]{20,})/.exec(u || ''); return m ? 'https://drive.google.com/uc?export=download&id=' + (m[1] || m[2]) : u; };
+  // the message: just the two links (as asked)
+  const message = (x, name) => `${name ? 'Hi ' + name + ',\n\n' : ''}*${x.title}* – MARS Training & Solution\n\n` +
+    `*Full Details:* https://marstraining.in/course/${slug(x.title)}\n` + `*Course Outline (PDF):* ${x.outline ? dl(x.outline) : 'available on request'}`;
 
   const css = `#shp{position:fixed;inset:0;z-index:70;display:grid;place-items:center;padding:16px;font:15px/1.45 Inter,system-ui,sans-serif;color:#0B1630}
 #shp[hidden]{display:none}#shp .sc-bg{position:absolute;inset:0;background:rgba(6,14,32,.55);backdrop-filter:blur(3px)}
@@ -54,7 +55,7 @@
 #shp .sc-go:disabled{opacity:.6}
 #shp .sc-ok{padding:20px 22px 22px}#shp .sc-ok h4{margin:0 0 6px;font:800 18px "Plus Jakarta Sans",Inter,sans-serif}
 #shp .sc-ok ul{margin:0 0 12px;padding-left:18px;font-size:14px}
-#shp pre{white-space:pre-wrap;font:12.5px/1.5 Inter,sans-serif;background:#F4F7FC;border:1px solid #E1E8F2;border-radius:12px;padding:12px;margin:8px 0 0;max-height:260px;overflow:auto}
+#shp pre{white-space:pre-wrap;overflow-wrap:anywhere;font:12.5px/1.5 Inter,sans-serif;background:#F4F7FC;border:1px solid #E1E8F2;border-radius:12px;padding:12px;margin:8px 0 0;max-height:260px;overflow:auto}
 @media(max-width:560px){#shp{place-items:end center;padding:0}#shp .sc-win{width:100%;border-radius:22px 22px 0 0}}`;
 
   let root;
@@ -81,11 +82,12 @@
       const x = details(title, card), msg = message(x, name);
       const to = [email && 'Email: ' + email, wa && 'WhatsApp: +91 ' + wa].filter(Boolean);
       root.querySelector('.sc-win').innerHTML = `<div class="sc-head"><button type="button" class="sc-x" data-x aria-label="Close">×</button><small>${PREVIEW ? 'Preview: nothing was sent' : 'Sent'}</small><h3>${PREVIEW ? 'This is what would be sent' : 'Course details sent ✓'}</h3></div>
-        <div class="sc-ok"><h4>To</h4><ul>${to.map(t => `<li>${esc(t)}</li>`).join('')}</ul><h4>Message</h4><pre>${esc(msg)}</pre></div>`;
+        <div class="sc-ok"><h4>To</h4><ul>${to.map(t => `<li>${esc(t)}</li>`).join('')}</ul><h4>Message</h4><pre>${esc(msg)}</pre>
+        ${wa ? `<a class="sc-go" style="display:block;text-align:center;text-decoration:none;margin-top:12px" href="https://wa.me/91${wa}?text=${encodeURIComponent(msg)}" target="_blank" rel="noopener">Open in WhatsApp to send</a>` : ''}</div>`;
     };
     setTimeout(() => f.name.focus(), 50);
   }
   function close() { root.hidden = true; root.innerHTML = ''; document.body.style.overflow = ''; }
   document.addEventListener('keydown', e => { if (e.key === 'Escape' && root && !root.hidden) close(); });
-  document.addEventListener('click', e => { const a = e.target.closest('[data-share]'); if (!a) return; e.preventDefault(); open(a.dataset.share, a.closest('.cc4')); });
+  document.addEventListener('click', e => { const a = e.target.closest('[data-share]'); if (!a) return; e.preventDefault(); e.stopImmediatePropagation(); open(a.dataset.share, a.closest('.cc4') || [...document.querySelectorAll('.cc4')].find(c => (c.querySelector('h3') || {}).textContent === a.dataset.share)); }, true);
 })();
