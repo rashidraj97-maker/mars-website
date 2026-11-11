@@ -508,6 +508,12 @@ textarea{min-height:90px;resize:vertical}
 .locnote svg{width:16px;height:16px;flex:none;margin-top:1px;fill:none;stroke:currentColor;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
 .cc4 .bts{display:flex;gap:8px;flex:none}.cc4 .eq{flex:none;min-height:44px;color:var(--cv);border:2px solid var(--cv);background:#fff;font:700 .95rem Figtree,sans-serif;padding:0 16px;border-radius:12px;cursor:pointer}
 @media(max-width:420px){.cc4 .pr{flex-wrap:wrap}.cc4 .bts{width:100%}.cc4 .bts button{flex:1}}
+.vp{position:fixed;inset:0;z-index:120;background:rgba(4,10,24,.94);display:flex;align-items:center;justify-content:center;padding:60px 16px 24px}
+.vp[hidden]{display:none}.vp .box{width:min(1000px,100%);display:flex;flex-direction:column;gap:12px}
+.vp .fr{position:relative;aspect-ratio:16/9;background:#000;border-radius:12px;overflow:hidden}
+.vp iframe{position:absolute;inset:0;width:100%;height:100%;border:0}.vp .cap{color:#B9C7DE;font-size:.9rem}.vp .cap b{color:#fff}
+.vp .x{position:absolute;top:14px;right:14px;width:46px;height:46px;border:0;border-radius:50%;background:rgba(255,255,255,.12);color:#fff;font-size:1.8rem;cursor:pointer}
+.cc4 .lk a{color:var(--brand);text-decoration:none;min-height:28px;display:inline-flex;align-items:center}
 </style>
 </head>
 <body>
@@ -1110,7 +1116,7 @@ function card(c) {
     <div class="ft">${facts.map(x => `<span>${esc(x)}</span>`).join('')}</div>${hl}${loc}
     <div class="pr"><div class="pv">${f ? `<b>${inr(p)}</b>${off ? `<s>${inr(f)}</s>` : ''}` : `<span class="ask">${esc(c.Fee || 'Fee on request')}</span>`}</div>
     <span class="bts">${buy ? `<button class="eq" style="--cv:${cv}" data-ask="${esc(c.Title)}">Enquire</button>` : ''}<button class="eb" style="--cv:${cv}" ${buy ? `data-buy="${esc(c.Title)}">Enroll` : `data-ask="${esc(c.Title)}">Enquire`}</button></span></div>
-    <div class="lk"><button data-open="${esc(c.Title)}">${mods ? 'Modules & details' : 'Course details'}</button></div></div></article>`;
+    <div class="lk">${mods ? `<button data-open="${esc(c.Title)}">Modules</button>` : ''}${typeof demoFor === 'function' && demoFor(c.Title) ? `<button data-play="${esc(c.Title)}">▶ Demo</button>` : ''}${/^https:\/\//.test(c.Outline || '') ? `<a href="${esc(c.Outline)}" target="_blank" rel="noopener" download>Outline</a>` : ''}<button data-open="${esc(c.Title)}">Details</button></div></div></article>`;
 }
 function batchCard(b, withCourse = true) {
   const p = ymd(b.start), full = b.left === 0, few = b.left > 0 && b.left <= 3, c = D.courses.find(x => x.Title === b.course), pay = c && amt(c.Fee);
@@ -1258,6 +1264,7 @@ function openCourse(title) {
     (pills.length ? `<div class="pills">${pills.map(p => `<span>${esc(p[0])}: ${esc(p[1])}</span>`).join('')}</div>` : '') +
     (hl.length ? `<h3 style="font-size:1rem;margin-top:18px">What you’ll learn</h3><ul class="hl">${hl.map(h => `<li>${svgI(I.check)}<span>${esc(h)}</span></li>`).join('')}</ul>` : '') +
     (/^https:\/\//.test(c.Outline || '') ? `<a class="btn line block pdf" href="${esc(c.Outline)}" target="_blank" rel="noopener" download>${svgI('M12 4v11m0 0-4-4m4 4 4-4M5 20h14')}Download course outline (PDF)</a>` : '') +
+    (typeof demoFor === 'function' && demoFor(c.Title) ? `<button class="btn line block pdf" data-play="${esc(c.Title)}">▶ Watch demo class</button>` : '') +
     (bs.length ? `<h3 style="font-size:1rem;margin:18px 0 10px">Upcoming batches</h3><div class="stack">${bs.map(b => batchCard(b, false)).join('')}</div>` : '') +
     (waLink() ? `<p style="margin:18px 0 0"><a href="${esc(waLink('Hi, I want to know more about ' + c.Title + '.'))}" target="_blank" rel="noopener">Ask about this course on WhatsApp</a></p>` : '');
   $('#dFoot').innerHTML = `<div class="price">${priceHtml(c)}</div><button class="btn line" data-ask="${esc(c.Title)}">Enquire</button>${buyable(c) ? `<button class="btn" data-buy="${esc(c.Title)}">Enroll</button>` : ''}`;
@@ -1888,5 +1895,29 @@ window.MARS_SHARE_INFO = t => { const key = s => String(s || '').toLowerCase().r
     batch: b ? { start: String(b.start).slice(0, 10), timing: b.timing, left: b.left } : null, offEnd: (() => { const e = c.Offer && c.Offer.end && new Date(c.Offer.end); return e && !isNaN(e) ? new Date(e.getTime() + 5.5 * 36e5).toISOString().slice(0, 10) : ''; })(), emi: (D.emi[c.Title] || []).map(x => x.n) }; };
 </script>
 <script src="https://marstraining.in/assets/share-course.js" defer></script>
+<script>/* Demo class videos (same list and player as the website) */
+var DEMOS = [];
+function demoFor(t) { return DEMOS.find(v => v.course && normT(v.course) === normT(t)) || null; }
+fetch(API + '?action=demos').then(r => r.json()).then(d => {
+  DEMOS = ((d && d.demos) || []).filter(v => v && /^[\w-]+$/.test(v.id) && (v.kind === 'yt' || v.kind === 'drive'));
+  if (DEMOS.length && typeof D !== 'undefined' && D && D.courses) try { drawCourses(); } catch (e) {}
+}).catch(() => {});
+function playDemo(v) {
+  let vp = document.getElementById('vp');
+  if (!vp) {
+    vp = document.createElement('div'); vp.className = 'vp'; vp.id = 'vp'; vp.hidden = true; vp.setAttribute('role', 'dialog'); vp.setAttribute('aria-modal', 'true'); vp.setAttribute('aria-label', 'Demo class video');
+    vp.innerHTML = '<button type="button" class="x" aria-label="Close">×</button><div class="box"><div class="fr"></div><div class="cap"></div></div>';
+    document.body.appendChild(vp);
+    const close = () => { vp.hidden = true; vp.querySelector('.fr').innerHTML = ''; document.body.style.overflow = ''; };
+    vp.querySelector('.x').onclick = close; vp.addEventListener('click', e => { if (e.target === vp) close(); });
+    addEventListener('keydown', e => { if (e.key === 'Escape' && !vp.hidden) close(); });
+  }
+  const src = v.kind === 'yt' ? 'https://www.youtube-nocookie.com/embed/' + v.id + '?autoplay=1&rel=0&modestbranding=1' : 'https://drive.google.com/file/d/' + v.id + '/preview';
+  vp.querySelector('.fr').innerHTML = '<iframe src="' + esc(src) + '" title="' + esc(v.title || 'Demo class') + '" allow="autoplay; encrypted-media; picture-in-picture; fullscreen" allowfullscreen referrerpolicy="strict-origin-when-cross-origin"></iframe>';
+  vp.querySelector('.cap').innerHTML = '<span><b>' + esc(v.title || 'Demo class') + '</b>' + (v.course ? ' · ' + esc(v.course) : '') + '</span>';
+  vp.hidden = false; document.body.style.overflow = 'hidden';
+}
+document.addEventListener('click', e => { const b = e.target.closest('[data-play]'); if (!b) return; e.preventDefault(); e.stopPropagation(); const v = demoFor(b.dataset.play); if (v) playDemo(v); }, true);
+</script>
 </body>
 </html>

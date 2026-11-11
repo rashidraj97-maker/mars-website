@@ -1004,3 +1004,4 @@ html{scroll-padding-top:96px}
 .cc4 .eq{flex:none;color:var(--cv);border:2px solid var(--cv);background:#fff;text-decoration:none;font-weight:700;padding:9px 16px;border-radius:12px;transition:background .2s}
 .cc4 .eq:hover{background:#F4F7FC}
 @media(max-width:420px){.cc4 .pr{flex-wrap:wrap}.cc4 .bts{width:100%}.cc4 .bts a{flex:1;text-align:center}}
+.cc4 .ccat{display:block;font-size:.72rem;font-weight:700;color:var(--brand);letter-spacing:.02em;margin-bottom:2px}
