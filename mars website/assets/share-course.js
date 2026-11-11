@@ -16,7 +16,8 @@
   const addLinks = () => document.querySelectorAll('.cc4 .lk').forEach(lk => {
     if (lk.querySelector('[data-share]')) return;
     const t = lk.closest('.cc4').querySelector('h3'); if (!t) return;
-    lk.insertAdjacentHTML('beforeend', `<a href="#" data-share="${esc(t.textContent.trim())}">${ICON}Share</a>`);
+    const tag = lk.querySelector('button') ? 'button type="button"' : 'a href="#"';   // the app's links are buttons
+    lk.insertAdjacentHTML('beforeend', `<${tag} data-share="${esc(t.textContent.trim())}">${ICON}Share</${tag.split(' ')[0]}>`);
   });
   new MutationObserver(addLinks).observe(document.body, { childList: true, subtree: true }); addLinks();
 
@@ -24,7 +25,8 @@
     const c = D && D.courses ? D.courses.find(x => norm(x.t) === norm(title)) : null;
     const out = card && card.querySelector('.lk a[download]');
     const fee = c ? (c.price < c.fee ? `${inr(c.price)} (regular ${inr(c.fee)}${c.offEnd ? ', offer till ' + (+c.offEnd.slice(8)) + ' ' + MON[+c.offEnd.slice(5, 7) - 1] : ''})` : inr(c.fee)) : 'on request';
-    return { title, fee, dur: (c && c.dur) || '', outline: out ? out.href : '', hours: (D && D.hours) || ['Mon – Thu: 10:30 AM – 7:30 PM', 'Friday: On call', 'Sat & Sun: 9:30 AM – 6:30 PM'],
+    const app = window.MARS_SHARE_INFO ? window.MARS_SHARE_INFO(title) || {} : {};   // the app passes its own course data
+    return { title, fee: app.fee || fee, dur: app.dur || (c && c.dur) || '', outline: app.outline || (out ? out.href : ''), hours: (D && D.hours) || ['Mon – Thu: 10:30 AM – 7:30 PM', 'Friday: On call', 'Sat & Sun: 9:30 AM – 6:30 PM'],
       phones: (D && D.phones) || ['74396 02303', '70444 70064'], wa: '+91 98702 59245', enroll: 'https://app.marstraining.in/?course=' + encodeURIComponent(title) + '#enroll' };
   }
   const message = (x, name) => `${name ? 'Hi ' + name + ',\n\n' : ''}Thank you for your interest in *${x.title}* at MARS Training & Solution.\n\n` +
