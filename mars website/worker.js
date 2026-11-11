@@ -59,8 +59,8 @@ async function loadCatalog(ctx) {
   const data = {
     at: today, courses, batches,
     offer: offer ? { name: offer.name, text: offer.text, discount: offer.discount, end: isoDay(offer.end) } : null,
-    hours: String(S.office_hours || 'Mon – Thu: 10:30 AM – 7:30 PM|Friday: On call|Sat & Sun: 9:30 AM – 6:30 PM').split('|').map(x => x.trim()).filter(Boolean),
-    phones: String(S.appointment_phones || '74396 02303|70444 70064').split('|').map(x => x.trim()).filter(x => x.replace(/\D/g, '').length >= 10),
+    hours: String(S.office_hours || 'Mon to Thu: 10:30 AM – 7:30 PM|Friday: On call|Sat & Sun: 9:30 AM – 6:30 PM').split('|').map(x => x.trim()).filter(Boolean),
+    phones: String(S.appointment_phones || '98702 59245|74396 02303|70444 70064').split('|').map(x => x.trim()).filter(x => x.replace(/\D/g, '').length >= 10),
     whatsapp: String(S.whatsapp || '919870259245'), email: 'contactus@marstraining.in', app: String(S.app_url || 'https://app.marstraining.in'),
     lateSmall: num(S.late_fee_small) || 250, lateBig: num(S.late_fee_big) || 500, lateLimit: num(S.late_fee_limit) || 10000,
     faqs: (d.faqs || []).filter(f => f.Question && f.Answer).slice(0, 12).map(f => ({ q: String(f.Question).slice(0, 160), a: String(f.Answer).slice(0, 360) }))
@@ -99,7 +99,7 @@ Upcoming batches:
 ${batches}
 - Other courses: the student picks a preferred start date when enrolling; batches usually start within 2-3 weeks. Weekday and weekend options.
 Mode: live online from anywhere, or classroom at our Kolkata centre (Ground Floor, P-74 Nani Gopal Roy Chowdhury Avenue, CIT Road, Kolkata 700014). Same trainer and certificate.
-Office hours: ${D.hours.join('; ')}. Call ${D.phones.join(' / ')}. WhatsApp +${D.whatsapp}. Email ${D.email}.
+Office hours: ${D.hours.join('; ')}. Call / WhatsApp ${D.phones.join(' | ')}. WhatsApp chat +${D.whatsapp}. Email ${D.email}.
 Certificate: every course ends with an exam. After the student completes the course, passes the exam and pays all fees, MARS issues a Course Completion certificate (ID like MARS-2026-CL-1540). It is emailed as a PDF and can be downloaded any time from the Certificate page on this website (Enrollment ID + registered mobile number), from My Courses in our app, or right here in this chat. Hard copy: request it on the Certificate page or in this chat and collect it from our office 10 days later. Certificates issued before November 2026 (IDs like MARS2023-CL-662) are also available: download them on the Certificate page with the certificate ID + name, or type the certificate ID here. Employers can verify any MARS certificate on the Certificate page or in this chat with the certificate ID and the candidate's name.
 Companies: on-site or online corporate training; they can fill the Corporate Training enquiry form.
 ${D.faqs.length ? 'FAQs:\n' + D.faqs.map(f => `Q: ${f.q} A: ${f.a}`).join('\n') : ''}

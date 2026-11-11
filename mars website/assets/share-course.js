@@ -52,7 +52,7 @@
     const emi = app.emi || (w && w.emi) || (c && c.emi || []).map(p => p.n);
     return { title, fee, price, offEnd, dur: app.dur || (c && c.dur) || '', batch, emi: [...new Set(emi)].filter(n => n > 1),
       outline: app.outline || siteOutline(title) || (out ? out.href : ''), demo: demoLink(title),
-      hours: (D && D.hours) || ['Mon – Thu: 10:30 AM – 7:30 PM', 'Friday: On call', 'Sat & Sun: 9:30 AM – 6:30 PM'],
+      hours: (D && D.hours) || ['Mon to Thu: 10:30 AM – 7:30 PM', 'Friday: On call', 'Sat & Sun: 9:30 AM – 6:30 PM'],
       phones: [FIRST_PHONE, ...((D && D.phones) || ['74396 02303', '70444 70064'])].filter((p, i, a) => a.findIndex(q => digits(q) === digits(p)) === i) };
   }
   const slug = t => norm(t).replace(/ /g, '-');
@@ -73,7 +73,7 @@
     if (x.demo) L.push(`▶️ *Watch a demo class:*\n${x.demo}`);
     L.push(`🔎 *See full course details:*\n${SITE_URL}/course/${slug(x.title)}`, `📚 *Explore other courses:*\n${SITE_URL}/courses`, '');
     L.push(`🌐 *Visit our website:*\n${SITE_URL}`, `📲 *Download the MARS app:*\n${APP_URL}`, '');
-    L.push(`📍 ${ADDRESS}`, '', `🕘 ${x.hours.join(' | ')}`, '', `📞 ${x.phones.map(phone).join(' | ')}`, '', 'Reply to this message or call us to book your seat. 🙂');
+    L.push(`📍 ${ADDRESS}`, '', `🕘 ${x.hours.join(' | ')}`, '', `📞💬 *Call / WhatsApp:*\n${x.phones.map(phone).join(' | ')}`, '', 'Reply to this message or call us to book your seat. 🙂');
     return L.join('\n');
   }
 

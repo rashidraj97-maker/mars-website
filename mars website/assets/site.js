@@ -13,8 +13,8 @@ const SITE = {
   // Sent with every course shared through the Share button
   website: 'https://marstraining.in',
   address: 'Ground Floor, P-74 Nani Gopal Roy Chowdhury Avenue, CIT Road, Kolkata – 700014',
-  hours: ['Mon – Thu: 10:30 AM – 7:30 PM', 'Friday: On call', 'Sat & Sun: 9:30 AM – 6:30 PM'],
-  phones: ['+91 74396 02303', '+91 70444 70064', '+91 98702 59245']
+  hours: ['Mon to Thu: 10:30 AM – 7:30 PM', 'Friday: On call', 'Sat & Sun: 9:30 AM – 6:30 PM'],
+  phones: ['+91 98702 59245', '+91 74396 02303', '+91 70444 70064']
 };
 
 /* ===== Course catalogue (shown on courses.html and the home page) ===== */
@@ -480,8 +480,8 @@ function shareText(c, bold) {
   if (d && d.batch && d.batch.start) L.push('Next batch: ' + niceDate(d.batch.start) + (d.batch.timing ? ' · ' + d.batch.timing : ''));
   L.push('Live online or classroom in Kolkata · Certificate on completion');
   L.push('', B('Full details, course outline, demo class & enroll:'), courseLink(c.title), '');
-  L.push('Visit us: CIT Road, Kolkata · ' + SITE.hours.join(', '));
-  L.push('Call / WhatsApp: ' + SITE.phones.slice(0, 2).join(', '));
+  L.push('Visit us: CIT Road, Kolkata', '🕘 ' + SITE.hours.join(' | '));
+  L.push('📞💬 Call / WhatsApp: ' + SITE.phones.join(' | '));
   return L.join('\n');
 }
 /* Course details window: opened from a course card or a shared link */
@@ -513,7 +513,7 @@ function showCourse(c) {
       ${out ? `<a class="btn ghost" href="${esc(out)}" target="_blank" rel="noopener">Course outline (PDF)</a>` : ''}${demo ? `<a class="btn ghost" href="#" data-play="${DEMOS.indexOf(demo)}">▶ Watch demo class</a>` : ''}
       <a class="btn ghost" href="#" data-share="${esc(c.title)}">${SHARE_IC}Share</a></div>
       <div class="cdo"><h4>Visit or call us</h4><p>${esc(SITE.address)}</p><p>${SITE.hours.map(esc).join('<br>')}</p>
-      <p>${SITE.phones.map(n => `<a href="tel:${n.replace(/[^\d+]/g, '')}">${esc(n)}</a>`).join(' · ')} · <a href="${esc(wa('Hi MARS, I would like to know more about ' + c.title + '.'))}" target="_blank" rel="noopener">WhatsApp</a></p></div></div>`;
+      <p>${SITE.phones.map(n => `<a href="tel:${n.replace(/[^\d+]/g, '')}">${esc(n)}</a>`).join(' | ')} | <a href="${esc(wa('Hi MARS, I would like to know more about ' + c.title + '.'))}" target="_blank" rel="noopener">WhatsApp</a></p></div></div>`;
   };
   draw(); cd.hidden = false; document.body.style.overflow = 'hidden';
   Promise.all([loadCatalog(), loadOutlines(), loadDemos()]).then(() => { if (!cd.hidden) draw(); });
