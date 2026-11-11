@@ -2,6 +2,7 @@
  * marstraining.in – static website + "Ask MARS AI" chat API.
  * Static files are served straight from the assets; this code only runs for /api/* (and for paths with no file).
  *   GET  /api/catalog  compact course data (fees, offer, batches, EMI, hours) for the chat widget
+ *   GET  /course/<slug> Courses page with that course's link preview; the page opens the course (used by Share links)
  *   POST /api/chat     { messages: [{ role: 'user'|'assistant', content }] } -> { ok, reply, courses: [titles], callback, cert }
  * AI: Cloudflare Workers AI (free daily allowance). If it fails or the allowance is used up, the widget answers from its own rules.
  */
@@ -145,6 +146,30 @@ async function chat(req, env, ctx) {
   }
 }
 
+/* ---------- shared course links: marstraining.in/course/<slug> ----------
+ * Sent by the website's Share button. Serves the Courses page (which then opens that course's details window)
+ * with the link preview (title, fee, duration) WhatsApp and email apps show for that course. */
+const slugOf = t => normT(t).replace(/ /g, '-');
+const attr = s => String(s).replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;');
+async function coursePage(req, env, ctx, slug) {
+  const origin = new URL(req.url).origin;
+  let page = await env.ASSETS.fetch(new Request(origin + '/courses.html'));
+  if (page.status >= 300 && page.status < 400 && page.headers.get('Location')) page = await env.ASSETS.fetch(new Request(new URL(page.headers.get('Location'), origin)));
+  let html = await page.text();
+  let c = null, b = null;
+  try { const d = await catalog(ctx); c = d.courses.find(x => slugOf(x.t) === slug) || null; if (c) b = d.batches.find(x => normT(x.course) === normT(c.t)) || null; } catch (e) { /* preview falls back to the general one */ }
+  const name = c ? c.t : slug.split('-').map(w => w ? w[0].toUpperCase() + w.slice(1) : '').join(' ');
+  const fee = c && c.fee ? (c.price < c.fee ? `${inr(c.price)} (offer, regular ${inr(c.fee)})` : inr(c.fee)) : '';
+  const desc = [fee && 'Fee ' + fee, c && c.dur, b && 'Next batch ' + niceDay(b.start), 'Live online or classroom in Kolkata', 'Certificate'].filter(Boolean).join(' · ')
+    + (c && c.desc ? '. ' + c.desc : '');
+  const title = `${name} | MARS Training & Solution`, img = origin + '/assets/logo.png', link = origin + '/course/' + slug;
+  html = html.replace(/<title>[^<]*<\/title>/, `<title>${attr(title)}</title>`)
+    .replace(/<meta name="description"[^>]*>/, `<meta name="description" content="${attr(desc.slice(0, 300))}">`)
+    .replace(/<meta property="og:[^>]*>\s*/g, '')
+    .replace(/<head>/, `<head>\n<base href="/">\n<meta property="og:type" content="website">\n<meta property="og:site_name" content="MARS Training & Solution">\n<meta property="og:title" content="${attr(title)}">\n<meta property="og:description" content="${attr(desc.slice(0, 300))}">\n<meta property="og:url" content="${attr(link)}">\n<meta property="og:image" content="${attr(img)}">\n<meta name="twitter:card" content="summary">\n<link rel="canonical" href="${attr(link)}">`);
+  return new Response(html, { status: 200, headers: { 'Content-Type': 'text/html; charset=utf-8', 'Cache-Control': 'public, max-age=300' } });
+}
+
 export default {
   async fetch(req, env, ctx) {
     const url = new URL(req.url);
@@ -153,6 +178,8 @@ export default {
     }
     if (url.pathname === '/api/chat') return req.method === 'POST' ? chat(req, env, ctx) : json({ ok: false, error: 'Use POST' }, 405);
     if (url.pathname.startsWith('/api/')) return json({ ok: false, error: 'Not found' }, 404);
+    const cm = url.pathname.match(/^\/course\/([a-z0-9-]+)\/?$/i);
+    if (cm && req.method === 'GET') return coursePage(req, env, ctx, cm[1].toLowerCase());
     return env.ASSETS.fetch(req);
   }
 };

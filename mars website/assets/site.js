@@ -280,6 +280,8 @@ function coursesPage() {
       || `<div class="none">No course matches “${esc(q.value)}”. <a href="${esc(wa('Hi MARS, do you teach ' + q.value + '?'))}" target="_blank" rel="noopener">Ask us on WhatsApp</a>; we may still teach it.</div>`;
   }
   draw();
+  const want = (location.pathname.match(/\/course\/([a-z0-9-]+)/i) || [])[1] || params.get('course');
+  if (want) { const c = COURSES.find(x => slugOf(x.title) === String(want).toLowerCase()); if (c) showCourse(c); }
   loadOutlines().then(draw);
   loadDemos().then(l => { if (l.length) draw(); });
   loadCatalog().then(ok => { if (ok) draw(); });
@@ -296,16 +298,17 @@ function loadCatalog() {
       const t = String(c.Title || '').trim(); if (!t) return;
       const fee = inr(String(c.Fee).replace(/[^\d.]/g, '')), b = (d.batches || []).find(x => normT(x.course) === normT(t));
       CAT[normT(t)] = { fee, price: c.Price ? inr(c.Price) : fee, off: c.Offer ? (c.Offer.label || '') : '', badge: String(c.Badge || '').trim(),
-        emi: ((d.emi || {})[t] || []).map(p => p.n), batch: b ? { start: b.start, timing: b.timing, left: b.left, seats: b.seats } : null };
+        emi: ((d.emi || {})[t] || []).map(p => p.n), batch: b ? { start: b.start, timing: b.timing, left: b.left, seats: b.seats } : null,
+        hl: String(c.Highlights || '').split('|').map(x => x.trim()).filter(Boolean) };
     });
     return true;
   };
-  try { const c = JSON.parse(sessionStorage.getItem('mars_cat1') || 'null'); if (c && Date.now() - c.at < 10 * 60e3) return Promise.resolve(use(c.d)); } catch (e) {}
+  try { const c = JSON.parse(sessionStorage.getItem('mars_cat2') || 'null'); if (c && Date.now() - c.at < 10 * 60e3) return Promise.resolve(use(c.d)); } catch (e) {}
   return fetch(SITE.api + '?action=data').then(r => r.json()).then(d => {
     if (!d || !d.courses) return false;
-    const slim = { courses: d.courses.map(c => ({ Title: c.Title, Fee: c.Fee, Price: c.Price, Offer: c.Offer ? { label: c.Offer.label } : null, Badge: c.Badge })),
+    const slim = { courses: d.courses.map(c => ({ Title: c.Title, Fee: c.Fee, Price: c.Price, Offer: c.Offer ? { label: c.Offer.label } : null, Badge: c.Badge, Highlights: c['Highlights (separate with |)'] || '' })),
       emi: Object.fromEntries(Object.entries(d.emi || {}).map(([k, v]) => [k, v.map(p => ({ n: p.n }))])), batches: (d.batches || []).map(b => ({ course: b.course, start: b.start, timing: b.timing, left: b.left, seats: b.seats })) };
-    try { sessionStorage.setItem('mars_cat1', JSON.stringify({ at: Date.now(), d: slim })); } catch (e) {}
+    try { sessionStorage.setItem('mars_cat2', JSON.stringify({ at: Date.now(), d: slim })); } catch (e) {}
     return use(slim);
   }).catch(() => false);
 }
@@ -414,9 +417,9 @@ function courseCard(c) {
   const loaded = Object.keys(CAT).length > 0, buy = d ? d.fee > 0 : !loaded;
   const price = d && d.fee ? `<div class="pv"><b>${rupee(d.price)}</b>${off ? `<s>${rupee(d.fee)}</s>` : ''}</div>` : loaded ? `<div class="pv"><span class="ask">Fee on request</span></div>` : '<div class="pv"></div>';
   const links = [mods ? `<a href="#" data-mods="${esc(c.title)}">Modules</a>` : '', demoFor(c.title) ? `<a href="#" data-play="${esc(DEMOS.indexOf(demoFor(c.title)))}">▶ Demo</a>` : '',
-    outlineFor(c.title) ? `<a href="${esc(outlineFor(c.title))}" download rel="noopener">Outline</a>` : '', `<a href="${esc(enquire(c.title))}" target="_blank" rel="noopener">Enquire</a>`, `<a href="#" class="shr" data-share="${esc(c.title)}">${SHARE_IC}Share</a>`].filter(Boolean).join('');
+    outlineFor(c.title) ? `<a href="${esc(outlineFor(c.title))}" download rel="noopener">Outline</a>` : '', `<a href="${esc(enquire(c.title))}" target="_blank" rel="noopener">Enquire</a>`, `<a href="${esc(courseLink(c.title))}" data-course="${esc(c.title)}">Details</a>`, `<a href="#" class="shr" data-share="${esc(c.title)}">${SHARE_IC}Share</a>`].filter(Boolean).join('');
   return `<article class="cc4">${coverHtml(c)}${badge ? `<span class="bdg">${esc(badge)}</span>` : ''}${off ? `<span class="offp">${off}% OFF</span>` : ''}
-    <div class="bd"><h3>${esc(c.title)}</h3>
+    <div class="bd"><h3><a href="${esc(courseLink(c.title))}" data-course="${esc(c.title)}">${esc(c.title)}</a></h3>
     <a class="rt" href="https://search.google.com/local/reviews?placeid=ChIJA2Tq7_ax5zsRdXed0byIdqg" target="_blank" rel="noopener"><b>5.0</b><span class="st" aria-hidden="true">★★★★★</span><span>Google rating</span></a>
     <div class="ft">${facts.map(x => `<span>${esc(x)}</span>`).join('')}</div>${hl ? loc + hl : loc}
     <div class="pr">${price}<a class="eb" href="${esc(buy ? enroll(c.title) : enquire(c.title))}" target="_blank" rel="noopener" style="--cv:${coverOf(c.title).bg}">${buy ? 'Enroll' : 'Enquire'}</a></div>
@@ -453,7 +456,7 @@ function playDemo(v) {
   $('.cap', vp).innerHTML = `<span><b>${esc(v.title)}</b>${v.course ? ' · ' + esc(v.course) : ''}</span>`;
   vp.hidden = false; document.body.style.overflow = 'hidden';
 }
-document.addEventListener('click', e => { const b = e.target.closest('[data-play]'); if (!b) return; e.preventDefault(); const v = DEMOS[+b.dataset.play]; if (v) playDemo(v); });
+document.addEventListener('click', e => { const b = e.target.closest('[data-play]'); if (!b) return; e.preventDefault(); const v = DEMOS[+b.dataset.play]; if (!v) return; $$('.mw').forEach(m => { m.hidden = true; }); playDemo(v); });
 
 /* ===== Share course details =====
    Every course card has a Share link. It opens a window with the full course details (outline, fee, duration,
@@ -461,37 +464,63 @@ document.addEventListener('click', e => { const b = e.target.closest('[data-play
    Fee, offer, batch, outline and demo links come live from the Google Sheet; office details from SITE above. */
 const SHARE_IC = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="M8.6 13.5l6.8 4M15.4 6.5l-6.8 4"/></svg>';
 const demoUrl = v => v.kind === 'yt' ? 'https://youtu.be/' + v.id : 'https://drive.google.com/file/d/' + v.id + '/view';
+const slugOf = t => normT(t).replace(/ /g, '-');
+const courseLink = t => SITE.website + '/course/' + slugOf(t);
+const catOf = t => CAT[normT(t)] || CAT[OUTLINE_ALIAS[normT(t)]] || null;
+function feeLine(d) {
+  if (!d || !d.fee) return '';
+  return d.price < d.fee ? `${rupee(d.price)} (${d.off ? d.off + ', ' : 'offer, '}regular ${rupee(d.fee)})` : rupee(d.fee);
+}
+/* Short message: the key facts, then the course link, which opens the full details on the website */
 function shareText(c, bold) {
-  const B = t => bold ? '*' + t + '*' : t;
-  const d = CAT[normT(c.title)] || CAT[OUTLINE_ALIAS[normT(c.title)]] || null, mods = modulesFor(c.title);
-  const out = outlineFor(c.title), demo = demoFor(c.title), L = [];
-  L.push(B('MARS Training & Solution') + ' – Course details', '');
-  L.push(B('Course:') + ' ' + c.title);
-  if (c.desc) L.push(c.desc);
-  if (mods) L.push(B('Modules:') + ' ' + mods.join(' → '));
-  L.push('');
-  if (c.dur) L.push(B('Duration:') + ' ' + c.dur);
-  if (d && d.fee) {
-    if (d.price < d.fee) L.push(B('Fee:') + ' ' + rupee(d.price) + ' (regular ' + rupee(d.fee) + (d.off ? ', ' + d.off : '') + ' – offer on full payment)');
-    else L.push(B('Fee:') + ' ' + rupee(d.fee));
-    if (d.emi && d.emi.length) L.push(B('Easy payment:') + ' ' + 'pay in ' + d.emi.join(' or ') + ' installments');
-  } else L.push(B('Fee:') + ' ' + 'please call us');
-  if (d && d.batch && d.batch.start) L.push(B('Next batch:') + ' ' + niceDate(d.batch.start) + (d.batch.timing ? ' · ' + d.batch.timing : ''));
-  L.push(B('Mode:') + ' ' + 'Live online, or classroom in Kolkata');
-  L.push(B('Certificate:') + ' ' + 'on completion (ISO 9001:2015 certified institute)');
-  L.push('');
-  if (out) L.push(B('Course outline (PDF):') + ' ' + out);
-  if (demo) L.push(B('Watch a free demo class:') + ' ' + demoUrl(demo));
-  L.push(B('Enroll / enquire:') + ' ' + (hasApp ? appLink(c.title, 'enroll') : SITE.website + '/courses.html'));
-  L.push(B('More details:') + ' ' + SITE.website + '/courses.html?q=' + encodeURIComponent(c.title));
-  L.push('');
-  L.push(B('Office:') + ' ' + SITE.address);
-  L.push(B('Office hours:') + ' ' + SITE.hours.join(' | '));
-  L.push(B('Call / WhatsApp:') + ' ' + SITE.phones.join(', '));
-  L.push(B('Email:') + ' ' + SITE.email);
+  const B = t => bold ? '*' + t + '*' : t, d = catOf(c.title), L = [];
+  L.push(B(c.title) + ' – MARS Training & Solution');
+  const f = feeLine(d);
+  L.push([f ? 'Fee ' + f : 'Fee: please call us', c.dur].filter(Boolean).join(' · '));
+  if (d && d.batch && d.batch.start) L.push('Next batch: ' + niceDate(d.batch.start) + (d.batch.timing ? ' · ' + d.batch.timing : ''));
+  L.push('Live online or classroom in Kolkata · Certificate on completion');
+  L.push('', B('Full details, course outline, demo class & enroll:'), courseLink(c.title), '');
+  L.push('Visit us: CIT Road, Kolkata · ' + SITE.hours.join(', '));
+  L.push('Call / WhatsApp: ' + SITE.phones.slice(0, 2).join(', '));
   return L.join('\n');
 }
+/* Course details window: opened from a course card or a shared link */
+function showCourse(c) {
+  let cd = $('#cd');
+  if (!cd) {
+    cd = document.createElement('div'); cd.className = 'mw cdw'; cd.id = 'cd'; cd.hidden = true;
+    cd.setAttribute('role', 'dialog'); cd.setAttribute('aria-modal', 'true');
+    document.body.appendChild(cd);
+    const close = () => { cd.hidden = true; document.body.style.overflow = ''; if (/\/course\/|[?&]course=/.test(location.href)) history.replaceState(null, '', 'courses.html'); };
+    cd.addEventListener('click', e => { if (e.target === cd || e.target.closest('.x')) close(); });
+    addEventListener('keydown', e => { if (e.key === 'Escape' && !cd.hidden) close(); });
+  }
+  const draw = () => {
+    const d = catOf(c.title), mods = modulesFor(c.title), out = outlineFor(c.title), demo = demoFor(c.title), loaded = Object.keys(CAT).length > 0;
+    const off = d && d.fee && d.price < d.fee ? Math.round((1 - d.price / d.fee) * 100) : 0;
+    const price = d && d.fee ? `<div class="cdp"><b>${rupee(d.price)}</b>${off ? `<s>${rupee(d.fee)}</s><span>${esc(d.off || off + '% off')}</span>` : ''}</div>${off ? '<p class="cdn">Offer price on full payment</p>' : ''}${d.emi && d.emi.length ? `<p class="cdn">Or pay in ${d.emi.join(' or ')} easy installments</p>` : ''}`
+      : `<div class="cdp"><span class="ask">${loaded ? 'Fee on request' : 'Loading fee…'}</span></div>`;
+    const facts = [['Duration', c.dur], ['Next batch', d && d.batch && d.batch.start ? niceDate(d.batch.start) + (d.batch.timing ? ' · ' + d.batch.timing : '') : ''], ['Mode', 'Live online or classroom in Kolkata'], ['Certificate', 'On completion · ISO 9001:2015 certified institute']].filter(x => x[1]);
+    const hl = d && d.hl && d.hl.length ? d.hl : [];
+    cd.setAttribute('aria-label', c.title);
+    cd.innerHTML = `<div class="card"><button type="button" class="x" aria-label="Close">×</button>
+      <small>${esc(c.cat)}</small><h3>${esc(c.title)}</h3><p class="sub">${esc(c.desc)}</p>
+      ${price}
+      <dl class="cdf">${facts.map(([k, v]) => `<div><dt>${esc(k)}</dt><dd>${esc(v)}</dd></div>`).join('')}</dl>
+      ${mods ? `<h4>Modules</h4>${modChips(mods)}` : ''}
+      ${hl.length ? `<h4>What you will learn</h4><ul class="cdl">${hl.map(x => `<li>${esc(x)}</li>`).join('')}</ul>` : ''}
+      <div class="act"><a class="btn en" href="${esc(enroll(c.title))}" target="_blank" rel="noopener">Enroll now</a><a class="btn ghost" href="${esc(enquire(c.title))}" target="_blank" rel="noopener">Enquire / free counselling</a>
+      ${out ? `<a class="btn ghost" href="${esc(out)}" target="_blank" rel="noopener">Course outline (PDF)</a>` : ''}${demo ? `<a class="btn ghost" href="#" data-play="${DEMOS.indexOf(demo)}">▶ Watch demo class</a>` : ''}
+      <a class="btn ghost" href="#" data-share="${esc(c.title)}">${SHARE_IC}Share</a></div>
+      <div class="cdo"><h4>Visit or call us</h4><p>${esc(SITE.address)}</p><p>${SITE.hours.map(esc).join('<br>')}</p>
+      <p>${SITE.phones.map(n => `<a href="tel:${n.replace(/[^\d+]/g, '')}">${esc(n)}</a>`).join(' · ')} · <a href="${esc(wa('Hi MARS, I would like to know more about ' + c.title + '.'))}" target="_blank" rel="noopener">WhatsApp</a></p></div></div>`;
+  };
+  draw(); cd.hidden = false; document.body.style.overflow = 'hidden';
+  Promise.all([loadCatalog(), loadOutlines(), loadDemos()]).then(() => { if (!cd.hidden) draw(); });
+}
+document.addEventListener('click', e => { const b = e.target.closest('[data-course]'); if (!b || e.ctrlKey || e.metaKey) return; e.preventDefault(); const c = COURSES.find(x => x.title === b.dataset.course); if (!c) return; showCourse(c); history.replaceState(null, '', 'courses.html?course=' + slugOf(c.title)); });
 async function showShare(c) {
+  const cdw = $('#cd'); if (cdw) cdw.hidden = true;
   let sw = $('#sw');
   if (!sw) {
     sw = document.createElement('div'); sw.className = 'mw sw'; sw.id = 'sw'; sw.hidden = true;
@@ -508,7 +537,7 @@ async function showShare(c) {
   const text = shareText(c, true), plain = shareText(c, false), subject = c.title + ' – course details | MARS Training & Solution';
   sw.innerHTML = `<div class="card"><button type="button" class="x" aria-label="Close">×</button>
     <small>Share course details</small><h3>${esc(c.title)}</h3>
-    <p class="sub">Outline, fee, duration, office address, timings and phone numbers in one message. Add a number or email to send it straight to that person, or leave them empty to pick a contact.</p>
+    <p class="sub">Sends the fee, duration and next batch with a link that opens this course on our website: full outline, demo class, office address, timings and Enroll button. Add a number or email to send it straight to that person, or leave them empty to pick a contact.</p>
     <div class="sf"><label>WhatsApp number<input type="tel" id="swNo" inputmode="tel" placeholder="e.g. 98765 43210" autocomplete="tel"></label>
     <label>Email<input type="email" id="swMail" placeholder="name@example.com" autocomplete="email"></label></div>
     <div class="sb"><button type="button" class="btn sbw" data-s="wa">WhatsApp</button><button type="button" class="btn sbe" data-s="em">Email</button><button type="button" class="btn sbb" data-s="both">WhatsApp + Email</button></div>
