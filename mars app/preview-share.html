@@ -509,9 +509,9 @@ textarea{min-height:90px;resize:vertical}
 .cc4 .bts{display:flex;gap:8px;flex:none}.cc4 .eq{flex:none;min-height:44px;color:var(--cv);border:2px solid var(--cv);background:#fff;font:700 .95rem Figtree,sans-serif;padding:0 16px;border-radius:12px;cursor:pointer}
 @media(max-width:420px){.cc4 .pr{flex-wrap:wrap}.cc4 .bts{width:100%}.cc4 .bts button{flex:1}}
 .vp{position:fixed;inset:0;z-index:120;background:rgba(4,10,24,.94);display:flex;align-items:center;justify-content:center;padding:60px 16px 24px}
-.vp[hidden]{display:none}.vp .box{width:min(1000px,100%);display:flex;flex-direction:column;gap:12px}
-.vp .fr{position:relative;aspect-ratio:16/9;background:#000;border-radius:12px;overflow:hidden}
-.vp iframe{position:absolute;inset:0;width:100%;height:100%;border:0}.vp .cap{color:#B9C7DE;font-size:.9rem}.vp .cap b{color:#fff}
+.vp[hidden]{display:none}.vp .vbox{width:min(1000px,100%);display:flex;flex-direction:column;gap:12px}
+.vp .vfr{position:relative;aspect-ratio:16/9;background:#000;border-radius:12px;overflow:hidden}
+.vp iframe{position:absolute;inset:0;width:100%;height:100%;border:0}.vp .vcap{color:#B9C7DE;font-size:.9rem;background:none}.vp .vcap b{color:#fff}
 .vp .x{position:absolute;top:14px;right:14px;width:46px;height:46px;border:0;border-radius:50%;background:rgba(255,255,255,.12);color:#fff;font-size:1.8rem;cursor:pointer}
 .cc4 .lk a{color:var(--brand);text-decoration:none;min-height:28px;display:inline-flex;align-items:center}
 </style>
@@ -1906,15 +1906,15 @@ function playDemo(v) {
   let vp = document.getElementById('vp');
   if (!vp) {
     vp = document.createElement('div'); vp.className = 'vp'; vp.id = 'vp'; vp.hidden = true; vp.setAttribute('role', 'dialog'); vp.setAttribute('aria-modal', 'true'); vp.setAttribute('aria-label', 'Demo class video');
-    vp.innerHTML = '<button type="button" class="x" aria-label="Close">×</button><div class="box"><div class="fr"></div><div class="cap"></div></div>';
+    vp.innerHTML = '<button type="button" class="x" aria-label="Close">×</button><div class="vbox"><div class="vfr"></div><div class="vcap"></div></div>';
     document.body.appendChild(vp);
-    const close = () => { vp.hidden = true; vp.querySelector('.fr').innerHTML = ''; document.body.style.overflow = ''; };
+    const close = () => { vp.hidden = true; vp.querySelector('.vfr').innerHTML = ''; document.body.style.overflow = ''; };
     vp.querySelector('.x').onclick = close; vp.addEventListener('click', e => { if (e.target === vp) close(); });
     addEventListener('keydown', e => { if (e.key === 'Escape' && !vp.hidden) close(); });
   }
   const src = v.kind === 'yt' ? 'https://www.youtube-nocookie.com/embed/' + v.id + '?autoplay=1&rel=0&modestbranding=1' : 'https://drive.google.com/file/d/' + v.id + '/preview';
-  vp.querySelector('.fr').innerHTML = '<iframe src="' + esc(src) + '" title="' + esc(v.title || 'Demo class') + '" allow="autoplay; encrypted-media; picture-in-picture; fullscreen" allowfullscreen referrerpolicy="strict-origin-when-cross-origin"></iframe>';
-  vp.querySelector('.cap').innerHTML = '<span><b>' + esc(v.title || 'Demo class') + '</b>' + (v.course ? ' · ' + esc(v.course) : '') + '</span>';
+  vp.querySelector('.vfr').innerHTML = '<iframe src="' + esc(src) + '" title="' + esc(v.title || 'Demo class') + '" allow="autoplay; encrypted-media; picture-in-picture; fullscreen" allowfullscreen referrerpolicy="strict-origin-when-cross-origin"></iframe>';
+  vp.querySelector('.vcap').innerHTML = '<span><b>' + esc(v.title || 'Demo class') + '</b>' + (v.course ? ' · ' + esc(v.course) : '') + '</span>';
   vp.hidden = false; document.body.style.overflow = 'hidden';
 }
 document.addEventListener('click', e => { const b = e.target.closest('[data-play]'); if (!b) return; e.preventDefault(); e.stopPropagation(); const v = demoFor(b.dataset.play); if (v) playDemo(v); }, true);
