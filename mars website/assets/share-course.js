@@ -1,7 +1,8 @@
 /* "Share" on every course card: a small window asks for Name, Email and/or WhatsApp number (at least one of the two)
  * and sends the course details: fee, duration, next batch, payment options, outline PDF link, demo class link (only when the
  * course has one), the course page link, office address, hours and phone numbers.
- * window.MARS_SHARE_PREVIEW = 1 -> nothing is sent; the window shows exactly what would be sent. */
+ * The email is written and sent by the MARS server (action shareCourse) from the sheet; WhatsApp opens on the visitor's phone/PC
+ * with the same details ready to send (sending from MARS's own number would need the WhatsApp Business API). */
 (function () {
   if (window.__marsShare) return; window.__marsShare = true;
   const PREVIEW = !!window.MARS_SHARE_PREVIEW;
@@ -92,6 +93,7 @@
 #shp .sc-go:disabled{opacity:.6}
 #shp .sc-ok{padding:20px 22px 22px}#shp .sc-ok h4{margin:0 0 6px;font:800 18px "Plus Jakarta Sans",Inter,sans-serif}
 #shp .sc-ok ul{margin:0 0 12px;padding-left:18px;font-size:14px}
+#shp .sc-st{margin:0 0 10px;font-size:14px}#shp .sc-bad{color:#B91C1C}#shp details summary{cursor:pointer;font-weight:600;color:#2A6EB5;font-size:13.5px}
 #shp pre{white-space:pre-wrap;overflow-wrap:anywhere;font:12.5px/1.5 Inter,sans-serif;background:#F4F7FC;border:1px solid #E1E8F2;border-radius:12px;padding:12px;margin:8px 0 0;max-height:260px;overflow:auto}
 @media(max-width:560px){#shp{place-items:end center;padding:0}#shp .sc-win{width:100%;border-radius:22px 22px 0 0}}`;
 
@@ -116,11 +118,20 @@
       if (!email && !wa) return fail('Please fill in an email ID or a WhatsApp number (or both).');
       if (email && !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) return fail('Please check the email ID.');
       if (f.wa.value.trim() && !/^[6-9]\d{9}$/.test(wa)) return fail('Please enter a 10-digit Indian mobile number for WhatsApp.');
-      const x = details(title, card), msg = message(x, name);
-      const to = [email && 'Email: ' + email, wa && 'WhatsApp: +91 ' + wa].filter(Boolean);
-      root.querySelector('.sc-win').innerHTML = `<div class="sc-head"><button type="button" class="sc-x" data-x aria-label="Close">×</button><small>${PREVIEW ? 'Preview: nothing was sent' : 'Sent'}</small><h3>${PREVIEW ? 'This is what would be sent' : 'Course details sent ✓'}</h3></div>
-        <div class="sc-ok"><h4>To</h4><ul>${to.map(t => `<li>${esc(t)}</li>`).join('')}</ul><h4>Message</h4><pre>${esc(msg)}</pre>
-        ${wa ? `<a class="sc-go" style="display:block;text-align:center;text-decoration:none;margin-top:12px" href="https://wa.me/91${wa}?text=${encodeURIComponent(msg)}" target="_blank" rel="noopener">Open in WhatsApp to send</a>` : ''}</div>`;
+      const x = details(title, card), msg = message(x, name), waUrl = wa ? 'https://wa.me/91' + wa + '?text=' + encodeURIComponent(msg) : '';
+      if (waUrl) window.open(waUrl, '_blank', 'noopener');   // WhatsApp opens with the message ready (must happen right on the click)
+      const btn = f.querySelector('.sc-go'); btn.disabled = true; btn.textContent = 'Sending…';
+      const done = (r, err) => {
+        const mailed = r && r.ok && r.emailed;
+        root.querySelector('.sc-win').innerHTML = `<div class="sc-head"><button type="button" class="sc-x" data-x aria-label="Close">×</button><small>Share course details</small><h3>${mailed || (wa && !err) ? 'Course details sent ✓' : 'Could not send'}</h3></div>
+        <div class="sc-ok">${email ? (mailed ? `<p class="sc-st">📧 Emailed to <b>${esc(email)}</b>, with the course outline PDF attached.</p>` : `<p class="sc-st sc-bad">📧 The email could not be sent${err ? ': ' + esc(err) : ''}.</p>`) : ''}
+        ${wa ? `<p class="sc-st">💬 WhatsApp opened with the message for <b>+91 ${esc(wa)}</b>. Press <b>Send</b> there.</p><a class="sc-go" style="display:block;text-align:center;text-decoration:none;margin:4px 0 12px" href="${esc(waUrl)}" target="_blank" rel="noopener">Didn't open? Send on WhatsApp</a>` : ''}
+        <details><summary>See the message</summary><pre>${esc(msg)}</pre></details></div>`;
+      };
+      const API = (window.APP_CONFIG && window.APP_CONFIG.API_URL) || (typeof SITE !== 'undefined' && SITE.api) || '';
+      if (!API) return done(null, 'no server');
+      fetch(API, { method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: JSON.stringify({ action: 'shareCourse', course: title, name, email, wa }) })
+        .then(r => r.json()).then(r => done(r, r.ok ? '' : r.error)).catch(() => done(null, 'network error, please try again'));
     };
     setTimeout(() => f.name.focus(), 50);
   }
