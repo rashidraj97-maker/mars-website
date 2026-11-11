@@ -462,6 +462,6 @@
 <script src="assets/hero-reports.js"></script>
 <script src="assets/ai-chat.js" defer></script>
 <script src="assets/offer-pop.js" defer></script>
-<script>addEventListener("load",()=>setTimeout(()=>{const f=document.getElementById("feedback");if(f){f.querySelectorAll(".rv").forEach(e=>e.classList.add("in"));scrollTo({top:f.getBoundingClientRect().top+scrollY-80})}},400))</script>
+<script>(()=>{let moved=false;["wheel","touchstart","keydown"].forEach(e=>addEventListener(e,()=>moved=true,{passive:true}));const go=()=>{const f=document.getElementById("feedback");if(!f||moved)return;f.querySelectorAll(".rv").forEach(e=>e.classList.add("in"));scrollTo({top:f.getBoundingClientRect().top+scrollY-90})};addEventListener("load",()=>[300,1200,2500,4000].forEach(t=>setTimeout(go,t)))})()</script>
 </body>
 </html>
