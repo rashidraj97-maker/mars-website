@@ -7,6 +7,9 @@
   if (window.__marsShare) return; window.__marsShare = true;
   const PREVIEW = !!window.MARS_SHARE_PREVIEW;
   const ADDRESS = 'Ground Floor, P-74, Nani Gopal Roy Chowdhury Avenue, CIT Road, Kolkata – 700014';
+  const FIRST_PHONE = '98702 59245';   // shown first in the share message, before the numbers from the sheet
+  const SITE_URL = 'https://marstraining.in', APP_URL = 'https://app.marstraining.in/?install=1';
+  const digits = p => String(p).replace(/\D/g, '').slice(-10);
   const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
   const inr = n => '₹' + Math.round(n).toLocaleString('en-IN');
   const norm = s => String(s || '').toLowerCase().replace(/[^a-z0-9]+/g, ' ').trim();
@@ -50,7 +53,7 @@
     return { title, fee, price, offEnd, dur: app.dur || (c && c.dur) || '', batch, emi: [...new Set(emi)].filter(n => n > 1),
       outline: app.outline || siteOutline(title) || (out ? out.href : ''), demo: demoLink(title),
       hours: (D && D.hours) || ['Mon – Thu: 10:30 AM – 7:30 PM', 'Friday: On call', 'Sat & Sun: 9:30 AM – 6:30 PM'],
-      phones: (D && D.phones) || ['74396 02303', '70444 70064'] };
+      phones: [FIRST_PHONE, ...((D && D.phones) || ['74396 02303', '70444 70064'])].filter((p, i, a) => a.findIndex(q => digits(q) === digits(p)) === i) };
   }
   const slug = t => norm(t).replace(/ /g, '-');
   const dl = u => { const m = /\/d\/([\w-]{20,})|[?&]id=([\w-]{20,})/.exec(u || ''); return m ? 'https://drive.google.com/uc?export=download&id=' + (m[1] || m[2]) : u; };
@@ -59,7 +62,7 @@
   /* The message (WhatsApp formatting: *bold*). Only lines that apply to this course are included. */
   function message(x, name) {
     const L = [];
-    L.push(name ? `Hi ${name.split(/\s+/)[0]} 👋` : 'Hi 👋', '', `Here are the details of *${x.title}* at *MARS Training & Solution*:`, '');
+    L.push(`Hi ${name ? name.split(/\s+/)[0] : 'there'} 👋`, 'Greetings from *MARS Training & Solution*!', '', `Thank you for your interest in *${x.title}*. Here are the complete course details:`, '');
     if (x.fee) L.push(x.price < x.fee ? `💰 *Fee:* ${inr(x.price)} ~${inr(x.fee)}~ (${Math.round((1 - x.price / x.fee) * 100)}% off${x.offEnd ? ', offer till ' + day(x.offEnd) : ''})` : `💰 *Fee:* ${inr(x.fee)}`);
     else L.push('💰 *Fee:* please call us');
     if (x.dur) L.push(`⏳ *Duration:* ${x.dur}`);
@@ -68,8 +71,9 @@
     L.push('🏫 Live online from anywhere, or classroom in Kolkata', '🎓 Certificate on completion', '');
     L.push(`📄 *Course outline (PDF):*\n${x.outline ? dl(x.outline) : 'ask us and we will send it'}`);
     if (x.demo) L.push(`▶️ *Watch a demo class:*\n${x.demo}`);
-    L.push(`🌐 *See full course details:*\nhttps://marstraining.in/course/${slug(x.title)}`, '');
-    L.push(`📍 ${ADDRESS}`, `🕘 ${x.hours.join(' · ')}`, `📞 ${x.phones.map(phone).join(' / ')}`, '', 'Reply to this message or call us to book your seat. 🙂');
+    L.push(`🔎 *See full course details:*\n${SITE_URL}/course/${slug(x.title)}`, `📚 *Explore other courses:*\n${SITE_URL}/courses`, '');
+    L.push(`🌐 *Visit our website:*\n${SITE_URL}`, `📲 *Download the MARS app:*\n${APP_URL}`, '');
+    L.push(`📍 ${ADDRESS}`, '', `🕘 ${x.hours.join(' | ')}`, '', `📞 ${x.phones.map(phone).join(' | ')}`, '', 'Reply to this message or call us to book your seat. 🙂');
     return L.join('\n');
   }
 

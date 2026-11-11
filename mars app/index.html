@@ -1891,7 +1891,7 @@ window.MARS_SHARE_INFO = t => { const key = s => String(s || '').toLowerCase().r
   return { fee: amt(c.Fee), price: price(c), dur: c.Duration || '', outline: /^https:/.test(c.Outline || '') ? c.Outline : '',
     batch: b ? { start: String(b.start).slice(0, 10), timing: b.timing, left: b.left } : null, offEnd: (() => { const e = c.Offer && c.Offer.end && new Date(c.Offer.end); return e && !isNaN(e) ? new Date(e.getTime() + 5.5 * 36e5).toISOString().slice(0, 10) : ''; })(), emi: (D.emi[c.Title] || []).map(x => x.n) }; };
 </script>
-<script src="https://marstraining.in/assets/share-course.js" defer></script>
+<script src="https://marstraining.in/assets/share-course.js?v=2" defer></script>
 <script>/* Demo class videos (same list and player as the website) */
 var DEMOS = [];
 function demoFor(t) { return DEMOS.find(v => v.course && normT(v.course) === normT(t)) || null; }
