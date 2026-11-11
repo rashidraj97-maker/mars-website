@@ -101,8 +101,15 @@
 #shp pre{white-space:pre-wrap;overflow-wrap:anywhere;font:12.5px/1.5 Inter,sans-serif;background:#F4F7FC;border:1px solid #E1E8F2;border-radius:12px;padding:12px;margin:8px 0 0;max-height:260px;overflow:auto}
 @media(max-width:560px){#shp{place-items:end center;padding:0}#shp .sc-win{width:100%;border-radius:22px 22px 0 0}}`;
 
+  // The website fetches the outline and demo lists from the MARS server a moment after the page opens. Start that as soon as
+  // the Share window opens and, if the visitor is quicker, wait for it (at most 4 s) so the message always has the outline link.
+  let readyP = null;
+  const ready = () => readyP || (readyP = Promise.race([Promise.all([
+    typeof loadOutlines === 'function' && typeof OUTLINES === 'object' && !Object.keys(OUTLINES).length ? loadOutlines() : 0,
+    typeof loadDemos === 'function' && typeof DEMOS !== 'undefined' && !DEMOS.length ? loadDemos() : 0]).catch(() => {}), new Promise(r => setTimeout(r, 4000))]));
   let root;
   function open(title, card) {
+    ready();
     if (!root) { root = document.createElement('div'); root.id = 'shp'; document.body.appendChild(root); const st = document.createElement('style'); st.textContent = css; document.head.appendChild(st); }
     root.hidden = false; document.body.style.overflow = 'hidden';
     root.innerHTML = `<div class="sc-bg" data-x></div><div class="sc-win" role="dialog" aria-modal="true" aria-labelledby="shp-t">
@@ -122,9 +129,11 @@
       if (!email && !wa) return fail('Please fill in an email ID or a WhatsApp number (or both).');
       if (email && !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) return fail('Please check the email ID.');
       if (f.wa.value.trim() && !/^[6-9]\d{9}$/.test(wa)) return fail('Please enter a 10-digit Indian mobile number for WhatsApp.');
-      const x = details(title, card), msg = message(x, name), waUrl = wa ? 'https://wa.me/91' + wa + '?text=' + encodeURIComponent(msg) : '';
-      if (waUrl) window.open(waUrl, '_blank', 'noopener');   // WhatsApp opens with the message ready (must happen right on the click)
       const btn = f.querySelector('.sc-go'); btn.disabled = true; btn.textContent = 'Sending…';
+      if (details(title, card).outline) send(); else ready().then(send);   // outline list still loading: wait for it
+      function send() {
+      const x = details(title, card), msg = message(x, name), waUrl = wa ? 'https://wa.me/91' + wa + '?text=' + encodeURIComponent(msg) : '';
+      if (waUrl) window.open(waUrl, '_blank', 'noopener');   // WhatsApp opens with the message ready
       const done = (r, err) => {
         const mailed = r && r.ok && r.emailed;
         root.querySelector('.sc-win').innerHTML = `<div class="sc-head"><button type="button" class="sc-x" data-x aria-label="Close">×</button><small>Share course details</small><h3>${mailed || (wa && !err) ? 'Course details sent ✓' : 'Could not send'}</h3></div>
@@ -136,6 +145,7 @@
       if (!API) return done(null, 'no server');
       fetch(API, { method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: JSON.stringify({ action: 'shareCourse', course: title, name, email, wa }) })
         .then(r => r.json()).then(r => done(r, r.ok ? '' : r.error)).catch(() => done(null, 'network error, please try again'));
+      }
     };
     setTimeout(() => f.name.focus(), 50);
   }
