@@ -9,7 +9,12 @@ const SITE = {
   phone: '+91 98702 59245',
   email: 'contactus@marstraining.in',
   // Apps Script web app link (the same /exec link as in the enquiry app's config.js). Trainer applications are saved to the sheet through it.
-  api: 'https://script.google.com/macros/s/AKfycbyXxbiBJtACn_OVfPzgAOb0vXe2xJJZUjW0ouAekolDCbmyvLh4OVPH4QVZKEcaXm72/exec'
+  api: 'https://script.google.com/macros/s/AKfycbyXxbiBJtACn_OVfPzgAOb0vXe2xJJZUjW0ouAekolDCbmyvLh4OVPH4QVZKEcaXm72/exec',
+  // Sent with every course shared through the Share button
+  website: 'https://marstraining.in',
+  address: 'Ground Floor, P-74 Nani Gopal Roy Chowdhury Avenue, CIT Road, Kolkata – 700014',
+  hours: ['Mon – Thu: 10:30 AM – 7:30 PM', 'Friday: On call', 'Sat & Sun: 9:30 AM – 6:30 PM'],
+  phones: ['+91 74396 02303', '+91 70444 70064', '+91 98702 59245']
 };
 
 /* ===== Course catalogue (shown on courses.html and the home page) ===== */
@@ -104,7 +109,7 @@ function showModules(c) {
     <small>${esc(c.cat)}${c.dur ? ' · ' + esc(c.dur) : ''}</small><h3>${esc(c.title)}</h3>
     <p class="sub">${l.length} modules in one program, taught in this order</p>
     <ol>${l.map((m, k) => { const i = MOD_INFO[m] || ['•', '#334155', '']; return `<li style="--mc:${i[1]}"><b class="ic">${esc(i[0])}</b><div><span class="n">Module ${k + 1}</span><strong>${esc(m)}</strong>${i[2] ? `<em>${esc(i[2])}</em>` : ''}</div></li>`; }).join('')}</ol>
-    <div class="act">${out ? `<a class="btn ghost" href="${esc(out)}" download rel="noopener">Download full outline</a>` : ''}<a class="btn" href="${esc(enquire(c.title))}" target="_blank" rel="noopener">Enquire about this program</a><a class="btn en" href="${esc(enroll(c.title))}" target="_blank" rel="noopener">Enroll now</a></div></div>`;
+    <div class="act">${out ? `<a class="btn ghost" href="${esc(out)}" download rel="noopener">Download full outline</a>` : ''}<a class="btn" href="${esc(enquire(c.title))}" target="_blank" rel="noopener">Enquire about this program</a><a class="btn en" href="${esc(enroll(c.title))}" target="_blank" rel="noopener">Enroll now</a><a class="btn ghost" href="#" data-share="${esc(c.title)}">${SHARE_IC}Share course details</a></div></div>`;
   mw.hidden = false; document.body.style.overflow = 'hidden'; $('.x', mw).focus();
 }
 
@@ -264,6 +269,7 @@ function coursesPage() {
   const q = $('#q'), chips = $('#chips'), list = $('#list'), count = $('#count');
   chips.innerHTML = cats.map(c => `<button type="button" data-c="${esc(c)}" aria-pressed="${c === cat}">${esc(c)}</button>`).join('');
   chips.addEventListener('click', e => { const b = e.target.closest('button'); if (!b) return; cat = b.dataset.c; $$('button', chips).forEach(x => x.setAttribute('aria-pressed', x === b)); draw(); });
+  if (params.get('q')) q.value = params.get('q');
   q.addEventListener('input', draw);
   list.addEventListener('click', e => { const a = e.target.closest('[data-mods]'); if (!a) return; e.preventDefault(); showModules(COURSES.find(c => c.title === a.dataset.mods)); });
   function draw() {
@@ -408,7 +414,7 @@ function courseCard(c) {
   const loaded = Object.keys(CAT).length > 0, buy = d ? d.fee > 0 : !loaded;
   const price = d && d.fee ? `<div class="pv"><b>${rupee(d.price)}</b>${off ? `<s>${rupee(d.fee)}</s>` : ''}</div>` : loaded ? `<div class="pv"><span class="ask">Fee on request</span></div>` : '<div class="pv"></div>';
   const links = [mods ? `<a href="#" data-mods="${esc(c.title)}">Modules</a>` : '', demoFor(c.title) ? `<a href="#" data-play="${esc(DEMOS.indexOf(demoFor(c.title)))}">▶ Demo</a>` : '',
-    outlineFor(c.title) ? `<a href="${esc(outlineFor(c.title))}" download rel="noopener">Outline</a>` : '', `<a href="${esc(enquire(c.title))}" target="_blank" rel="noopener">Enquire</a>`].filter(Boolean).join('');
+    outlineFor(c.title) ? `<a href="${esc(outlineFor(c.title))}" download rel="noopener">Outline</a>` : '', `<a href="${esc(enquire(c.title))}" target="_blank" rel="noopener">Enquire</a>`, `<a href="#" class="shr" data-share="${esc(c.title)}">${SHARE_IC}Share</a>`].filter(Boolean).join('');
   return `<article class="cc4">${coverHtml(c)}${badge ? `<span class="bdg">${esc(badge)}</span>` : ''}${off ? `<span class="offp">${off}% OFF</span>` : ''}
     <div class="bd"><h3>${esc(c.title)}</h3>
     <a class="rt" href="https://search.google.com/local/reviews?placeid=ChIJA2Tq7_ax5zsRdXed0byIdqg" target="_blank" rel="noopener"><b>5.0</b><span class="st" aria-hidden="true">★★★★★</span><span>Google rating</span></a>
@@ -448,6 +454,84 @@ function playDemo(v) {
   vp.hidden = false; document.body.style.overflow = 'hidden';
 }
 document.addEventListener('click', e => { const b = e.target.closest('[data-play]'); if (!b) return; e.preventDefault(); const v = DEMOS[+b.dataset.play]; if (v) playDemo(v); });
+
+/* ===== Share course details =====
+   Every course card has a Share link. It opens a window with the full course details (outline, fee, duration,
+   next batch, office address, office hours, phone numbers) ready to send on WhatsApp, by email, or both.
+   Fee, offer, batch, outline and demo links come live from the Google Sheet; office details from SITE above. */
+const SHARE_IC = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="M8.6 13.5l6.8 4M15.4 6.5l-6.8 4"/></svg>';
+const demoUrl = v => v.kind === 'yt' ? 'https://youtu.be/' + v.id : 'https://drive.google.com/file/d/' + v.id + '/view';
+function shareText(c, bold) {
+  const B = t => bold ? '*' + t + '*' : t;
+  const d = CAT[normT(c.title)] || CAT[OUTLINE_ALIAS[normT(c.title)]] || null, mods = modulesFor(c.title);
+  const out = outlineFor(c.title), demo = demoFor(c.title), L = [];
+  L.push(B('MARS Training & Solution') + ' – Course details', '');
+  L.push(B('Course:') + ' ' + c.title);
+  if (c.desc) L.push(c.desc);
+  if (mods) L.push(B('Modules:') + ' ' + mods.join(' → '));
+  L.push('');
+  if (c.dur) L.push(B('Duration:') + ' ' + c.dur);
+  if (d && d.fee) {
+    if (d.price < d.fee) L.push(B('Fee:') + ' ' + rupee(d.price) + ' (regular ' + rupee(d.fee) + (d.off ? ', ' + d.off : '') + ' – offer on full payment)');
+    else L.push(B('Fee:') + ' ' + rupee(d.fee));
+    if (d.emi && d.emi.length) L.push(B('Easy payment:') + ' ' + 'pay in ' + d.emi.join(' or ') + ' installments');
+  } else L.push(B('Fee:') + ' ' + 'please call us');
+  if (d && d.batch && d.batch.start) L.push(B('Next batch:') + ' ' + niceDate(d.batch.start) + (d.batch.timing ? ' · ' + d.batch.timing : ''));
+  L.push(B('Mode:') + ' ' + 'Live online, or classroom in Kolkata');
+  L.push(B('Certificate:') + ' ' + 'on completion (ISO 9001:2015 certified institute)');
+  L.push('');
+  if (out) L.push(B('Course outline (PDF):') + ' ' + out);
+  if (demo) L.push(B('Watch a free demo class:') + ' ' + demoUrl(demo));
+  L.push(B('Enroll / enquire:') + ' ' + (hasApp ? appLink(c.title, 'enroll') : SITE.website + '/courses.html'));
+  L.push(B('More details:') + ' ' + SITE.website + '/courses.html?q=' + encodeURIComponent(c.title));
+  L.push('');
+  L.push(B('Office:') + ' ' + SITE.address);
+  L.push(B('Office hours:') + ' ' + SITE.hours.join(' | '));
+  L.push(B('Call / WhatsApp:') + ' ' + SITE.phones.join(', '));
+  L.push(B('Email:') + ' ' + SITE.email);
+  return L.join('\n');
+}
+async function showShare(c) {
+  let sw = $('#sw');
+  if (!sw) {
+    sw = document.createElement('div'); sw.className = 'mw sw'; sw.id = 'sw'; sw.hidden = true;
+    sw.setAttribute('role', 'dialog'); sw.setAttribute('aria-modal', 'true');
+    document.body.appendChild(sw);
+    const close = () => { sw.hidden = true; document.body.style.overflow = ''; };
+    sw.addEventListener('click', e => { if (e.target === sw || e.target.closest('.x')) close(); });
+    addEventListener('keydown', e => { if (e.key === 'Escape' && !sw.hidden) close(); });
+  }
+  sw.setAttribute('aria-label', 'Share ' + c.title);
+  sw.innerHTML = `<div class="card"><button type="button" class="x" aria-label="Close">×</button><small>Share course details</small><h3>${esc(c.title)}</h3><p class="sub">Getting the latest fee and batch…</p></div>`;
+  sw.hidden = false; document.body.style.overflow = 'hidden';
+  await Promise.all([loadCatalog(), loadOutlines(), loadDemos()]);
+  const text = shareText(c, true), plain = shareText(c, false), subject = c.title + ' – course details | MARS Training & Solution';
+  sw.innerHTML = `<div class="card"><button type="button" class="x" aria-label="Close">×</button>
+    <small>Share course details</small><h3>${esc(c.title)}</h3>
+    <p class="sub">Outline, fee, duration, office address, timings and phone numbers in one message. Add a number or email to send it straight to that person, or leave them empty to pick a contact.</p>
+    <div class="sf"><label>WhatsApp number<input type="tel" id="swNo" inputmode="tel" placeholder="e.g. 98765 43210" autocomplete="tel"></label>
+    <label>Email<input type="email" id="swMail" placeholder="name@example.com" autocomplete="email"></label></div>
+    <div class="sb"><button type="button" class="btn sbw" data-s="wa">WhatsApp</button><button type="button" class="btn sbe" data-s="em">Email</button><button type="button" class="btn sbb" data-s="both">WhatsApp + Email</button></div>
+    <div class="sb2"><button type="button" data-s="copy">Copy text</button>${navigator.share ? '<button type="button" data-s="more">More apps</button>' : ''}</div>
+    <p class="msg" role="status"></p>
+    <details><summary>See the message</summary><pre>${esc(plain)}</pre></details></div>`;
+  const no = $('#swNo', sw), mail = $('#swMail', sw), msg = $('.msg', sw);
+  const waLink = () => { let n = no.value.replace(/\D/g, ''); if (n.length === 10) n = '91' + n; else if (n.length === 11 && n[0] === '0') n = '91' + n.slice(1); return 'https://wa.me/' + (n.length >= 11 ? n : '') + '?text=' + encodeURIComponent(text); };
+  const mailLink = () => 'mailto:' + encodeURIComponent(mail.value.trim()) + '?subject=' + encodeURIComponent(subject) + '&body=' + encodeURIComponent(plain);
+  const bad = () => { const n = no.value.replace(/\D/g, ''); if (n && n.length < 10) { msg.textContent = 'Please check the WhatsApp number (10 digits).'; no.focus(); return true; }
+    if (mail.value.trim() && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(mail.value.trim())) { msg.textContent = 'Please check the email address.'; mail.focus(); return true; } return false; };
+  $$('[data-s]', sw).forEach(b => b.addEventListener('click', async () => {
+    const k = b.dataset.s; msg.textContent = '';
+    if ((k === 'wa' || k === 'em' || k === 'both') && bad()) return;
+    if (k === 'wa') window.open(waLink(), '_blank', 'noopener');
+    if (k === 'em') location.href = mailLink();
+    if (k === 'both') { window.open(waLink(), '_blank', 'noopener'); setTimeout(() => { location.href = mailLink(); }, 400); msg.textContent = 'WhatsApp opened in a new tab and your email app is opening with the same details.'; }
+    if (k === 'copy') { try { await navigator.clipboard.writeText(plain); msg.textContent = 'Copied. Paste it anywhere.'; } catch (e) { msg.textContent = 'Could not copy. Open "See the message" and copy it from there.'; } }
+    if (k === 'more') { try { await navigator.share({ title: subject, text: plain }); } catch (e) {} }
+  }));
+  no.focus();
+}
+document.addEventListener('click', e => { const b = e.target.closest('[data-share]'); if (!b) return; e.preventDefault(); const c = COURSES.find(x => x.title === b.dataset.share); if (c) showShare(c); });
 function demosHome() {
   const sec = $('#demos'), grid = $('#demoGrid'); if (!sec || !grid) return;
   $$('[data-demo-book]').forEach(a => { a.href = bookDemo(''); });
