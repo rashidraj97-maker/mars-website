@@ -998,3 +998,9 @@ html{scroll-padding-top:96px}
 .cdw .cdo h4{margin-top:12px}.cdw .cdo p{margin:6px 0}.cdw .cdo a{color:var(--brand);font-weight:700;text-decoration:none}
 @media(max-width:560px){.cdw .cdf{grid-template-columns:1fr}}
 .cdw .cdl li{display:list-item;padding:0;gap:0}.cdw .cdl li::before{content:none}.cdw .cdl li::marker{color:var(--brand)}
+
+/* course cards: Enquire button beside Enroll */
+.cc4 .bts{display:flex;gap:8px;flex:none}
+.cc4 .eq{flex:none;color:var(--cv);border:2px solid var(--cv);background:#fff;text-decoration:none;font-weight:700;padding:9px 16px;border-radius:12px;transition:background .2s}
+.cc4 .eq:hover{background:#F4F7FC}
+@media(max-width:420px){.cc4 .pr{flex-wrap:wrap}.cc4 .bts{width:100%}.cc4 .bts a{flex:1;text-align:center}}

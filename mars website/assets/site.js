@@ -417,12 +417,12 @@ function courseCard(c) {
   const loaded = Object.keys(CAT).length > 0, buy = d ? d.fee > 0 : !loaded;
   const price = d && d.fee ? `<div class="pv"><b>${rupee(d.price)}</b>${off ? `<s>${rupee(d.fee)}</s>` : ''}</div>` : loaded ? `<div class="pv"><span class="ask">Fee on request</span></div>` : '<div class="pv"></div>';
   const links = [mods ? `<a href="#" data-mods="${esc(c.title)}">Modules</a>` : '', demoFor(c.title) ? `<a href="#" data-play="${esc(DEMOS.indexOf(demoFor(c.title)))}">▶ Demo</a>` : '',
-    outlineFor(c.title) ? `<a href="${esc(outlineFor(c.title))}" download rel="noopener">Outline</a>` : '', `<a href="${esc(enquire(c.title))}" target="_blank" rel="noopener">Enquire</a>`, `<a href="${esc(courseLink(c.title))}" data-course="${esc(c.title)}">Details</a>`, `<a href="#" class="shr" data-share="${esc(c.title)}">${SHARE_IC}Share</a>`].filter(Boolean).join('');
+    outlineFor(c.title) ? `<a href="${esc(outlineFor(c.title))}" download rel="noopener">Outline</a>` : '', (window.MARS_ENQ_BTN && buy ? '' : `<a href="${esc(enquire(c.title))}" target="_blank" rel="noopener">Enquire</a>`), `<a href="${esc(courseLink(c.title))}" data-course="${esc(c.title)}">Details</a>`, `<a href="#" class="shr" data-share="${esc(c.title)}">${SHARE_IC}Share</a>`].filter(Boolean).join('');
   return `<article class="cc4">${coverHtml(c)}${badge ? `<span class="bdg">${esc(badge)}</span>` : ''}${off ? `<span class="offp">${off}% OFF</span>` : ''}
     <div class="bd"><h3><a href="${esc(courseLink(c.title))}" data-course="${esc(c.title)}">${esc(c.title)}</a></h3>
     <a class="rt" href="https://search.google.com/local/reviews?placeid=ChIJA2Tq7_ax5zsRdXed0byIdqg" target="_blank" rel="noopener"><b>5.0</b><span class="st" aria-hidden="true">★★★★★</span><span>Google rating</span></a>
     <div class="ft">${facts.map(x => `<span>${esc(x)}</span>`).join('')}</div>${hl ? loc + hl : loc}
-    <div class="pr">${price}<a class="eb" href="${esc(buy ? enroll(c.title) : enquire(c.title))}" target="_blank" rel="noopener" style="--cv:${coverOf(c.title).bg}">${buy ? 'Enroll' : 'Enquire'}</a></div>
+    <div class="pr">${price}${window.MARS_ENQ_BTN && buy ? `<span class="bts"><a class="eq" href="${esc(enquire(c.title))}" target="_blank" rel="noopener" style="--cv:${coverOf(c.title).bg}">Enquire</a>` : ''}<a class="eb" href="${esc(buy ? enroll(c.title) : enquire(c.title))}" target="_blank" rel="noopener" style="--cv:${coverOf(c.title).bg}">${buy ? 'Enroll' : 'Enquire'}</a>${window.MARS_ENQ_BTN && buy ? '</span>' : ''}</div>
     <div class="lk">${links}</div></div></article>`;
 }
 
