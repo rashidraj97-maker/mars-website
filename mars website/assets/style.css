@@ -1005,3 +1005,36 @@ html{scroll-padding-top:96px}
 .cc4 .eq:hover{background:#F4F7FC}
 @media(max-width:420px){.cc4 .pr{flex-wrap:wrap}.cc4 .bts{width:100%}.cc4 .bts a{flex:1;text-align:center}}
 .cc4 .ccat{display:block;font-size:.72rem;font-weight:700;color:var(--brand);letter-spacing:.02em;margin-bottom:2px}
+
+/* Corporate training feedback (homepage section + feedback.html) */
+.fbk-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin:8px 0 28px}
+.fbk-stats div{background:#fff;border:1px solid var(--line);border-radius:18px;padding:18px 20px}
+.fbk-stats b{display:block;font-size:clamp(1.6rem,3vw,2.2rem);font-weight:800;background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent;line-height:1.1}
+.fbk-stats span{font-size:.9rem;color:var(--muted)}
+.fbk-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:20px}
+.fbk{background:#fff;border:1px solid var(--line);border-radius:var(--r);padding:26px;display:flex;flex-direction:column;gap:14px;transition:box-shadow .3s}
+.fbk:hover{box-shadow:var(--shadow)}
+.fbk-top{display:flex;justify-content:space-between;gap:12px;align-items:flex-start}
+.fbk h3{font-size:1.2rem;font-weight:800;color:var(--ink);margin:0}
+.fbk .meta{font-size:.88rem;color:var(--muted);margin-top:4px}
+.fbk .score{flex:none;text-align:right}
+.fbk .score b{font-size:1.7rem;font-weight:800;color:var(--ink)}
+.fbk .score small{display:block;font-size:.78rem;color:var(--muted)}
+.fbk .stars{color:#F5A623;letter-spacing:2px;font-size:.95rem}
+.fbk .tag{display:inline-block;align-self:flex-start;font-size:.78rem;font-weight:700;padding:5px 10px;border-radius:999px;background:#EAF7EF;color:#15803D}
+.fbk .tag.letter{background:#EEF0FF;color:#5B47E0}
+.fbk .tag.wait{background:#FFF6DD;color:#8A5A00}
+.fbk.pending{background:#FBFCFE;border-style:dashed}
+.fbk .bars{display:grid;gap:7px}
+.fbk .bar{display:grid;grid-template-columns:150px 1fr 34px;gap:10px;align-items:center;font-size:.84rem;color:var(--text)}
+.fbk .bar i{display:block;height:8px;border-radius:99px;background:var(--paper);overflow:hidden}
+.fbk .bar i em{display:block;height:100%;border-radius:99px;background:var(--grad)}
+.fbk blockquote{margin:0;padding:14px 16px;border-left:3px solid var(--sky);background:var(--paper);border-radius:0 14px 14px 0;font-size:1rem;color:var(--ink);line-height:1.55}
+.fbk blockquote footer{margin-top:6px;font-size:.82rem;color:var(--muted)}
+.fbk-more{display:flex;justify-content:center;margin-top:28px}
+.fbk-tools{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin:6px 0 22px}
+.fbk-tools strong{font-size:.92rem;color:var(--muted);font-weight:600}
+.chips button.on{background:var(--ink);color:#fff;border-color:var(--ink)}
+@media(max-width:860px){.fbk-grid{grid-template-columns:1fr}.fbk-stats{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:560px){.fbk-top{flex-direction:column;gap:8px}.fbk .score{text-align:left;display:flex;align-items:baseline;gap:8px}.fbk .score small{display:inline}.fbk .bar{grid-template-columns:118px 1fr 30px;font-size:.8rem}.fbk .bar span{white-space:nowrap}}
+@media(max-width:420px){.fbk{padding:20px}}
