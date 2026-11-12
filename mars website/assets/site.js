@@ -335,6 +335,7 @@ function coverOf(title) {
   if (has('ms word')) return { bg: '#2B579A', kind: 'doc', ic: 'W' };
   if (has('outlook')) return { bg: '#0F6CBD', kind: 'mail', ic: 'O' };
   if (has('access')) return { bg: '#A4373A', kind: 'db', ic: 'A' };
+  if (has('visio')) return { bg: '#2E3F8F', kind: 'flow', ic: 'V' };
   if (has('project')) return { bg: '#31752F', kind: 'gantt', ic: 'P' };
   if (has('power bi')) return { bg: '#2B2B2B', kind: 'bars', ic: 'BI', pal: ['#F2C811', '#F2C811', '#E8A33D', '#F2C811', '#E8A33D', '#F2C811'] };
   if (has('tableau')) return { bg: '#1F3B57', kind: 'bars', ic: 'T', pal: ['#4E79A7', '#F28E2B', '#E15759', '#76B7B2', '#59A14F', '#EDC948'] };
@@ -387,6 +388,21 @@ const AIHEAD = (cls = '') => {
   <circle cx="290" cy="64" r="34" fill="#5AB8FF" fill-opacity=".14"/></svg>`;
 };
 const AIBADGE = () => `<span class="aibadge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 3a3 3 0 0 0-3 3 3 3 0 0 0-2 5 3 3 0 0 0 2 5 3 3 0 0 0 3 3h1V3z"/><path d="M15 3a3 3 0 0 1 3 3 3 3 0 0 1 2 5 3 3 0 0 1-2 5 3 3 0 0 1-3 3h-1V3z"/><path d="M10 8h-2M10 12H7M10 16H8M14 8h2M14 12h3M14 16h2"/></svg>AI</span>`;
+/* Original "MS Visio" cover: swimlane process map with start, steps, a decision and an org-chart cluster (inline SVG, no image files) */
+const VISIOART = () => `<svg viewBox="0 0 400 168" preserveAspectRatio="xMinYMid slice" style="position:absolute;inset:0;width:100%;height:100%" aria-hidden="true"><defs><linearGradient id="vsg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#1E2A78"/><stop offset=".55" stop-color="#3148B8"/><stop offset="1" stop-color="#6A5CF5"/></linearGradient><pattern id="vsd" width="14" height="14" patternUnits="userSpaceOnUse"><circle cx="1" cy="1" r="1" fill="#fff" fill-opacity=".10"/></pattern><marker id="vsa" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0 8 4 0 8z" fill="#CFE0FF"/></marker></defs>
+<rect width="400" height="168" fill="url(#vsg)"/><rect width="400" height="168" fill="url(#vsd)"/>
+<g fill="#fff" fill-opacity=".07"><rect x="92" y="8" width="300" height="48" rx="7"/><rect x="92" y="60" width="300" height="46" rx="7"/><rect x="92" y="110" width="300" height="50" rx="7"/></g>
+<g font-family="Inter,Arial,sans-serif" font-size="7" font-weight="700" fill="#BFD0FF" letter-spacing=".1em"><text x="99" y="19">SALES</text><text x="99" y="71">ACCOUNTS</text><text x="99" y="121">DISPATCH</text></g>
+<g fill="none" stroke="#CFE0FF" stroke-width="1.6" marker-end="url(#vsa)"><path d="M140 36 H155"/><path d="M204 36 H220 V66"/><path d="M238 84 H273 V124"/><path d="M220 98 V138 H197"/></g>
+<rect x="100" y="27" width="40" height="18" rx="9" fill="#FFC23C"/><text x="120" y="39" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="8" font-weight="800" fill="#1E2A78">Start</text>
+<rect x="158" y="24" width="46" height="24" rx="4" fill="#fff"/><g fill="#9DB4F5"><rect x="164" y="32" width="34" height="3" rx="1.5"/><rect x="164" y="38" width="22" height="3" rx="1.5"/></g>
+<path d="M220 70 L238 84 L220 98 L202 84 Z" fill="#7CF0C5"/><text x="220" y="87" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="7.5" font-weight="800" fill="#0B3B2E">OK?</text>
+<rect x="250" y="126" width="46" height="24" rx="4" fill="#fff"/><g fill="#9DB4F5"><rect x="256" y="134" width="34" height="3" rx="1.5"/><rect x="256" y="140" width="20" height="3" rx="1.5"/></g>
+<rect x="149" y="126" width="46" height="24" rx="4" fill="#fff"/><g fill="#F7A8B8"><rect x="155" y="134" width="34" height="3" rx="1.5"/><rect x="155" y="140" width="18" height="3" rx="1.5"/></g>
+<g font-family="Inter,Arial,sans-serif" font-size="7" font-weight="700" fill="#E6EEFF"><text x="246" y="80">Yes</text><text x="225" y="114">No</text></g>
+<g transform="translate(256 16)"><g fill="none" stroke="#CFE0FF" stroke-width="1.2"><path d="M18 11 V18 M6 18 H30 M6 18 V24 M30 18 V24"/></g><rect x="9" y="0" width="18" height="11" rx="3" fill="#FFC23C"/><rect x="0" y="24" width="13" height="10" rx="2.5" fill="#fff"/><rect x="23" y="24" width="13" height="10" rx="2.5" fill="#fff"/></g>
+<g transform="translate(318 66)" fill="none" stroke="#CFE0FF" stroke-width="1.2" stroke-opacity=".7"><rect x="0" y="0" width="56" height="30" rx="4"/><path d="M14 0 V30 M28 0 V30 M42 0 V30 M0 15 H56"/></g>
+</svg>`;
 function coverHtml(c) {
   const k = coverOf(c.title), tile = (x, cls = '') => `<span class="tile ${cls}">${esc(x)}</span>`, withAi = k.kind !== 'ai' && k.kind !== 'photo' && /\b(ai|gen ai)\b/i.test(c.title);
   let art = '';
@@ -402,6 +418,7 @@ function coverHtml(c) {
   else if (k.kind === 'ledger') art = `${tile(k.ic, 'sm')}<span class="ledger"><span><b>Dr</b><b>Cr</b></span><span><i></i><i></i></span><span><i></i><i></i></span><span><i></i><i></i></span></span>`;
   else if (k.kind === 'photo') art = `<img class="cphoto" src="${k.src}" alt="" loading="lazy" style="object-position:${k.pos || 'center'}" onerror="this.parentNode.insertAdjacentHTML('beforeend', AIHEAD()); this.remove()">`;
   else if (k.kind === 'ai') art = `<img class="aiphoto" src="https://images.unsplash.com/photo-1770233621425-5d9ee7a0a700?fm=jpg&q=70&w=800&auto=format&fit=crop" alt="" loading="lazy" onerror="this.parentNode.insertAdjacentHTML('beforeend', AIHEAD()); this.remove()"><span class="aitint"></span><span class="aishade"></span>`;   // photo: Zach M on Unsplash (Unsplash License)
+  else if (k.kind === 'flow') art = VISIOART() + tile(k.ic);
   else if (k.kind === 'pc') art = `<span class="pc"><i></i></span>`;
   else if (k.kind === 'talk') art = `<span class="talk">Tell me about yourself…</span><span class="talk r">I am a…</span>`;
   const ph = k.kind !== 'photo' && k.kind !== 'ai' ? photoOf(c.title) : null;
