@@ -1916,5 +1916,7 @@ function playDemo(v) {
 }
 document.addEventListener('click', e => { const b = e.target.closest('[data-play]'); if (!b) return; e.preventDefault(); e.stopPropagation(); const v = demoFor(b.dataset.play); if (v) playDemo(v); }, true);
 </script>
+<!-- Cloudflare Web Analytics (anonymous visit counts; no cookies) -->
+<script type="module" src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "1d91c51046de44108f0915f251eac223"}'></script>
 </body>
 </html>
