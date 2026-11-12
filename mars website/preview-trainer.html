@@ -17,6 +17,7 @@
 <link rel="stylesheet" href="assets/hero-reports.css">
 <script>document.documentElement.classList.add('js')</script>
 <style>.pvbar{position:sticky;top:0;z-index:999;background:#FFC23C;color:#0B1630;text-align:center;font:600 14px/1.4 Inter,sans-serif;padding:8px 12px}</style>
+<script>(()=>{const of=window.fetch,ALI={"order": 9.5, "type": "Full", "name": "Ali Zargham", "photo": "https://marstraining.in/assets/trainers/ali.jpg", "role": "SAP FICO Trainer · Finance & Accounts Professional", "exp": "6+ yrs experience", "field": "Brings hands-on finance operations experience: accounts payable and receivable, general ledger, reconciliations and payment processing, taught the way they run in SAP.", "skills": "SAP FICO, General Ledger, AP & AR, Reconciliation, Payment Processing, EBS, MS Excel", "footer": "Studied at: University of Greenwich", "filters": "ERP"};window.fetch=(u,o)=>{const p=of(u,o);if(!/action=trainers/.test(String(u)))return p;return p.then(r=>r.clone().json().then(d=>{const t=(d.trainers||[]).filter(x=>!/^mr\.? ali$/i.test(String(x.name).trim()));const i=t.findIndex(x=>/Arpit/.test(x.name));t.splice(i<0?t.length:i+1,0,ALI);d.trainers=t;return new Response(JSON.stringify(d),{headers:{"Content-Type":"application/json"}})}).catch(()=>r))}})()</script>
 </head>
 <body data-page="home" id="top">
 <div class="pvbar">PREVIEW: new trainer Ali Zargham (SAP FICO) (only you can see this link)</div>
@@ -337,12 +338,6 @@
         <div class="trc-chips"><span>NetSuite</span><span>SuiteScript</span><span>Order-to-Cash</span><span>Procure-to-Pay</span><span>Saved Searches</span></div>
         <p class="trc-cl">Previously at <strong>Capgemini, WSP</strong></p>
       </article>
-      <article class="trc" data-cat="erp excel">
-        <div class="trc-top"><img class="trc-av" src="assets/trainers/ali.jpg" alt="Ali Zargham" width="72" height="72" loading="lazy"><div><h4>Ali Zargham</h4><p class="trc-role">SAP FICO Trainer · Finance &amp; Accounts Professional</p><span class="trc-exp">6+ yrs experience</span></div></div>
-        <div class="trc-proof"><b>From the field</b>Brings hands-on finance operations experience: accounts payable and receivable, general ledger, reconciliations and payment processing, taught the way they run in SAP.</div>
-        <div class="trc-chips"><span>SAP FICO</span><span>General Ledger</span><span>AP &amp; AR</span><span>Reconciliation</span><span>Payment Processing</span><span>EBS</span><span>MS Excel</span></div>
-        <p class="trc-cl">Studied at <strong>University of Greenwich</strong> · based in Kolkata</p>
-      </article>
       <article class="trc" data-cat="data ai excel">
         <div class="trc-top"><img class="trc-av" src="assets/trainers/zeeshan.jpg?v=2" alt="Md Zeeshan" width="72" height="72" loading="lazy"><div><h4>Md Zeeshan</h4><p class="trc-role">MIS &amp; Automation Trainer</p><span class="trc-exp">Experienced in MIS &amp; automation</span></div></div>
         <div class="trc-proof"><b>From the field</b>Builds MIS reports, live dashboards and workflow automations that teams use every day.</div>
@@ -453,6 +448,6 @@ bar.tabIndex=0;bar.addEventListener('keydown',e=>{if(e.key==='ArrowRight'||e.key
 requestAnimationFrame(step)})();
 </script>
 
-<script>addEventListener("load",()=>setTimeout(()=>{const a=[...document.querySelectorAll(".trc h4")].find(h=>/Ali Zargham/.test(h.textContent));if(a){const c=a.closest(".trc");document.querySelectorAll(".trc,.rv").forEach(e=>e.classList.add("in"));scrollTo({top:c.getBoundingClientRect().top+scrollY-140,behavior:"instant"});c.style.outline="3px solid #FFC23C";c.style.outlineOffset="4px"}},700))</script>
+<script>addEventListener("load",()=>{let n=0;const go=()=>{const a=[...document.querySelectorAll(".trc h4")].find(h=>/Ali Zargham/.test(h.textContent));if(!a){if(n++<20)setTimeout(go,400);return}const c=a.closest(".trc");scrollTo({top:c.getBoundingClientRect().top+scrollY-140,behavior:"instant"});c.style.outline="3px solid #FFC23C";c.style.outlineOffset="4px"};setTimeout(go,800)})</script>
 </body>
 </html>
