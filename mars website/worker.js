@@ -211,6 +211,7 @@ export default {
     }
     if (url.pathname === '/api/chat') return req.method === 'POST' ? chat(req, env, ctx) : json({ ok: false, error: 'Use POST' }, 405);
     if (url.pathname.startsWith('/api/')) return json({ ok: false, error: 'Not found' }, 404);
+    if (/^\/feedback(\.html)?\/?$/i.test(url.pathname)) return Response.redirect(url.origin + '/reviews' + url.search, 301);   // old link (page renamed to Reviews)
     const cm = url.pathname.match(/^\/course\/([a-z0-9-]+)\/?$/i);
     if (cm && req.method === 'GET') return coursePage(req, env, ctx, cm[1].toLowerCase());
     return env.ASSETS.fetch(req);

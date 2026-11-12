@@ -184,6 +184,10 @@ document.addEventListener('DOMContentLoaded', () => {
   const nav = $('#nav'), burger = $('#burger');
   if (burger) burger.addEventListener('click', () => { const o = nav.classList.toggle('open'); burger.setAttribute('aria-expanded', o); });
   $$('#nav a').forEach(a => a.addEventListener('click', () => { nav.classList.remove('open'); if (burger) burger.setAttribute('aria-expanded', 'false'); }));
+  // About ▾ dropdown (About us · Reviews): click to open on phones and computers, hover also opens it on computers
+  $$('.dd').forEach(d => { const b = $('.ddb', d); b.addEventListener('click', e => { e.stopPropagation(); const o = d.classList.toggle('open'); b.setAttribute('aria-expanded', o); }); });
+  document.addEventListener('click', e => $$('.dd.open').forEach(d => { if (!d.contains(e.target)) { d.classList.remove('open'); $('.ddb', d).setAttribute('aria-expanded', 'false'); } }));
+  addEventListener('keydown', e => { if (e.key === 'Escape') $$('.dd.open').forEach(d => { d.classList.remove('open'); $('.ddb', d).setAttribute('aria-expanded', 'false'); }); });
   // enquire buttons
   // Enquire and Enroll Now always open in a new browser tab, so the website stays open
   $$('[data-enquire]').forEach(a => { a.href = a.dataset.enroll !== undefined && !hasApp ? wa('Hi MARS, I would like to enroll in a course.') : enquire(a.dataset.enquire); if (hasApp && a.dataset.enroll !== undefined) a.href = SITE.enquiryApp.replace(/\/?$/, '/') + '#enroll'; a.target = '_blank'; a.rel = 'noopener'; });
@@ -804,11 +808,12 @@ function trainersSection() {
 
 /* Highlight the menu item for the page (or home-page section) the visitor is on */
 (function navActive() {
-  const links = [...document.querySelectorAll('#nav > a:not(.btn)')];
+  const links = [...document.querySelectorAll('#nav > a:not(.btn), #nav .ddm a')];
   if (!links.length) return;
   const norm = f => { f = String(f || '').toLowerCase().replace(/\.html?$/, ''); return f === '' || f === 'index' ? 'index' : f; };
   const page = norm(location.pathname.replace(/\/+$/, '').split('/').pop());
-  const set = a => links.forEach(x => { if (x === a) x.setAttribute('aria-current', 'page'); else x.removeAttribute('aria-current'); });
+  const mark = a => (a && a.closest('.dd')) ? a.closest('.dd').querySelector('.ddb') : a;   // a dropdown item highlights "About ▾"
+  const set = a => { const t = mark(a); links.map(mark).forEach(x => { if (x === t) x.setAttribute('aria-current', 'page'); else x.removeAttribute('aria-current'); }); };
   const fileOf = a => { const h = a.getAttribute('href') || ''; return h.startsWith('#') ? 'index' : norm(h.split('#')[0].split('/').pop()); };
   const hashOf = a => (a.getAttribute('href') || '').split('#')[1] || '';
   if (page !== 'index') { set(links.find(a => fileOf(a) === page && !hashOf(a)) || null); return; }
