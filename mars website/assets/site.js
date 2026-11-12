@@ -25,6 +25,7 @@ const COURSES = [
   ["Office & Productivity", "MS Access", "Design and use Access databases: tables, relationships, queries, forms, reports and basic automation.", "", "2.5 months"],
   ["Office & Productivity", "MS Office", "A complete MS Office program: Excel from basic to advanced, PowerPoint and Word for everyday office work.", "", "5 months"],
   ["Office & Productivity", "MS Project (MSP)", "Plan, schedule, track and report projects in Microsoft Project, from first plan to progress reports.", "", "2.5 months"],
+  ["Office & Productivity", "MS Visio", "Create professional diagrams in Microsoft Visio: flowcharts, swimlane SOPs, org charts built from Excel, network and floor plans, and process maps linked to live data.", "", "2 months"],
   ["Office & Productivity", "Libre Office (Calc-Excel)", "Advanced spreadsheets in LibreOffice Calc: formulas, lookups, data cleaning, pivot tables and professional reports.", "", "2.5 months"],
   ["Office & Productivity", "Libre Office (Writer-Word)", "Create professional documents in LibreOffice Writer: styles, tables, long documents, templates and mail merge.", "", "1.5 months"],
   ["Office & Productivity", "Libre Office (Presentation-PPT)", "Build professional presentations in LibreOffice Impress with masters, charts, multimedia and animations.", "", "1.5 months"],
