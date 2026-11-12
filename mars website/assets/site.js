@@ -147,7 +147,7 @@ function clientStrip() {
       const k = key(n), i = left.findIndex(l => { const m = key(alias[normT(l.name)] || l.name); return m && (m === k || k.indexOf(m + ' ') === 0 || m.indexOf(k + ' ') === 0 || (m.length > 3 && k.startsWith(m))); });
       return i >= 0 ? { n, id: left.splice(i, 1)[0].id } : { n, d: doms[n] };
     }).concat(left.map(l => ({ n: l.name, id: l.id })));
-    items.sort((a, b) => (b.id ? 1 : 0) - (a.id ? 1 : 0));                        // logos first, names after
+    if (!tr.dataset.order) items.sort((a, b) => (b.id ? 1 : 0) - (a.id ? 1 : 0));   // logos first, names after (unless the page fixes the order)
     const ini = n => n.replace(/\(.*?\)/g, '').split(/[\s&-]+/).filter(w => /^[A-Za-z]/.test(w)).slice(0, 2).map(w => w[0]).join('').toUpperCase();
     const hue = n => [...n].reduce((a, c) => a + c.charCodeAt(0), 0) % 360;
     const mark = x => x.d ? `<img class="ic" src="https://t1.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=https://${esc(x.d)}&size=128" alt="" loading="lazy" referrerpolicy="no-referrer" data-ini="${esc(ini(x.n))}" style="--h:${hue(x.n)}">` : `<b class="ini" style="--h:${hue(x.n)}">${esc(ini(x.n))}</b>`;
