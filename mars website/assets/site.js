@@ -600,16 +600,20 @@ function galleryPage() {
   addEventListener('keydown', e => { if (lb.hidden) return; if (e.key === 'Escape') close(); if (e.key === 'ArrowLeft') open(idx - 1); if (e.key === 'ArrowRight') open(idx + 1); });
   let x0 = null; lb.addEventListener('touchstart', e => { x0 = e.touches[0].clientX; }, { passive: true });
   lb.addEventListener('touchend', e => { if (x0 == null) return; const dx = e.changedTouches[0].clientX - x0; if (Math.abs(dx) > 50) open(idx + (dx < 0 ? 1 : -1)); x0 = null; });
-  draw();
-  // Photos added to the Google Drive folder "MARS Website Gallery" (one sub-folder per programme) show up here automatically
-  if (/^https:\/\/script\.google\.com\//.test(SITE.api)) fetch(SITE.api + '?action=gallery').then(r => r.json()).then(d => {
-    const img = (id, w) => `https://lh3.googleusercontent.com/d/${encodeURIComponent(id)}=w${w}`;
-    const add = ((d && d.events) || []).filter(e => e.ids && e.ids.length).map(e => ({ t: e.t, s: e.s, d: e.d, y: Number(e.y) || new Date().getFullYear(), drive: 1, p: e.ids.map(id => ({ src: img(id, 800), full: img(id, 1800) })) }));
-    if (!add.length) return;
+  // Photos added to the Google Drive folder "MARS Website Gallery" (one sub-folder per programme) show up here automatically.
+  // The list comes from the website's saved copy (/api/gallery, instant); Apps Script directly only if that fails.
+  // The first drawing waits for it (at most 0.9 s) so Drive albums appear together with the rest instead of popping in later.
+  const pic = (id, w) => `https://lh3.googleusercontent.com/d/${encodeURIComponent(id)}=w${w}`;
+  const viaScript = () => /^https:\/\/script\.google\.com\//.test(SITE.api) ? fetch(SITE.api + '?action=gallery').then(r => r.json()) : null;
+  const load = fetch('/api/gallery').then(r => r.ok ? r.json() : Promise.reject(r.status)).catch(viaScript).then(d => {
+    const add = ((d && d.events) || []).filter(e => e.ids && e.ids.length).map(e => ({ t: e.t, s: e.s, d: e.d, y: Number(e.y) || new Date().getFullYear(), drive: 1, p: e.ids.map(id => ({ src: pic(id, 800), full: pic(id, 1800) })) }));
     add.forEach(e => { const same = G.find(x => x.t.toLowerCase() === e.t.toLowerCase() && x.y === e.y); if (same) same.p = e.p.concat(same.p); else G.push(e); });
     G.sort((a, b) => b.y - a.y || (b.drive || 0) - (a.drive || 0));   // newest year first; within a year, Drive uploads first
-    draw();
-  }).catch(() => {});
+    return add.length;
+  }).catch(() => 0);
+  let drawn = false;
+  const first = setTimeout(() => { if (!drawn) { drawn = true; draw(); } }, 900);
+  load.then(n => { clearTimeout(first); if (!drawn || n) { drawn = true; draw(); } });
 }
 
 /* Join as a Trainer: sends the form and resume to the Google Sheet through Apps Script */

@@ -2,6 +2,7 @@
  * marstraining.in – static website + "Ask MARS AI" chat API.
  * Static files are served straight from the assets; this code only runs for /api/* (and for paths with no file).
  *   GET  /api/catalog  compact course data (fees, offer, batches, EMI, hours) for the chat widget
+ *   GET  /api/gallery  photo albums from the Drive folder "MARS Website Gallery" (saved copy, so the Gallery page shows them at once)
  *   GET  /course/<slug> Courses page with that course's link preview; the page opens the course (used by Share links)
  *   POST /api/chat     { messages: [{ role: 'user'|'assistant', content }] } -> { ok, reply, courses: [titles], callback, cert }
  * AI: Cloudflare Workers AI (free daily allowance). If it fails or the allowance is used up, the widget answers from its own rules.
@@ -67,6 +68,35 @@ async function loadCatalog(ctx) {
   };
   const at = Date.now(); memo = { at, data };
   ctx.waitUntil(caches.default.put(new Request(CAT_KEY), new Response(JSON.stringify({ at, data }), { headers: { 'Content-Type': 'application/json', 'Cache-Control': `public, max-age=${CACHE_SECS}` } })));
+  return data;
+}
+
+/* ---------- Gallery albums from the Drive folder (via Apps Script), cached ----------
+ * Apps Script takes about 2 seconds to answer, so the Gallery page used to show the Drive albums (e.g. "Corporate Clients")
+ * a few seconds after the rest. The worker keeps a saved copy (kept for a day) and refreshes it in the background
+ * when it is older than GAL_FRESH, so new uploads still appear within a few minutes. */
+let gmemo = null, grefreshing = null;
+const GAL_URL = DATA_URL.replace('action=data', 'action=gallery'), GAL_KEY = 'https://marstraining.in/__ai/gallery-v1', GAL_FRESH = 300;
+async function gallery(ctx) {
+  if (!gmemo) {
+    const hit = await caches.default.match(new Request(GAL_KEY));
+    if (hit) { try { const j = await hit.json(); if (j && j.data) gmemo = { at: j.at, data: j.data }; } catch (e) { /* ignore a bad copy */ } }
+  }
+  if (!gmemo) return loadGallery(ctx);
+  if (Date.now() - gmemo.at > GAL_FRESH * 1000 && !grefreshing) {
+    grefreshing = loadGallery(ctx).catch(e => console.log('gallery refresh', String(e && e.message || e))).finally(() => { grefreshing = null; });
+    ctx.waitUntil(grefreshing);
+  }
+  return gmemo.data;
+}
+async function loadGallery(ctx) {
+  const r = await fetch(GAL_URL, { redirect: 'follow', cf: { cacheTtl: 0 } });
+  const d = await r.json();
+  if (!d || !Array.isArray(d.events)) throw new Error('no gallery data');
+  const data = { ok: true, events: d.events.map(e => ({ t: String(e.t || ''), s: String(e.s || ''), d: String(e.d || ''), y: Number(e.y) || 0,
+    ids: (Array.isArray(e.ids) ? e.ids : []).map(String).filter(x => /^[\w-]{10,}$/.test(x)) })).filter(e => e.t && e.ids.length) };
+  const at = Date.now(); gmemo = { at, data };
+  ctx.waitUntil(caches.default.put(new Request(GAL_KEY), new Response(JSON.stringify({ at, data }), { headers: { 'Content-Type': 'application/json', 'Cache-Control': 'public, max-age=86400' } })));
   return data;
 }
 
@@ -175,6 +205,9 @@ export default {
     const url = new URL(req.url);
     if (url.pathname === '/api/catalog' && req.method === 'GET') {
       try { return json(await catalog(ctx), 200, { 'Cache-Control': 'public, max-age=60' }); } catch (e) { return json({ ok: false, error: 'data' }, 503); }
+    }
+    if (url.pathname === '/api/gallery' && req.method === 'GET') {
+      try { return json(await gallery(ctx), 200, { 'Cache-Control': 'public, max-age=120' }); } catch (e) { return json({ ok: false, events: [] }, 503); }
     }
     if (url.pathname === '/api/chat') return req.method === 'POST' ? chat(req, env, ctx) : json({ ok: false, error: 'Use POST' }, 405);
     if (url.pathname.startsWith('/api/')) return json({ ok: false, error: 'Not found' }, 404);
