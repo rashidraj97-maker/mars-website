@@ -409,5 +409,40 @@
 <script src="assets/hero-reports.js"></script>
 <script src="assets/ai-chat.js" defer></script>
 <script src="assets/offer-pop.js" defer></script>
+<!-- Client logo strip: scroll bar + drag/swipe (auto-scroll pauses while used) -->
+<style>
+.logos .marquee{overflow-x:auto;overflow-y:hidden;scrollbar-width:none;-webkit-overflow-scrolling:touch;cursor:grab}
+.logos .marquee::-webkit-scrollbar{display:none}
+.logos .marquee.drag{cursor:grabbing;user-select:none}
+.logos .marquee .track{animation:none!important}
+.mqbar{position:relative;width:min(420px,70%);height:8px;margin:18px auto 0;border-radius:99px;background:#E4EAF3;cursor:pointer;touch-action:none}
+.mqbar i{position:absolute;top:0;left:0;height:100%;width:18%;border-radius:99px;background:linear-gradient(90deg,#2A6EB5,#7B61FF);cursor:grab}
+.mqbar:hover i,.mqbar.drag i{box-shadow:0 0 0 4px rgba(91,97,255,.15)}
+@media(max-width:560px){.mqbar{width:72%;height:7px;margin-top:14px}}
+</style>
+<script>
+(()=>{const mq=document.querySelector('.logos .marquee'),tr=document.getElementById('track');if(!mq||!tr)return;
+const bar=document.createElement('div');bar.className='mqbar';bar.setAttribute('role','scrollbar');bar.setAttribute('aria-label','Scroll the client list');bar.setAttribute('aria-controls','track');bar.innerHTML='<i></i>';mq.after(bar);const th=bar.firstChild;
+const reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;let hold=0,hover=false,last=performance.now(),pos=0;
+const half=()=>tr.scrollWidth/2,max=()=>Math.max(1,half());
+const paint=()=>{const f=(mq.scrollLeft%max())/max(),w=Math.max(.08,Math.min(1,mq.clientWidth/max()));th.style.width=w*100+'%';th.style.left=f*(1-w)*100+'%';bar.setAttribute('aria-valuenow',Math.round(f*100))};
+const wrap=()=>{const h=half();if(h>0&&mq.scrollLeft>=h)mq.scrollLeft-=h;if(mq.scrollLeft<=0&&h>0)mq.scrollLeft+=h};
+const pause=ms=>{hold=performance.now()+ms};
+const step=t=>{const dt=Math.min(64,t-last);last=t;if(!reduce&&!hover&&t>hold&&!mq.classList.contains('drag')&&!bar.classList.contains('drag')){pos+=dt*0.045;const px=Math.floor(pos);if(px){mq.scrollLeft+=px;pos-=px;wrap()}}paint();requestAnimationFrame(step)};
+mq.addEventListener('mouseenter',()=>hover=true);mq.addEventListener('mouseleave',()=>hover=false);
+mq.addEventListener('scroll',()=>{wrap();paint()},{passive:true});
+mq.addEventListener('wheel',e=>{if(Math.abs(e.deltaX)>Math.abs(e.deltaY)||e.shiftKey){pause(2500)}},{passive:true});
+mq.addEventListener('touchstart',()=>pause(3000),{passive:true});mq.addEventListener('touchend',()=>pause(2500),{passive:true});
+let dx=null;mq.addEventListener('pointerdown',e=>{if(e.pointerType!=='mouse')return;dx={x:e.clientX,s:mq.scrollLeft,moved:false};mq.classList.add('drag')});
+addEventListener('pointermove',e=>{if(!dx)return;const d=e.clientX-dx.x;if(Math.abs(d)>3)dx.moved=true;mq.scrollLeft=dx.s-d;wrap()});
+addEventListener('pointerup',()=>{if(!dx)return;mq.classList.remove('drag');dx=null;pause(2500)});
+const seek=x=>{const r=bar.getBoundingClientRect(),w=th.offsetWidth/r.width,f=Math.max(0,Math.min(1,(x-r.left)/r.width-w/2)/(1-w||1));mq.scrollLeft=f*max();paint()};
+bar.addEventListener('pointerdown',e=>{bar.classList.add('drag');bar.setPointerCapture(e.pointerId);seek(e.clientX);pause(4000)});
+bar.addEventListener('pointermove',e=>{if(bar.classList.contains('drag'))seek(e.clientX)});
+bar.addEventListener('pointerup',()=>{bar.classList.remove('drag');pause(3000)});
+bar.tabIndex=0;bar.addEventListener('keydown',e=>{if(e.key==='ArrowRight'||e.key==='ArrowLeft'){mq.scrollLeft+=(e.key==='ArrowRight'?1:-1)*240;wrap();pause(4000)}});
+requestAnimationFrame(step)})();
+</script>
+
 </body>
 </html>
