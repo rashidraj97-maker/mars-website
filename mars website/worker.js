@@ -64,6 +64,7 @@ async function loadCatalog(ctx) {
     phones: String(S.appointment_phones || '98702 59245|74396 02303|70444 70064').split('|').map(x => x.trim()).filter(x => x.replace(/\D/g, '').length >= 10),
     whatsapp: String(S.whatsapp || '919870259245'), email: 'contactus@marstraining.in', app: String(S.app_url || 'https://app.marstraining.in'),
     lateSmall: num(S.late_fee_small) || 250, lateBig: num(S.late_fee_big) || 500, lateLimit: num(S.late_fee_limit) || 10000,
+    popup: { on: /^(yes|on|true|1)$/i.test(String(S.popup_show || '').trim()), until: isoDay(S.popup_until), img: String(S.popup_image || '').trim(), btn: String(S.popup_button || '').trim(), msg: String(S.popup_message || '').trim(), link: String(S.popup_link || '').trim() },   // batch poster popup (Settings tab)
     faqs: (d.faqs || []).filter(f => f.Question && f.Answer).slice(0, 12).map(f => ({ q: String(f.Question).slice(0, 160), a: String(f.Answer).slice(0, 360) }))
   };
   const at = Date.now(); memo = { at, data };
