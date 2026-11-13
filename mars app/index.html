@@ -143,6 +143,13 @@ main{padding:0 16px}
 .cc4 .chl{display:flex;margin:0;align-items:center;gap:8px;font-size:.78rem;font-weight:600;padding:8px 11px;border-radius:10px;line-height:1.35}
 .cc4 .chl svg{width:16px;height:16px;flex:none}
 .cc4 .chl.g{background:#EAF7EE;color:#15803D}.cc4 .chl.b{background:#EEF3FD;color:#1D4ED8}.cc4 .chl.v{background:#F3EEFF;color:#6D28D9}.cc4 .chl.k{background:#FFF6E5;color:#92400E}
+.sapx{display:flex;align-items:center;gap:9px;margin:0;padding:9px 11px;border-radius:11px;background:linear-gradient(135deg,#FFF6DB,#FFE9A8);border:1px solid #F5C84B;color:#6B4500;font-size:.8rem;font-weight:600;line-height:1.35}
+.sapx b{color:#4A2F00;font-weight:800}
+.sapx svg,.sapbox svg{width:20px;height:20px;flex:none;color:#B7791F}
+.sapbox{display:flex;gap:12px;align-items:flex-start;margin:14px 0;padding:14px 16px;border-radius:14px;background:linear-gradient(135deg,#FFF6DB,#FFE6A0);border:1.5px solid #F2BE3A;box-shadow:0 10px 24px -14px rgba(183,121,31,.6);color:#6B4500;line-height:1.4}
+.sapbox svg{width:26px;height:26px;margin-top:1px}
+.sapbox b{display:block;color:#3F2700;font-size:1rem;font-weight:800}
+.sapbox span{display:block;margin-top:3px;font-size:.86rem}
 .cc4 .loc{display:flex;align-items:center;gap:6px;font-size:.76rem;font-weight:600;color:#92400E}
 .cc4 .loc svg{width:15px;height:15px;flex:none}
 .cc4 .pr{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:auto;padding-top:4px}
@@ -1115,6 +1122,11 @@ function coverHtml(c) {
 const PIN = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 22s7-6.2 7-12a7 7 0 0 0-14 0c0 5.8 7 12 7 12z"/><circle cx="12" cy="10" r="2.5"/></svg>';
 const CAL = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>';
 const CARD = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20"/></svg>';
+/* SAP courses: the fee includes unlimited SAP server access (shown on the card and in the course details) */
+const isSap = t => /\bsap\b/i.test(String(t || ''));
+const SAPX_IC = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="18" height="7" rx="2"/><rect x="3" y="14" width="18" height="7" rx="2"/><path d="M7 6.5h.01M7 17.5h.01M11 6.5h6M11 17.5h6"/></svg>';
+const sapCard = t => isSap(t) ? `<div class="sapx">${SAPX_IC}<span><b>Course fee includes Unlimited SAP Server Access</b> at no additional cost</span></div>` : '';
+const sapBox = t => isSap(t) ? `<div class="sapbox">${SAPX_IC}<div><b>Course Fee Includes Unlimited SAP Server Access at No Additional Cost.</b><span>Practise on a live SAP system as much as you need during the course. No separate server or licence charges.</span></div></div>` : '';
 function card(c) {
   const mods = modulesFor(c.Title), f = amt(c.Fee), p = price(c), off = c.Offer && f && p < f ? Math.round((1 - p / f) * 100) : 0;
   const facts = [c.Duration, mods ? mods.length + ' modules' : '', 'Certificate'].filter(Boolean);
@@ -1129,7 +1141,7 @@ function card(c) {
   return `<article class="cc4">${coverHtml({ title: c.Title })}${c.Badge ? `<span class="bdg">${esc(c.Badge)}</span>` : ''}${off ? `<span class="offp">${off}% OFF</span>` : ''}
     <div class="bd"><span class="ccat">${esc(c.Category || 'Course')}</span><h3><button class="c-title" data-open="${esc(c.Title)}">${esc(c.Title)}</button></h3>
     <div class="crt"><b>5.0</b><span class="stars" aria-hidden="true">★★★★★</span><span>Google rating</span></div>
-    <div class="ft">${facts.map(x => `<span>${esc(x)}</span>`).join('')}</div>${hl}${loc}
+    <div class="ft">${facts.map(x => `<span>${esc(x)}</span>`).join('')}</div>${hl}${loc}${sapCard(c.Title)}
     <div class="pr"><div class="pv">${f ? `<b>${inr(p)}</b>${off ? `<s>${inr(f)}</s>` : ''}` : `<span class="ask">${esc(c.Fee || 'Fee on request')}</span>`}</div>
     <span class="bts">${buy ? `<button class="eq" style="--cv:${cv}" data-ask="${esc(c.Title)}">Enquire</button>` : ''}<button class="eb" style="--cv:${cv}" ${buy ? `data-buy="${esc(c.Title)}">Enroll` : `data-ask="${esc(c.Title)}">Enquire`}</button></span></div>
     <div class="lk">${mods ? `<button data-open="${esc(c.Title)}">Modules</button>` : ''}${typeof demoFor === 'function' && demoFor(c.Title) ? `<button data-play="${esc(c.Title)}">▶ Demo</button>` : ''}${/^https:\/\//.test(c.Outline || '') ? `<a href="${esc(c.Outline)}" target="_blank" rel="noopener" download>Outline</a>` : ''}<button data-open="${esc(c.Title)}">Details</button></div></div></article>`;
@@ -1277,6 +1289,7 @@ function openCourse(title) {
   $('#dCat').textContent = c.Category || 'Course'; $('#dTitle').textContent = c.Title;
   $('#dBody').innerHTML = (c.Badge ? `<span class="badge">${esc(c.Badge)}</span>` : '') +
     (c.Description ? `<p style="color:var(--muted);margin:10px 0">${esc(c.Description)}</p>` : `<p style="color:var(--muted);margin:10px 0">Ask us for the syllabus, duration and fee for this course.</p>`) +
+    sapBox(c.Title) +
     (pills.length ? `<div class="pills">${pills.map(p => `<span>${esc(p[0])}: ${esc(p[1])}</span>`).join('')}</div>` : '') +
     (hl.length ? `<h3 style="font-size:1rem;margin-top:18px">What you’ll learn</h3><ul class="hl">${hl.map(h => `<li>${svgI(I.check)}<span>${esc(h)}</span></li>`).join('')}</ul>` : '') +
     (/^https:\/\//.test(c.Outline || '') ? `<a class="btn line block pdf" href="${esc(c.Outline)}" target="_blank" rel="noopener" download>${svgI('M12 4v11m0 0-4-4m4 4 4-4M5 20h14')}Download course outline (PDF)</a>` : '') +
