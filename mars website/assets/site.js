@@ -228,6 +228,8 @@ function home() {
   } else if (f) f.textContent = text;
   // client marquee: names from the page, real logos from the Drive folder "MARS Client Logos"
   clientStrip();
+  // total number of courses (homepage stat, Courses page banner): counted from the course list, so it updates when a course is added
+  $$('[data-courses]').forEach(e => { e.dataset.to = COURSES.length; e.textContent = COURSES.length; });
   // count-up numbers
   const fmt = n => n.toLocaleString('en-IN');
   const cio = new IntersectionObserver(es => es.forEach(e => {
