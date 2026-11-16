@@ -633,7 +633,7 @@ function galleryPage() {
       shown = [];
       gal.innerHTML = `<div class="cgrid">${list.map(({ s: s0, fx }) => { const s = typeof s0 === 'string' ? { src: s0, full: s0 } : s0, i = shown.push({ src: s.full, t: 'Certified learner', l: 'MARS Training & Solution' }) - 1;
         return `<button type="button" class="ph${fx ? ' fx' : ''}" data-k="${i}"><img src="${esc(s.src)}" alt="MARS learner with course certificate" loading="lazy" referrerpolicy="no-referrer" onerror="this.closest('.ph').remove()"></button>`; }).join('')}</div>`;
-      const tot = $('#gtotal'); if (tot) tot.innerHTML = `<b>${certP.length}</b> certified learner photos`;
+      const tot = $('#gtotal'); if (tot) tot.innerHTML = 'Certified by <b>MARS</b>';
       return;
     }
     const ev = corp.filter(groups[cur][1]); shown = [];
