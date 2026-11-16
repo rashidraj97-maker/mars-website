@@ -1098,3 +1098,16 @@ html{scroll-padding-top:96px}
 .sapbox svg{width:26px;height:26px;margin-top:1px}
 .sapbox b{display:block;color:#3F2700;font-size:1rem;font-weight:800}
 .sapbox span{display:block;margin-top:3px;font-size:.86rem}
+
+/* Gallery: Certified learners tab */
+.certi{display:flex;align-items:center;justify-content:space-between;gap:14px 24px;flex-wrap:wrap;margin:0 0 22px;padding:16px 20px;border-radius:18px;background:linear-gradient(135deg,#FFF8E6,#F3F7FF);border:1px solid var(--line)}
+.certi[hidden]{display:none}
+.certi p{margin:0;max-width:640px;color:var(--text)}
+.cgrid{columns:4 230px;column-gap:14px}
+.cgrid .ph{display:block;width:100%;margin:0 0 14px;break-inside:avoid}
+.cgrid .ph img{height:auto;display:block}
+.gtabs[hidden]{display:none}
+.cgrid .ph.fx img{filter:brightness(1.08) contrast(1.06) saturate(1.1)}
+.certi .chips{flex-basis:100%}
+.certi .chips:empty{display:none}
+.certi .chips button b{opacity:.7;margin-left:3px}
