@@ -603,13 +603,14 @@ function demosHome() {
 /* Gallery: year filter, photo grid and full-screen viewer */
 function galleryPage() {
   const G = (window.GALLERY || []).slice();
-  if (window.CERT_PREVIEW) G.push({ t: 'Certified learners', s: '', d: '', y: 2026, drive: 1, p: window.CERT_PREVIEW.map(id => ({ src: `https://lh3.googleusercontent.com/d/${id}=w800`, full: `https://lh3.googleusercontent.com/d/${id}=w1800` })) });
+  if (window.CERT_PREVIEW) { const u = id => ({ src: `https://lh3.googleusercontent.com/d/${id}=w800`, full: `https://lh3.googleusercontent.com/d/${id}=w1800` }); G.push({ t: 'Certified learners', s: 'Collages', d: '', y: 2026, drive: 1, p: window.CERT_PREVIEW.c.map(u) }, { t: 'Certified learners', s: 'Photos', d: '', y: 2026, drive: 1, p: window.CERT_PREVIEW.p.map(u) }); }
   const groups = [['All', () => true], ['2022 – 2026', e => e.y >= 2022], ['2019 – 2021', e => e.y >= 2019 && e.y <= 2021], ['2015 – 2018', e => e.y >= 2015 && e.y <= 2018], ['Before 2015', e => e.y < 2015]];
-  let cur = 0, shown = [], idx = 0, tab = /certif/i.test(location.hash) ? 'cert' : 'corp';
+  let cur = 0, shown = [], idx = 0, sub = 'all', tab = /certif/i.test(location.hash) ? 'cert' : 'corp';
   const chips = $('#gchips'), gal = $('#gal'), count = $('#gcount'), lb = $('#lb'), img = $('#lbi'), cap = $('#lbc');
   // Albums whose Drive folder name has "Certif" in it (e.g. "Certified learners") go to the Certified learners tab
   const isCert = e => /certif/i.test(e.t), certi = $('#certi'), gtools = $('.gtools');
   const gtabs = $$('.gtabs [role=tab]');
+  const cch = $('#cchips'); if (cch) cch.addEventListener('click', e => { const b = e.target.closest('button'); if (!b) return; sub = b.dataset.sub; draw(); });
   gtabs.forEach(t => t.addEventListener('click', () => { tab = t.dataset.tab; history.replaceState(null, '', tab === 'cert' ? '#certified' : location.pathname); draw(); }));
   chips.innerHTML = groups.map((g, i) => `<button type="button" data-i="${i}" aria-pressed="${i === 0}">${g[0]}</button>`).join('');
   chips.addEventListener('click', e => { const b = e.target.closest('button'); if (!b) return; cur = +b.dataset.i; $$('button', chips).forEach(x => x.setAttribute('aria-pressed', x === b)); draw(); });
@@ -624,9 +625,14 @@ function galleryPage() {
     const h1 = $('.page-hero h1'), hp = $('.page-hero p'); if (h1 && !h1.dataset.corp) { h1.dataset.corp = h1.innerHTML; hp.dataset.corp = hp.innerHTML; }
     if (h1) { h1.innerHTML = tab === 'cert' ? 'Our learners, <span class="grad">certified.</span>' : h1.dataset.corp; hp.innerHTML = tab === 'cert' ? 'Students who completed their course at MARS and proudly received their certificate.' : hp.dataset.corp; }
     if (tab === 'cert') {
+      const albums = G.filter(isCert), kinds = [['all', 'All', albums], ['col', 'Collages', albums.filter(e => !/photo/i.test(e.t + ' ' + e.s))], ['pho', 'Photos', albums.filter(e => /photo/i.test(e.t + ' ' + e.s))]].filter(k => k[2].length);
+      if (!kinds.some(k => k[0] === sub)) sub = 'all';
+      const pick = (kinds.find(k => k[0] === sub) || kinds[0])[2], list = [];
+      pick.forEach(e => e.p.forEach(s => list.push({ s, fx: /photo/i.test(e.t + ' ' + e.s) })));
+      const cc = $('#cchips'); if (cc) cc.innerHTML = kinds.length > 2 ? kinds.map(k => `<button type="button" data-sub="${k[0]}" aria-pressed="${k[0] === sub}">${k[1]} <b>${k[2].reduce((n, e) => n + e.p.length, 0)}</b></button>`).join('') : '';
       shown = [];
-      gal.innerHTML = `<div class="cgrid">${certP.map(s0 => { const s = typeof s0 === 'string' ? { src: s0, full: s0 } : s0, i = shown.push({ src: s.full, t: 'Certified learner', l: 'MARS Training & Solution' }) - 1;
-        return `<button type="button" class="ph" data-k="${i}"><img src="${esc(s.src)}" alt="MARS learner with course certificate" loading="lazy" referrerpolicy="no-referrer" onerror="this.closest('.ph').remove()"></button>`; }).join('')}</div>`;
+      gal.innerHTML = `<div class="cgrid">${list.map(({ s: s0, fx }) => { const s = typeof s0 === 'string' ? { src: s0, full: s0 } : s0, i = shown.push({ src: s.full, t: 'Certified learner', l: 'MARS Training & Solution' }) - 1;
+        return `<button type="button" class="ph${fx ? ' fx' : ''}" data-k="${i}"><img src="${esc(s.src)}" alt="MARS learner with course certificate" loading="lazy" referrerpolicy="no-referrer" onerror="this.closest('.ph').remove()"></button>`; }).join('')}</div>`;
       const tot = $('#gtotal'); if (tot) tot.innerHTML = `<b>${certP.length}</b> certified learner photos`;
       return;
     }
