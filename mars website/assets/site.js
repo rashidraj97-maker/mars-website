@@ -57,6 +57,8 @@ const COURSES = [
   ["AI & Programming", "Python with AI", "Python for data analytics: programming basics, NumPy, Pandas, visualisation and statistics, with AI tools to code faster.", "", "3 months"],
   ["AI & Programming", "Gen AI", "Use Generative AI with MS Office: write Excel formulas, analyse data, create presentations and documents in minutes. No coding needed.", "", "1 month"],
   ["AI & Programming", "Machine Learning (ML)", "Machine learning with Python: the maths, key algorithms and the full lifecycle to train, evaluate and use models.", "", "2.5 months"],
+  ["AI & Programming", "C Programming", "Learn C from your first program to pointers, dynamic memory, structures and files, with lab practice in every class and a capstone project. The foundation for C++, Java and placements.", "New", "35 hours"],
+  ["AI & Programming", "C++ Programming", "Object-oriented programming in C++ the way the industry uses it: classes, inheritance, polymorphism, templates, the STL and modern C++ (C++11 to C++20), ending with a complete OOP project.", "New", "35 hours"],
   ["AI & Programming", "Web App Development (Full Stack)", "Build and deploy web applications end to end: HTML, CSS and JavaScript front end, back end, database and hosting.", "", "2 months"],
   ["AI & Programming", "Claude AI", "Practical Generative AI for business teams: Claude, ChatGPT, Gemini and Grok, prompt design, document and data workflows, and responsible use.", "", "2 months"],
   ["ERP & Accounting", "Tally", "Accounting and GST in TallyPrime: company setup, vouchers, inventory, GST returns and financial reports.", "", "2 months"],
@@ -342,6 +344,8 @@ function coverOf(title) {
   if (has('power bi')) return { bg: '#2B2B2B', kind: 'bars', ic: 'BI', pal: ['#F2C811', '#F2C811', '#E8A33D', '#F2C811', '#E8A33D', '#F2C811'] };
   if (has('tableau')) return { bg: '#1F3B57', kind: 'bars', ic: 'T', pal: ['#4E79A7', '#F28E2B', '#E15759', '#76B7B2', '#59A14F', '#EDC948'] };
   if (has('sql')) return { bg: '#0B3B60', kind: 'code', ic: 'SQL', code: ['SELECT region, SUM(sales)', 'FROM orders', 'GROUP BY region', 'ORDER BY 2 DESC;'] };
+  if (/^c\+\+/.test(t)) return { bg: '#0A3A6B', kind: 'code', ic: 'C++', code: ['class Account {', '  double balance;', 'public:', '  void deposit(double amt);', '};'] };
+  if (/^c programming/.test(t)) return { bg: '#26306E', kind: 'code', ic: 'C', code: ['#include <stdio.h>', 'int main(void) {', '  printf("Hello, MARS!");', '  return 0;', '}'] };
   if (has('python', 'machine learning')) return { bg: '#1E2A44', kind: 'code', ic: 'Py', code: ['import pandas as pd', 'df = pd.read_csv("sales.csv")', 'df.groupby("month").sum()', 'model.fit(X, y)'] };
   if (has('web app')) return { bg: '#111827', kind: 'code', ic: '</>', code: ['<form id="enroll">', '  fetch("/api/save")', '  .then(r => r.json())', '</form>'] };
   if (/^gen ai/.test(t)) return { bg: '#061733', kind: 'photo', src: 'https://cdn.pixabay.com/photo/2024/02/09/15/22/ai-generated-8563259_1280.jpg', pos: '60% 35%' };   // Pixabay, free licence
