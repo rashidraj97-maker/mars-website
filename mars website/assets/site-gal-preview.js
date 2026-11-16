@@ -603,7 +603,7 @@ function demosHome() {
 /* Gallery: year filter, photo grid and full-screen viewer */
 function galleryPage() {
   const G = (window.GALLERY || []).slice();
-  if (window.CERT_PREVIEW) { const u = id => ({ src: `https://lh3.googleusercontent.com/d/${id}=w800`, full: `https://lh3.googleusercontent.com/d/${id}=w1800` }); G.push({ t: 'Certified learners', s: 'Collages', d: '', y: 2026, drive: 1, p: window.CERT_PREVIEW.c.map(u) }, { t: 'Certified learners', s: 'Photos', d: '', y: 2026, drive: 1, p: window.CERT_PREVIEW.p.map(u) }); }
+  if (window.CERT_PREVIEW) { const u = id => ({ src: `https://lh3.googleusercontent.com/d/${id}=w800`, full: `https://lh3.googleusercontent.com/d/${id}=w1800` }); G.push({ t: 'Certified learners', s: '', d: '', y: 2026, drive: 1, p: window.CERT_PREVIEW.c.map(u) } ); }
   const groups = [['All', () => true], ['2022 – 2026', e => e.y >= 2022], ['2019 – 2021', e => e.y >= 2019 && e.y <= 2021], ['2015 – 2018', e => e.y >= 2015 && e.y <= 2018], ['Before 2015', e => e.y < 2015]];
   let cur = 0, shown = [], idx = 0, sub = 'all', tab = /certif/i.test(location.hash) ? 'cert' : 'corp';
   const chips = $('#gchips'), gal = $('#gal'), count = $('#gcount'), lb = $('#lb'), img = $('#lbi'), cap = $('#lbc');
