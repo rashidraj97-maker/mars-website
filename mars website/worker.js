@@ -188,7 +188,7 @@ async function coursePage(req, env, ctx, slug) {
   if (page.status >= 300 && page.status < 400 && page.headers.get('Location')) page = await env.ASSETS.fetch(new Request(new URL(page.headers.get('Location'), origin)));
   let html = await page.text();
   let c = null, b = null;
-  try { const d = await catalog(ctx); c = d.courses.find(x => slugOf(x.t) === slug) || null; if (c) b = d.batches.find(x => normT(x.course) === normT(c.t)) || null; } catch (e) { /* preview falls back to the general one */ }
+  try { const d = await catalog(ctx); c = d.courses.find(x => slugOf(x.t) === slug) || d.courses.find(x => slugOf(x.t).startsWith(slug + '-')) || null; if (c) b = d.batches.find(x => normT(x.course) === normT(c.t)) || null; } catch (e) { /* preview falls back to the general one */ }
   const name = c ? c.t : slug.split('-').map(w => w ? w[0].toUpperCase() + w.slice(1) : '').join(' ');
   const fee = c && c.fee ? (c.price < c.fee ? `${inr(c.price)} (offer, regular ${inr(c.fee)})` : inr(c.fee)) : '';
   const desc = [fee && 'Fee ' + fee, c && c.dur, b && 'Next batch ' + niceDay(b.start), 'Live online or classroom in Kolkata', 'Certificate'].filter(Boolean).join(' · ')

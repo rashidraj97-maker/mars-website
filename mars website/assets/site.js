@@ -55,12 +55,12 @@ const COURSES = [
   ["Automation & Google", "Google Sheet", "Google Sheets from basics to advanced: formulas, lookups, QUERY, pivot tables, charts and collaboration.", "", "2.5 months"],
   ["Automation & Google", "Google sheet with Google Form", "Collect data with Google Forms and analyse it in Google Sheets with formulas, pivots and automated reports.", "", "3.5 months"],
   ["AI & Programming", "Python with AI", "Python for data analytics: programming basics, NumPy, Pandas, visualisation and statistics, with AI tools to code faster.", "", "3 months"],
-  ["AI & Programming", "Gen AI", "Use Generative AI with MS Office: write Excel formulas, analyse data, create presentations and documents in minutes. No coding needed.", "", "1 month"],
+  ["AI & Programming", "Gen AI (ChatGPT, Gemini & Copilot)", "A 10-hour hands-on course in five 2-hour sessions: use ChatGPT, Gemini and Copilot with Excel, PowerPoint and Word to write formulas, analyse data, build presentations and create error-free documents. No coding needed.", "", "10 hours"],
   ["AI & Programming", "Machine Learning (ML)", "Machine learning with Python: the maths, key algorithms and the full lifecycle to train, evaluate and use models.", "", "2.5 months"],
   ["AI & Programming", "C Programming", "Learn C from your first program to pointers, dynamic memory, structures and files, with lab practice in every class and a capstone project. The foundation for C++, Java and placements.", "New", "35 hours"],
   ["AI & Programming", "C++ Programming", "Object-oriented programming in C++ the way the industry uses it: classes, inheritance, polymorphism, templates, the STL and modern C++ (C++11 to C++20), ending with a complete OOP project.", "New", "35 hours"],
   ["AI & Programming", "Web App Development (Full Stack)", "Build and deploy web applications end to end: HTML, CSS and JavaScript front end, back end, database and hosting.", "", "2 months"],
-  ["AI & Programming", "Claude AI", "Practical Generative AI for business teams: Claude, ChatGPT, Gemini and Grok, prompt design, document and data workflows, and responsible use.", "", "2 months"],
+  ["AI & Programming", "Claude AI", "A 6-hour Generative AI program in six 1-hour sessions for non-technical teams: Claude compared with ChatGPT, Gemini and Grok, structured prompt design, document and data workflows, and responsible use at work.", "", "6 hours"],
   ["ERP & Accounting", "Tally", "Accounting and GST in TallyPrime: company setup, vouchers, inventory, GST returns and financial reports.", "", "2 months"],
   ["ERP & Accounting", "SAP FICO", "SAP Financial Accounting and Controlling in S/4HANA/ECC: configuration, transactions and management reporting.", "", "2 months"],
   ["ERP & Accounting", "SAP Business One", "SAP Business One ERP for small and mid-size companies: sales, purchasing, inventory, finance and production. Practice software provided.", "", "2 months"],
@@ -290,7 +290,7 @@ function coursesPage() {
   }
   draw();
   const want = (location.pathname.match(/\/course\/([a-z0-9-]+)/i) || [])[1] || params.get('course');
-  if (want) { const c = COURSES.find(x => slugOf(x.title) === String(want).toLowerCase()); if (c) showCourse(c); }
+  if (want) { const w = String(want).toLowerCase(), c = COURSES.find(x => slugOf(x.title) === w) || COURSES.find(x => slugOf(x.title).startsWith(w + '-')); if (c) showCourse(c); }
   loadOutlines().then(draw);
   loadDemos().then(l => { if (l.length) draw(); });
   loadCatalog().then(ok => { if (ok) draw(); });
