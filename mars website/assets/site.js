@@ -605,7 +605,7 @@ function demosHome() {
   $$('[data-demo-book]').forEach(a => { a.href = bookDemo(''); });
   loadDemos().then(l => {
     if (!l.length) return;
-    grid.innerHTML = l.slice(0, 6).map((v, i) => `<button type="button" class="demo" data-play="${i}"><span class="th" style="background-image:url('${esc(thumbOf(v))}')"><span class="pl"><svg viewBox="0 0 24 24"><path d="M7 4v16l13-8z"/></svg></span>${v.dur ? `<span class="du">${esc(v.dur)}</span>` : ''}</span><span class="bd">${v.course ? `<small>${esc(v.course)}</small>` : ''}<b>${esc(v.title)}</b>${v.trainer ? `<span class="tr">Trainer: ${esc(v.trainer)}</span>` : ''}</span></button>`).join('');
+    grid.innerHTML = l.slice(0, 8).map((v, i) => `<button type="button" class="demo" data-play="${i}"><span class="th" style="background-image:url('${esc(thumbOf(v))}')"><span class="pl"><svg viewBox="0 0 24 24"><path d="M7 4v16l13-8z"/></svg></span>${v.dur ? `<span class="du">${esc(v.dur)}</span>` : ''}</span><span class="bd">${v.course ? `<small>${esc(v.course)}</small>` : ''}<b>${esc(v.title)}</b>${v.trainer ? `<span class="tr">Trainer: ${esc(v.trainer)}</span>` : ''}</span></button>`).join('');
     sec.hidden = false;
   });
 }
