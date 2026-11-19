@@ -1111,3 +1111,7 @@ html{scroll-padding-top:96px}
 .certi .chips{flex-basis:100%}
 .certi .chips:empty{display:none}
 .certi .chips button b{opacity:.7;margin-left:3px}
+.sapx.perk{background:linear-gradient(135deg,#E9FBEF,#CFF5DC);border-color:#5BC27E;color:#14532D}
+.sapx.perk b,.sapbox.perk b{color:#0B3D20}
+.sapbox.perk{background:linear-gradient(135deg,#ECFCF1,#D2F6DE);border-color:#4FB873;color:#14532D;box-shadow:0 10px 24px -14px rgba(31,140,70,.55)}
+.sapx.perk svg,.sapbox.perk svg{color:#1F9D55}
