@@ -232,7 +232,7 @@ function home() {
   clientStrip();
   // total number of courses (homepage stat, Courses page banner): counted from the course list, so it updates when a course is added
   $$('[data-courses]').forEach(e => { e.dataset.to = COURSES.length; e.textContent = COURSES.length; });
-  $$('[data-courses-round]').forEach(e => { e.textContent = Math.floor(COURSES.length / 10) * 10 + '+'; });   // e.g. 51 courses -> "50+"
+  $$('[data-courses-round]').forEach(e => { e.textContent = (e.dataset.label || '{n}').replace('{n}', Math.floor(COURSES.length / 10) * 10 + '+'); });   // e.g. 51 courses -> "50+"
   // count-up numbers
   const fmt = n => n.toLocaleString('en-IN');
   const cio = new IntersectionObserver(es => es.forEach(e => {
@@ -432,6 +432,11 @@ function coverHtml(c) {
   if (ph) { const lab = photoTile(c.title, k); art += `<img class="cimg" src="${ph.src}" alt="" loading="lazy" style="object-position:${ph.pos}" onerror="this.parentNode.classList.remove('hasimg')"><span class="cshade"></span>${tile(lab, 'ctile' + (lab.length > 3 ? ' xs' : lab.length > 2 ? ' sm' : ''))}`; }
   return `<div class="cv${ph ? ' hasimg' : ''}" style="--cv:${k.bg}" aria-hidden="true">${art}${withAi ? AIBADGE() : ''}</div>`;
 }
+/* Advanced Excel: Basic Excel included free (shown on the card and in the course details) */
+const hasFreeBasic = t => /^advanced excel$/i.test(String(t || '').trim());
+const GIFT_IC = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="8" width="18" height="4" rx="1"/><path d="M12 8v13M19 12v7a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2v-7"/><path d="M7.5 8a2.5 2.5 0 0 1 0-5C10 3 12 8 12 8s2-5 4.5-5a2.5 2.5 0 0 1 0 5"/></svg>';
+const perkCard = t => hasFreeBasic(t) ? `<div class="sapx perk">${GIFT_IC}<span><b>Basic Excel included</b> at no extra cost</span></div>` : '';
+const perkBox = t => hasFreeBasic(t) ? `<div class="sapbox perk">${GIFT_IC}<div><b>Basic Excel course included, complimentary.</b><span>New to Excel? Start with our Basic Excel course at no extra cost, then move on to Advanced Excel.</span></div></div>` : '';
 /* SAP courses: the fee includes unlimited SAP server access (shown on the card and in the course details) */
 const isSap = t => /\bsap\b/i.test(String(t || ''));
 const SAPX_IC = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="18" height="7" rx="2"/><rect x="3" y="14" width="18" height="7" rx="2"/><path d="M7 6.5h.01M7 17.5h.01M11 6.5h6M11 17.5h6"/></svg>';
@@ -455,7 +460,7 @@ function courseCard(c) {
   return `<article class="cc4">${coverHtml(c)}${badge ? `<span class="bdg">${esc(badge)}</span>` : ''}${off ? `<span class="offp">${off}% OFF</span>` : ''}
     <div class="bd">${c.cat ? `<span class="ccat">${esc(c.cat)}</span>` : ''}<h3><a href="${esc(courseLink(c.title))}" data-course="${esc(c.title)}">${esc(c.title)}</a></h3>
     <a class="rt" href="https://search.google.com/local/reviews?placeid=ChIJA2Tq7_ax5zsRdXed0byIdqg" target="_blank" rel="noopener"><b>5.0</b><span class="st" aria-hidden="true">★★★★★</span><span>Google rating</span></a>
-    <div class="ft">${facts.map(x => `<span>${esc(x)}</span>`).join('')}</div>${hl ? loc + hl : loc}${sapCard(c.title)}
+    <div class="ft">${facts.map(x => `<span>${esc(x)}</span>`).join('')}</div>${hl ? loc + hl : loc}${sapCard(c.title)}${perkCard(c.title)}
     <div class="pr">${price}${buy ? `<span class="bts"><a class="eq" href="${esc(enquire(c.title))}" target="_blank" rel="noopener" style="--cv:${coverOf(c.title).bg}">Enquire</a>` : ''}<a class="eb" href="${esc(buy ? enroll(c.title) : enquire(c.title))}" target="_blank" rel="noopener" style="--cv:${coverOf(c.title).bg}">${buy ? 'Enroll' : 'Enquire'}</a>${buy ? '</span>' : ''}</div>
     <div class="lk">${links}</div></div></article>`;
 }
@@ -539,7 +544,7 @@ function showCourse(c) {
     cd.setAttribute('aria-label', c.title);
     cd.innerHTML = `<div class="card"><button type="button" class="x" aria-label="Close">×</button>
       <small>${esc(c.cat)}</small><h3>${esc(c.title)}</h3><p class="sub">${esc(c.desc)}</p>
-      ${sapBox(c.title)}${price}
+      ${sapBox(c.title)}${perkBox(c.title)}${price}
       <dl class="cdf">${facts.map(([k, v]) => `<div><dt>${esc(k)}</dt><dd>${esc(v)}</dd></div>`).join('')}</dl>
       ${mods ? `<h4>Modules</h4>${modChips(mods)}` : ''}
       ${hl.length ? `<h4>What you will learn</h4><ul class="cdl">${hl.map(x => `<li>${esc(x)}</li>`).join('')}</ul>` : ''}
