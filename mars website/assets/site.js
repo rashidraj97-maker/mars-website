@@ -232,6 +232,7 @@ function home() {
   clientStrip();
   // total number of courses (homepage stat, Courses page banner): counted from the course list, so it updates when a course is added
   $$('[data-courses]').forEach(e => { e.dataset.to = COURSES.length; e.textContent = COURSES.length; });
+  $$('[data-courses-round]').forEach(e => { e.textContent = Math.floor(COURSES.length / 10) * 10 + '+'; });   // e.g. 51 courses -> "50+"
   // count-up numbers
   const fmt = n => n.toLocaleString('en-IN');
   const cio = new IntersectionObserver(es => es.forEach(e => {
