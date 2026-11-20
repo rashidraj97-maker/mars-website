@@ -35,6 +35,7 @@ const COURSES = [
   ["Office & Productivity", "Basics of Computer", "Computer fundamentals for beginners: Windows, files and folders, internet and email, plus basic Word and Excel.", "", "2.5 months"],
   ["Data & Analytics", "Advanced Excel", "Master advanced Excel for analysis and MIS: complex formulas, lookups, dynamic arrays, data cleaning and professional reports and dashboards.", "Popular", "2.5 months"],
   ["Data & Analytics", "Advanced Excel with AI", "Excel from basics to professional MIS reporting, then AI inside Excel to write formulas, analyse data and build reports faster.", "New", "4 months"],
+  ["Data & Analytics", "Advanced Excel for HR Professionals", "Excel built around HR work: employee master data, attendance and leave, payroll with PF, ESI and PT, recruitment and appraisal analysis, and interactive HR dashboards, all on real data for a 250-employee company. 16 sessions of 1.5 hours.", "", "3 months (24 hours)"],
   ["Data & Analytics", "Basic Excel", "Build a strong Excel foundation: worksheets, cell references, everyday formulas, sorting, filtering and formatting.", "Popular", "1.5 months"],
   ["Data & Analytics", "SQL", "Microsoft SQL Server from basics to advanced analytics, with Python integration and AI-assisted query writing.", "", "2.5 months"],
   ["Data & Analytics", "Power BI", "Turn raw data into interactive dashboards with Power BI Desktop and Service: Power Query, data modelling, DAX and sharing.", "", "2.5 months"],
@@ -333,6 +334,7 @@ function coverOf(title) {
   if (has('vba', 'macro')) return { bg: '#0F5132', kind: 'code', ic: 'VBA', code: ['Sub MonthlyReport()', '  For Each ws In Sheets', '    ws.Calculate', 'End Sub'] };
   if (has('power query')) return grid('#0E6B3A', 'PQ', 'Merge · Append');
   if (has('power pivot')) return grid('#0E6B3A', 'PP', 'CALCULATE(…)');
+  if (has('hr professionals')) return grid('#6D28D9', 'HR', '=NETWORKDAYS(…)');
   if (has('advanced excel')) return grid('#107C41', 'X', '=XLOOKUP(…)');
   if (has('basic excel')) return grid('#169552', 'X', '=SUM(A1:A9)');
   if (has('google sheet', 'google form', 'app script')) return has('looker') ? { bg: '#174EA6', kind: 'bars', ic: 'LS' } : grid('#188038', 'G', has('script') ? 'onEdit(e)' : '=QUERY(…)');

@@ -1025,6 +1025,7 @@ function coverOf(title) {
   if (has('vba', 'macro')) return { bg: '#0F5132', kind: 'code', ic: 'VBA', code: ['Sub MonthlyReport()', '  For Each ws In Sheets', '    ws.Calculate', 'End Sub'] };
   if (has('power query')) return grid('#0E6B3A', 'PQ', 'Merge · Append');
   if (has('power pivot')) return grid('#0E6B3A', 'PP', 'CALCULATE(…)');
+  if (has('hr professionals')) return grid('#6D28D9', 'HR', '=NETWORKDAYS(…)');
   if (has('advanced excel')) return grid('#107C41', 'X', '=XLOOKUP(…)');
   if (has('basic excel')) return grid('#169552', 'X', '=SUM(A1:A9)');
   if (has('google sheet', 'google form', 'app script')) return has('looker') ? { bg: '#174EA6', kind: 'bars', ic: 'LS' } : grid('#188038', 'G', has('script') ? 'onEdit(e)' : '=QUERY(…)');
