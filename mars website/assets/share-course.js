@@ -10,6 +10,15 @@
   const FIRST_PHONE = '98702 59245';   // shown first in the share message, before the numbers from the sheet
   const SITE_URL = 'https://marstraining.in', APP_URL = 'https://app.marstraining.in/?install=1';
   const digits = p => String(p).replace(/\D/g, '').slice(-10);
+  // WhatsApp number typed in the Share box -> full number with country code for wa.me ('' = not valid)
+  // 10-digit Indian mobile (also with 0 or 91 in front) -> 91XXXXXXXXXX; '+' or '00' in front, or 11-15 digits -> kept as an international number
+  const waNum = v => { const raw = String(v || '').trim(), d = raw.replace(/\D/g, '');
+    if (!d) return '';
+    if (/^\+|^00/.test(raw)) { const n = raw.startsWith('00') ? d.slice(2) : d; return /^[1-9]\d{7,14}$/.test(n) ? n : ''; }
+    const ind = d.replace(/^(91|0)(?=\d{10}$)/, '');
+    if (/^[6-9]\d{9}$/.test(ind)) return '91' + ind;
+    return /^[1-9]\d{10,14}$/.test(d) ? d : ''; };
+  const waShow = n => n.startsWith('91') && n.length === 12 ? '+91 ' + n.slice(2, 7) + ' ' + n.slice(7) : '+' + n;
   const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
   const inr = n => '₹' + Math.round(n).toLocaleString('en-IN');
   const norm = s => String(s || '').toLowerCase().replace(/[^a-z0-9]+/g, ' ').trim();
@@ -117,33 +126,33 @@
       <p>We'll send the outline, fee, duration, office address, timings and contact numbers.</p></div>
       <form novalidate><label><span>Person name <i>(optional)</i></span><input name="name" autocomplete="name" placeholder="e.g. Rahul Sharma"></label>
       <label><span>Email ID</span><input name="email" type="email" autocomplete="email" placeholder="name@example.com"></label>
-      <label><span>WhatsApp number</span><input name="wa" type="tel" inputmode="tel" autocomplete="tel" placeholder="10-digit mobile number"></label>
+      <label><span>WhatsApp number</span><input name="wa" type="tel" inputmode="tel" autocomplete="tel" placeholder="10-digit mobile, or +country code for outside India"></label>
       <div class="sc-note">Fill in the email, the WhatsApp number or both. We send to whatever you fill.</div>
       <div class="sc-err" hidden></div><button class="sc-go" type="submit">Send course details</button></form></div>`;
     const f = root.querySelector('form'), er = root.querySelector('.sc-err');
     root.onclick = e => { if (e.target.closest('[data-x]')) close(); };
     f.onsubmit = e => {
       e.preventDefault();
-      const name = f.name.value.trim(), email = f.email.value.trim(), wa = f.wa.value.replace(/\D/g, '').replace(/^(91|0)(?=\d{10}$)/, '');
+      const name = f.name.value.trim(), email = f.email.value.trim(), waIn = f.wa.value.trim(), wa = waNum(waIn);
       const fail = m => { er.textContent = m; er.hidden = false; };
       if (!email && !wa) return fail('Please fill in an email ID or a WhatsApp number (or both).');
       if (email && !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) return fail('Please check the email ID.');
-      if (f.wa.value.trim() && !/^[6-9]\d{9}$/.test(wa)) return fail('Please enter a 10-digit Indian mobile number for WhatsApp.');
+      if (waIn && !wa) return fail('Please enter a 10-digit Indian mobile number, or an international number with its country code (e.g. +971 50 123 4567).');
       const btn = f.querySelector('.sc-go'); btn.disabled = true; btn.textContent = 'Sending…';
       if (details(title, card).outline) send(); else ready().then(send);   // outline list still loading: wait for it
       function send() {
-      const x = details(title, card), msg = message(x, name), waUrl = wa ? 'https://wa.me/91' + wa + '?text=' + encodeURIComponent(msg) : '';
+      const x = details(title, card), msg = message(x, name), waUrl = wa ? 'https://wa.me/' + wa + '?text=' + encodeURIComponent(msg) : '';
       if (waUrl) window.open(waUrl, '_blank', 'noopener');   // WhatsApp opens with the message ready
       const done = (r, err) => {
         const mailed = r && r.ok && r.emailed;
         root.querySelector('.sc-win').innerHTML = `<div class="sc-head"><button type="button" class="sc-x" data-x aria-label="Close">×</button><small>Share course details</small><h3>${mailed || (wa && !err) ? 'Course details sent ✓' : 'Could not send'}</h3></div>
         <div class="sc-ok">${email ? (mailed ? `<p class="sc-st">📧 Emailed to <b>${esc(email)}</b>, with the course outline PDF attached.</p>` : `<p class="sc-st sc-bad">📧 The email could not be sent${err ? ': ' + esc(err) : ''}.</p>`) : ''}
-        ${wa ? `<p class="sc-st">💬 WhatsApp opened with the message for <b>+91 ${esc(wa)}</b>. Press <b>Send</b> there.</p><a class="sc-go" style="display:block;text-align:center;text-decoration:none;margin:4px 0 12px" href="${esc(waUrl)}" target="_blank" rel="noopener">Didn't open? Send on WhatsApp</a>` : ''}
+        ${wa ? `<p class="sc-st">💬 WhatsApp opened with the message for <b>${esc(waShow(wa))}</b>. Press <b>Send</b> there.</p><a class="sc-go" style="display:block;text-align:center;text-decoration:none;margin:4px 0 12px" href="${esc(waUrl)}" target="_blank" rel="noopener">Didn't open? Send on WhatsApp</a>` : ''}
         <details><summary>See the message</summary><pre>${esc(msg)}</pre></details></div>`;
       };
       const API = (window.APP_CONFIG && window.APP_CONFIG.API_URL) || (typeof SITE !== 'undefined' && SITE.api) || '';
       if (!API) return done(null, 'no server');
-      fetch(API, { method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: JSON.stringify({ action: 'shareCourse', course: title, name, email, wa }) })
+      fetch(API, { method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: JSON.stringify({ action: 'shareCourse', course: title, name, email, wa: wa.startsWith('91') && wa.length === 12 ? wa.slice(2) : wa }) })
         .then(r => r.json()).then(r => done(r, r.ok ? '' : r.error)).catch(() => done(null, 'network error, please try again'));
       }
     };
