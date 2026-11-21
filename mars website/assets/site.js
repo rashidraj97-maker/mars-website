@@ -46,6 +46,8 @@ const COURSES = [
   ["Data & Analytics", "Business Analytics with Gen AI", "Business Analytics with Generative AI: Excel, Power BI, SQL, Python and machine learning, supported by AI tools for faster insight.", "", "12 months"],
   ["Data & Analytics", "MIS Specialist", "A 6-month MIS program: Advanced Excel, VBA automation and Power BI to build automated MIS reports and dashboards.", "", "6 months"],
   ["Data & Analytics", "MIS with Gen AI", "The MIS Specialist program with Generative AI: Excel, VBA and Power BI reports built faster with AI tools (7 months).", "", "7 months"],
+  ["Data & Analytics", "Advanced MIS Specialist", "A complete MIS career program in four modules: Advanced Excel, Power BI, Excel VBA and SQL. Build automated MIS reports and interactive dashboards, and pull data straight from databases.", "", ""],
+  ["Data & Analytics", "MIS Reporting & Dashboards", "Build professional MIS reports and interactive dashboards with Advanced Excel and Power BI, the two tools every MIS role uses.", "", ""],
   ["Data & Analytics", "Power Query", "Import, clean, combine and automate data in Excel Power Query, the first half of the Power Query & Power Pivot course.", "", "1 month"],
   ["Data & Analytics", "Power Pivot", "Build data models, write DAX and create interactive dashboards with Excel Power Pivot, the second half of the Power Query & Power Pivot course.", "", "1 month"],
   ["Automation & Google", "Google Sheets with App script (AUTOMATION)", "A job-oriented program on Google Sheets, Forms, Apps Script, web apps and Looker Studio, ending with an end-to-end business automation project.", "New", "3.5 months"],
@@ -92,7 +94,8 @@ const MODULES = {
   'business analytics': DA.concat('Machine Learning'), 'business analytics with gen ai': DA.concat('Machine Learning', 'Generative AI'),
   'mis specialist': MIS, 'mis with gen ai': MIS.concat('Generative AI'),
   'ms office': ['MS Word', 'MS PowerPoint', 'MS Excel'],
-  'advanced excel with ai': ['Advanced Excel', 'Generative AI']
+  'advanced excel with ai': ['Advanced Excel', 'Generative AI'],
+  'advanced mis specialist': ['Advanced Excel', 'Power BI', 'Excel VBA', 'SQL'], 'mis reporting dashboards': ['Advanced Excel', 'Power BI']
 };
 const modulesFor = title => MODULES[normT(title)] || null;
 const modChips = l => `<div class="mods">${l.map(m => { const i = MOD_INFO[m] || ['', '#334155']; return `<span style="--mc:${i[1]}">${esc(m)}</span>`; }).join('<i>+</i>')}</div>`;
