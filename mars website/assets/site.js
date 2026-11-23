@@ -95,7 +95,8 @@ const MODULES = {
   'mis specialist': MIS, 'mis with gen ai': MIS.concat('Generative AI'),
   'ms office': ['MS Word', 'MS PowerPoint', 'MS Excel'],
   'advanced excel with ai': ['Advanced Excel', 'Generative AI'],
-  'advanced mis specialist': ['Advanced Excel', 'Power BI', 'Excel VBA', 'SQL'], 'mis reporting dashboards': ['Advanced Excel', 'Power BI']
+  'advanced mis specialist': ['Advanced Excel', 'Power BI', 'Excel VBA', 'SQL'], 'mis reporting dashboards': ['Advanced Excel', 'Power BI'],
+  'advanced excel gen ai': ['Advanced Excel', 'Generative AI']
 };
 const modulesFor = title => MODULES[normT(title)] || null;
 const modChips = l => `<div class="mods">${l.map(m => { const i = MOD_INFO[m] || ['', '#334155']; return `<span style="--mc:${i[1]}">${esc(m)}</span>`; }).join('<i>+</i>')}</div>`;
@@ -237,6 +238,8 @@ function home() {
   // total number of courses (homepage stat, Courses page banner): counted from the course list, so it updates when a course is added
   $$('[data-courses]').forEach(e => { e.dataset.to = COURSES.length; e.textContent = COURSES.length; });
   $$('[data-courses-round]').forEach(e => { e.textContent = (e.dataset.label || '{n}').replace('{n}', Math.floor(COURSES.length / 10) * 10 + '+'); });   // e.g. 51 courses -> "50+"
+  // pages that show the course count also count courses added only in the sheet (loaded quietly after the page is ready)
+  if ($('[data-courses], [data-courses-round]') && typeof loadCatalog === 'function') setTimeout(() => loadCatalog(), 1500);
   // count-up numbers
   const fmt = n => n.toLocaleString('en-IN');
   const cio = new IntersectionObserver(es => es.forEach(e => {
@@ -307,22 +310,25 @@ let CAT = {};
 function loadCatalog() {
   if (!/^https:\/\/script\.google\.com\//.test(SITE.api)) return Promise.resolve(false);
   const use = d => {
-    CAT = {}; const inr = n => Number(n) || 0;
+    CAT = {}; const inr = n => Number(n) || 0; let added = 0;
     (d.courses || []).forEach(c => {
       const t = String(c.Title || '').trim(); if (!t) return;
+      // a course added only in the Google Sheet (Courses tab, Show = Yes) still gets its card on the website
+      if (!COURSES.some(x => normT(x.title) === normT(t))) { COURSES.push({ cat: String(c.Category || 'Data & Analytics').trim(), title: t, desc: String(c.Description || '').trim(), badge: '', dur: String(c.Duration || '').trim() }); added++; }
       const fee = inr(String(c.Fee).replace(/[^\d.]/g, '')), b = (d.batches || []).find(x => normT(x.course) === normT(t));
       CAT[normT(t)] = { fee, price: c.Price ? inr(c.Price) : fee, off: c.Offer ? (c.Offer.label || '') : '', badge: String(c.Badge || '').trim(),
         emi: ((d.emi || {})[t] || []).map(p => p.n), batch: b ? { start: b.start, timing: b.timing, left: b.left, seats: b.seats } : null,
         hl: String(c.Highlights || '').split('|').map(x => x.trim()).filter(Boolean) };
     });
+    if (added) $$('[data-courses]').forEach(e => { e.dataset.to = COURSES.length; e.textContent = COURSES.length; }), $$('[data-courses-round]').forEach(e => { e.textContent = (e.dataset.label || '{n}').replace('{n}', Math.floor(COURSES.length / 10) * 10 + '+'); });
     return true;
   };
-  try { const c = JSON.parse(sessionStorage.getItem('mars_cat2') || 'null'); if (c && Date.now() - c.at < 10 * 60e3) return Promise.resolve(use(c.d)); } catch (e) {}
+  try { const c = JSON.parse(sessionStorage.getItem('mars_cat3') || 'null'); if (c && Date.now() - c.at < 10 * 60e3) return Promise.resolve(use(c.d)); } catch (e) {}
   return fetch(SITE.api + '?action=data').then(r => r.json()).then(d => {
     if (!d || !d.courses) return false;
-    const slim = { courses: d.courses.map(c => ({ Title: c.Title, Fee: c.Fee, Price: c.Price, Offer: c.Offer ? { label: c.Offer.label } : null, Badge: c.Badge, Highlights: c['Highlights (separate with |)'] || '' })),
+    const slim = { courses: d.courses.map(c => ({ Title: c.Title, Fee: c.Fee, Price: c.Price, Offer: c.Offer ? { label: c.Offer.label } : null, Badge: c.Badge, Highlights: c['Highlights (separate with |)'] || '', Category: c.Category || '', Description: c.Description || '', Duration: c.Duration || '' })),
       emi: Object.fromEntries(Object.entries(d.emi || {}).map(([k, v]) => [k, v.map(p => ({ n: p.n }))])), batches: (d.batches || []).map(b => ({ course: b.course, start: b.start, timing: b.timing, left: b.left, seats: b.seats })) };
-    try { sessionStorage.setItem('mars_cat2', JSON.stringify({ at: Date.now(), d: slim })); } catch (e) {}
+    try { sessionStorage.setItem('mars_cat3', JSON.stringify({ at: Date.now(), d: slim })); } catch (e) {}
     return use(slim);
   }).catch(() => false);
 }
