@@ -1154,3 +1154,5 @@ html{scroll-padding-top:96px}
 
 /* phones: marketing lines may wrap to two lines */
 @media (hover:none){ .cc4 .hovmsg.msg .hm-msg,.cc4 .hovmsg.msg.jobs .hm-msg{white-space:normal;font-size:.78rem;line-height:1.25;text-align:left} }
+
+.btn.dmb{white-space:normal;text-align:center;line-height:1.3;padding:10px 22px}
