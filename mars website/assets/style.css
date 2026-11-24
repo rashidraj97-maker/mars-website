@@ -1151,3 +1151,6 @@ html{scroll-padding-top:96px}
   .cc4 .hovmsg.msg.jobs .hm-j{display:none}
   .cc4 .hovmsg.msg.jobs .hm-star{display:grid}
 }
+
+/* phones: marketing lines may wrap to two lines */
+@media (hover:none){ .cc4 .hovmsg.msg .hm-msg,.cc4 .hovmsg.msg.jobs .hm-msg{white-space:normal;font-size:.78rem;line-height:1.25;text-align:left} }

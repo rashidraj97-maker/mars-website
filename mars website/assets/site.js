@@ -460,7 +460,66 @@ const GIFT_IC = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stro
    - Advanced Excel: "Your professional life is not complete without this"
    - every course with a figure below: about how many jobs are open in India for that skill (Indeed India, Nov 2026) */
 const HOVER_PREVIEW = true;
+const LINES_PREVIEW = /[?&]preview=lines\b/.test(location.search);
 const JOBS_PREVIEW = /[?&]preview=jobs\b/.test(location.search);
+const LINES_LIST = [   // [course title, marketing line shown on mouse-over]
+  ['Basics of Computer', 'Your first step into the digital world starts here'],
+  ['Basic Excel', 'Every office runs on Excel. Make it your strength'],
+  ['Advanced Excel with AI', 'Excel skills + AI speed = the employee everyone wants'],
+  ['Advanced Excel & Gen Ai', 'Work smarter, not longer: Excel powered by AI'],
+  ['Advanced Excel for HR Professionals', 'Turn HR data into decisions, not headaches'],
+  ['Gen AI (ChatGPT, Gemini & Copilot)', 'Let AI do the busy work. You take the credit'],
+  ['Claude AI', 'Get a tireless AI assistant at your desk in just 6 hours'],
+  ['MIS Specialist', 'Be the person every manager depends on for reports'],
+  ['Advanced MIS Specialist', 'Reports, dashboards, automation: become indispensable'],
+  ['MIS with Gen AI', 'MIS reports in minutes, not days, with AI'],
+  ['MIS Reporting & Dashboards', 'Dashboards that get you noticed in every meeting'],
+  ['VBA/Macros', 'Hours of Excel work, done with one click'],
+  ['Google Sheet', 'Work together, anywhere, in real time'],
+  ['Google sheet with Google Form', 'Collect data effortlessly. Analyse it instantly'],
+  ['Google Sheets with App script (AUTOMATION)', 'Automate the boring stuff and save hours every week'],
+  ['Google sheets With Looker Studio', 'Turn Google Sheets into live, beautiful dashboards'],
+  ['Power Query', 'Clean messy data in seconds, every single time'],
+  ['Power Pivot', 'Analyse millions of rows without breaking a sweat'],
+  ['Power BI', 'Turn data into stories that bosses love'],
+  ['Tableau', 'See your data. Tell its story. Get noticed'],
+  ['MS Power Apps', 'Build business apps without being a coder'],
+  ['MS PowerAutomate', 'Put your repetitive tasks on autopilot'],
+  ['MS Access', 'Manage data like a pro, without the chaos'],
+  ['SQL', 'Speak the language of data. Every company needs it'],
+  ['MS Word', 'Documents that look professional, every time'],
+  ['MS PowerPoint', 'Presentations that make people listen'],
+  ['MS Outlook', 'Take control of your inbox and your day'],
+  ['MS Office', 'The complete office toolkit every employer expects'],
+  ['MS Project (MSP)', 'Deliver projects on time, every time'],
+  ['MS Visio', 'Explain complex ideas in one clear diagram'],
+  ['Libre Office (Calc-Excel)', 'Spreadsheet power with zero licence cost'],
+  ['Libre Office (Writer-Word)', 'Professional documents with free software'],
+  ['Libre Office (Presentation-PPT)', 'Impressive presentations with zero licence cost'],
+  ['Open Office (Calc-Excel)', 'Free spreadsheet software, professional results'],
+  ['Open Office (Writer-Word)', 'Polished documents without paying for software'],
+  ['Open Office (Presentation-PPT)', 'Win your audience with free presentation software'],
+  ['Data Analytics', "Become a Data Analyst, one of India's most hired roles"],
+  ['Data Analytics with AI', 'Data skills + AI: the career of the decade'],
+  ['Business Analytics', 'Be the one who turns numbers into business decisions'],
+  ['Business Analytics with Gen AI', 'Analytics + AI: lead the future of business'],
+  ['Machine Learning (ML)', 'Teach machines to think. Build the future'],
+  ['Tally', 'Every business needs someone who knows Tally'],
+  ['SAP FICO', 'Master the finance system top companies run on'],
+  ['SAP Business One', 'Learn the ERP that growing businesses trust'],
+  ['SAP MM (User Level)', 'Run purchasing and inventory like the big companies'],
+  ['SAP MM (Consultant Level)', 'Become the SAP consultant companies look for'],
+  ['SAP SD (User Level)', "Master sales in the world's leading ERP"],
+  ['SAP SD (Consultant Level)', 'Step into a high-demand SAP consulting career'],
+  ['NetSuite', 'Learn the cloud ERP fast-growing companies love'],
+  ['Python with AI', "The world's most wanted language, now with AI"],
+  ['Web App Development (Full Stack)', 'Build real apps, from front end to back end'],
+  ['C Programming', 'Every great programmer starts with C'],
+  ['C++ Programming', 'The language behind games, browsers and banks'],
+  ['Career Communication & Interview Skills Program', 'Speak with confidence. Crack your next interview'],
+];
+let LINES_MAP = null;
+const lineFor = t => { if (hasFreeBasic(t)) return HOVER_PREVIEW ? 'Your professional life is not complete without this' : ''; if (!LINES_PREVIEW) return ''; if (!LINES_MAP) LINES_MAP = Object.fromEntries(LINES_LIST.map(([k, v]) => [normT(k), v])); return LINES_MAP[normT(t)] || ''; };
 const JOBS_SRC = 'Source: Indeed India · Nov 2026';
 const JOBS_LIST = [   // [course title, approx. open jobs, skill searched]
   ['Basics of Computer', '30,000+', 'computer'], ['Basic Excel', '28,000+', 'MS Excel'], ['Advanced Excel', '10,000+', 'Advanced Excel'],
@@ -482,10 +541,10 @@ let JOBS_MAP = null;
 const jobsFor = t => { if (!JOBS_PREVIEW) return null; if (!JOBS_MAP) JOBS_MAP = Object.fromEntries(JOBS_LIST.map(([k, n, s]) => [normT(k), { n, s }])); return JOBS_MAP[normT(t)] || null; };
 const TREND_IC = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 17l6-6 4 4 8-8"/><path d="M14 7h7v7"/></svg>';
 const hoverMsg = t => {
-  const m = HOVER_PREVIEW && hasFreeBasic(t), j = jobsFor(t);
+  const m = lineFor(t), j = jobsFor(t);
   if (!m && !j) return '';
   const jobs = j ? `<div class="hm-j"><div class="hm-big">${TREND_IC}<b>${esc(j.n)}</b></div><div class="hm-lbl"><span class="hm-skill">${esc(j.s)} </span>jobs open in India</div><small class="hm-src">${JOBS_SRC}</small></div>` : '';
-  return `<div class="hovmsg${m ? ' msg' : ''}${j ? ' jobs' : ''}" role="note">${m ? `<span class="hm-star" aria-hidden="true">★</span><b class="hm-msg">Your professional life is not complete without this</b>` : ''}${jobs}</div>`;
+  return `<div class="hovmsg${m ? ' msg' : ''}${j ? ' jobs' : ''}" role="note">${m ? `<span class="hm-star" aria-hidden="true">★</span><b class="hm-msg">${esc(m)}</b>` : ''}${jobs}</div>`;
 };
 const perkCard = t => hasFreeBasic(t) ? `<div class="sapx perk">${GIFT_IC}<span><b>Basic Excel included</b> at no extra cost</span></div>` : '';
 const perkBox = t => hasFreeBasic(t) ? `<div class="sapbox perk">${GIFT_IC}<div><b>Basic Excel course included, complimentary.</b><span>New to Excel? Start with our Basic Excel course at no extra cost, then move on to Advanced Excel.</span></div></div>` : '';
