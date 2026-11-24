@@ -226,6 +226,9 @@ document.addEventListener('DOMContentLoaded', () => {
   if (document.body.dataset.page === 'jobs') jobsPage('#jobsAll', 0);
   if (document.body.dataset.page === 'home') jobsPage('#jobsHome', 3);
   if (document.body.dataset.page === 'home') trainersSection();
+  // course count on every page that shows one (Courses page banner, homepage stat and button)
+  $$('[data-courses]').forEach(e => { e.dataset.to = COURSES.length; e.textContent = COURSES.length; });
+  $$('[data-courses-round]').forEach(e => { e.textContent = (e.dataset.label || '{n}').replace('{n}', Math.floor(COURSES.length / 10) * 10 + '+'); });
 });
 
 /* Home: the formula bar types the formula behind the selected cell */
@@ -327,7 +330,7 @@ function loadCatalog() {
     // arrange the cards in the order of the sheet's Order column (Courses tab); courses not in the sheet go last
     if (SHEET_ORDER) { const ord = {}; (d.courses || []).forEach((c, i) => { const n = parseFloat(c.Order); ord[normT(String(c.Title || ''))] = isFinite(n) ? n : 1e6 + i; });
       COURSES.sort((x, y) => (ord[normT(x.title)] ?? 1e9) - (ord[normT(y.title)] ?? 1e9)); try { localStorage.setItem('mars_order', JSON.stringify(ord)); } catch (e) {} }
-    if (added) $$('[data-courses]').forEach(e => { e.dataset.to = COURSES.length; e.textContent = COURSES.length; }), $$('[data-courses-round]').forEach(e => { e.textContent = (e.dataset.label || '{n}').replace('{n}', Math.floor(COURSES.length / 10) * 10 + '+'); });
+    $$('[data-courses]').forEach(e => { e.dataset.to = COURSES.length; e.textContent = COURSES.length; }), $$('[data-courses-round]').forEach(e => { e.textContent = (e.dataset.label || '{n}').replace('{n}', Math.floor(COURSES.length / 10) * 10 + '+'); });
     return true;
   };
   try { const c = JSON.parse(sessionStorage.getItem('mars_cat4') || 'null'); if (c && Date.now() - c.at < 10 * 60e3) return Promise.resolve(use(c.d)); } catch (e) {}
