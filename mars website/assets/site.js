@@ -456,6 +456,9 @@ function coverHtml(c) {
 /* Advanced Excel: Basic Excel included free (shown on the card and in the course details) */
 const hasFreeBasic = t => /^advanced excel$/i.test(String(t || '').trim());
 const GIFT_IC = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="8" width="18" height="4" rx="1"/><path d="M12 8v13M19 12v7a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2v-7"/><path d="M7.5 8a2.5 2.5 0 0 1 0-5C10 3 12 8 12 8s2-5 4.5-5a2.5 2.5 0 0 1 0 5"/></svg>';
+/* Advanced Excel: a message that appears over the card picture when the mouse is on the card (always shown on phones) */
+const HOVER_PREVIEW = /[?&]preview=hover\b/.test(location.search);
+const hoverMsg = t => HOVER_PREVIEW && hasFreeBasic(t) ? `<div class="hovmsg" role="note"><span class="hm-star" aria-hidden="true">★</span><b>Your professional life is not complete without this</b></div>` : '';
 const perkCard = t => hasFreeBasic(t) ? `<div class="sapx perk">${GIFT_IC}<span><b>Basic Excel included</b> at no extra cost</span></div>` : '';
 const perkBox = t => hasFreeBasic(t) ? `<div class="sapbox perk">${GIFT_IC}<div><b>Basic Excel course included, complimentary.</b><span>New to Excel? Start with our Basic Excel course at no extra cost, then move on to Advanced Excel.</span></div></div>` : '';
 /* SAP courses: the fee includes unlimited SAP server access (shown on the card and in the course details) */
@@ -478,7 +481,7 @@ function courseCard(c) {
   const price = d && d.fee ? `<div class="pv"><b>${rupee(d.price)}</b>${off ? `<s>${rupee(d.fee)}</s>` : ''}</div>` : loaded ? `<div class="pv"><span class="ask">Fee on request</span></div>` : '<div class="pv"></div>';
   const links = [mods ? `<a href="#" data-mods="${esc(c.title)}">Modules</a>` : '', demoFor(c.title) ? `<a href="#" data-play="${esc(DEMOS.indexOf(demoFor(c.title)))}">▶ Demo</a>` : '',
     outlineFor(c.title) ? `<a href="${esc(outlineFor(c.title))}" download rel="noopener">Outline</a>` : '', (buy ? '' : `<a href="${esc(enquire(c.title))}" target="_blank" rel="noopener">Enquire</a>`), `<a href="${esc(courseLink(c.title))}" data-course="${esc(c.title)}">Details</a>`, `<a href="#" class="shr" data-share="${esc(c.title)}">${SHARE_IC}Share</a>`].filter(Boolean).join('');
-  return `<article class="cc4">${coverHtml(c)}${badge ? `<span class="bdg">${esc(badge)}</span>` : ''}${off ? `<span class="offp">${off}% OFF</span>` : ''}
+  return `<article class="cc4">${coverHtml(c)}${hoverMsg(c.title)}${badge ? `<span class="bdg">${esc(badge)}</span>` : ''}${off ? `<span class="offp">${off}% OFF</span>` : ''}
     <div class="bd">${c.cat ? `<span class="ccat">${esc(c.cat)}</span>` : ''}<h3><a href="${esc(courseLink(c.title))}" data-course="${esc(c.title)}">${esc(c.title)}</a></h3>
     <a class="rt" href="https://search.google.com/local/reviews?placeid=ChIJA2Tq7_ax5zsRdXed0byIdqg" target="_blank" rel="noopener"><b>5.0</b><span class="st" aria-hidden="true">★★★★★</span><span>Google rating</span></a>
     <div class="ft">${facts.map(x => `<span>${esc(x)}</span>`).join('')}</div>${hl ? loc + hl : loc}${sapCard(c.title)}${perkCard(c.title)}
