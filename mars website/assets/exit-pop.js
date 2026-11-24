@@ -5,7 +5,7 @@
  * At most once per visit, only after the visitor has spent 10 s on the page, never over another popup or the chat. */
 (function () {
   if (window.__marsExit) return; window.__marsExit = true;
-  const PREVIEW = /[?&]preview=exit\b/.test(location.search), LIVE = false;
+  const PREVIEW = /[?&]preview=exit\b/.test(location.search), LIVE = true;
   if (!LIVE && !PREVIEW) return;
   const KEY = 'mars_exit1', MIN_MS = PREVIEW ? 1500 : 5000, t0 = Date.now();
   const ss = (k, v) => { try { if (v === undefined) return sessionStorage.getItem(k); sessionStorage.setItem(k, v); } catch (e) { return null; } };
