@@ -1,3 +1,4 @@
+const PV_DEMOS = /[?&]preview=demos\b/.test(location.search); /* preview: every demo on the home page, several demos per course */
 /* MARS Training & Solution – website script */
 
 /* ===== Settings you may change ===== */
@@ -566,7 +567,7 @@ function courseCard(c) {
   const loc = hl ? `<div class="loc">${PIN}<span>Live online · or classroom in Kolkata</span></div>` : `<div class="hl k">${PIN}<span><b>Live online</b> · or <b>classroom in Kolkata</b></span></div>`;
   const loaded = Object.keys(CAT).length > 0, buy = d ? d.fee > 0 : !loaded;
   const price = d && d.fee ? `<div class="pv"><b>${rupee(d.price)}</b>${off ? `<s>${rupee(d.fee)}</s>` : ''}</div>` : loaded ? `<div class="pv"><span class="ask">Fee on request</span></div>` : '<div class="pv"></div>';
-  const links = [mods ? `<a href="#" data-mods="${esc(c.title)}">Modules</a>` : '', demoFor(c.title) ? `<a href="#" data-play="${esc(DEMOS.indexOf(demoFor(c.title)))}">▶ Demo</a>` : '',
+  const links = [mods ? `<a href="#" data-mods="${esc(c.title)}">Modules</a>` : '', PV_DEMOS && demosFor(c.title).length > 1 ? `<a href="${esc(courseLink(c.title))}" data-course="${esc(c.title)}">▶ ${demosFor(c.title).length} Demos</a>` : demoFor(c.title) ? `<a href="#" data-play="${esc(DEMOS.indexOf(demoFor(c.title)))}">▶ Demo</a>` : '',
     outlineFor(c.title) ? `<a href="${esc(outlineFor(c.title))}" download rel="noopener">Outline</a>` : '', (buy ? '' : `<a href="${esc(enquire(c.title))}" target="_blank" rel="noopener">Enquire</a>`), `<a href="${esc(courseLink(c.title))}" data-course="${esc(c.title)}">Details</a>`, `<a href="#" class="shr" data-share="${esc(c.title)}">${SHARE_IC}Share</a>`].filter(Boolean).join('');
   return `<article class="cc4">${coverHtml(c)}${hoverMsg(c.title)}${badge ? `<span class="bdg">${esc(badge)}</span>` : ''}${off ? `<span class="offp">${off}% OFF</span>` : ''}
     <div class="bd">${c.cat ? `<span class="ccat">${esc(c.cat)}</span>` : ''}<h3><a href="${esc(courseLink(c.title))}" data-course="${esc(c.title)}">${esc(c.title)}</a></h3>
@@ -587,6 +588,7 @@ function loadDemos() {
     return DEMOS;
   }).catch(() => DEMOS);
 }
+const demosFor = title => { const n = normT(title), a = OUTLINE_ALIAS[n]; return DEMOS.filter(v => v.course && (normT(v.course) === n || normT(v.course) === a)); };
 const demoFor = title => { const n = normT(title), a = OUTLINE_ALIAS[n]; return DEMOS.find(v => v.course && (normT(v.course) === n || normT(v.course) === a)) || null; };
 const thumbOf = v => v.kind === 'yt' ? `https://i.ytimg.com/vi/${v.id}/hqdefault.jpg` : `https://drive.google.com/thumbnail?id=${v.id}&sz=w640`;
 const embedOf = v => v.kind === 'yt' ? `https://www.youtube-nocookie.com/embed/${v.id}?autoplay=1&rel=0&modestbranding=1` : `https://drive.google.com/file/d/${v.id}/preview`;
@@ -660,7 +662,7 @@ function showCourse(c) {
       ${mods ? `<h4>Modules</h4>${modChips(mods)}` : ''}
       ${hl.length ? `<h4>What you will learn</h4><ul class="cdl">${hl.map(x => `<li>${esc(x)}</li>`).join('')}</ul>` : ''}
       <div class="act"><a class="btn en" href="${esc(enroll(c.title))}" target="_blank" rel="noopener">Enroll now</a><a class="btn ghost" href="${esc(enquire(c.title))}" target="_blank" rel="noopener">Enquire / free counselling</a>
-      ${out ? `<a class="btn ghost" href="${esc(out)}" target="_blank" rel="noopener">Course outline (PDF)</a>` : ''}${demo ? `<a class="btn ghost" href="#" data-play="${DEMOS.indexOf(demo)}">▶ Watch demo class</a>` : ''}
+      ${out ? `<a class="btn ghost" href="${esc(out)}" target="_blank" rel="noopener">Course outline (PDF)</a>` : ''}${PV_DEMOS && demosFor(c.title).length > 1 ? demosFor(c.title).map((v, k) => `<a class="btn ghost" href="#" data-play="${DEMOS.indexOf(v)}">▶ Demo class ${k + 1}${v.title ? ': ' + esc(v.title) : ''}</a>`).join('') : demo ? `<a class="btn ghost" href="#" data-play="${DEMOS.indexOf(demo)}">▶ Watch demo class</a>` : ''}
       <a class="btn ghost" href="#" data-share="${esc(c.title)}">${SHARE_IC}Share</a></div>
       <div class="cdo"><h4>Visit or call us</h4><p>${esc(SITE.address)}</p><p>${SITE.hours.map(esc).join('<br>')}</p>
       <p>${SITE.phones.map(n => `<a href="tel:${n.replace(/[^\d+]/g, '')}">${esc(n)}</a>`).join(' | ')} | <a href="${esc(wa('Hi MARS, I would like to know more about ' + c.title + '.'))}" target="_blank" rel="noopener">WhatsApp</a></p></div></div>`;
@@ -716,8 +718,7 @@ function demosHome() {
   $$('[data-demo-book]').forEach(a => { a.href = bookDemo(''); });
   loadDemos().then(l => {
     if (!l.length) return;
-    const all = /[?&]preview=demos\b/.test(location.search); /* preview: show every video instead of the first 8 */
-    grid.innerHTML = (all ? l : l.slice(0, 8)).map((v, i) => `<button type="button" class="demo" data-play="${i}"><span class="th" style="background-image:url('${esc(thumbOf(v))}')"><span class="pl"><svg viewBox="0 0 24 24"><path d="M7 4v16l13-8z"/></svg></span>${v.dur ? `<span class="du">${esc(v.dur)}</span>` : ''}</span><span class="bd">${v.course ? `<small>${esc(v.course)}</small>` : ''}<b>${esc(v.title)}</b>${v.trainer ? `<span class="tr">Trainer: ${esc(v.trainer)}</span>` : ''}</span></button>`).join('');
+    grid.innerHTML = (PV_DEMOS ? l : l.slice(0, 8)).map((v, i) => `<button type="button" class="demo" data-play="${i}"><span class="th" style="background-image:url('${esc(thumbOf(v))}')"><span class="pl"><svg viewBox="0 0 24 24"><path d="M7 4v16l13-8z"/></svg></span>${v.dur ? `<span class="du">${esc(v.dur)}</span>` : ''}</span><span class="bd">${v.course ? `<small>${esc(v.course)}</small>` : ''}<b>${esc(v.title)}</b>${v.trainer ? `<span class="tr">Trainer: ${esc(v.trainer)}</span>` : ''}</span></button>`).join('');
     sec.hidden = false;
   });
 }
