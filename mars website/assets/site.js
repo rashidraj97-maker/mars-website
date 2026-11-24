@@ -19,10 +19,34 @@ const SITE = {
 
 /* ===== Course catalogue (shown on courses.html and the home page) ===== */
 const COURSES = [
-  ["Office & Productivity", "MS PowerPoint", "Create impactful, professional presentations with templates, SmartArt, charts, multimedia and animation.", "", "1.5 months"],
-  ["Office & Productivity", "MS Word", "Work with Microsoft Word professionally: advanced formatting, styles, tables, long documents, templates and mail merge.", "", "1.5 months"],
-  ["Office & Productivity", "MS Outlook", "Manage email, calendar, contacts and tasks efficiently in Microsoft Outlook.", "", "1.5 months"],
+  ["Office & Productivity", "Basics of Computer", "Computer fundamentals for beginners: Windows, files and folders, internet and email, plus basic Word and Excel.", "", "2.5 months"],
+  ["Data & Analytics", "Basic Excel", "Build a strong Excel foundation: worksheets, cell references, everyday formulas, sorting, filtering and formatting.", "Popular", "1.5 months"],
+  ["Data & Analytics", "Advanced Excel", "Master advanced Excel for analysis and MIS: complex formulas, lookups, dynamic arrays, data cleaning and professional reports and dashboards.", "Popular", "2.5 months"],
+  ["Data & Analytics", "Advanced Excel with AI", "Excel from basics to professional MIS reporting, then AI inside Excel to write formulas, analyse data and build reports faster.", "New", "4 months"],
+  ["Data & Analytics", "Advanced Excel & Gen Ai", "A 40-hour program: Excel from the first formula to professional MIS reports, then Gen AI to write formulas, analyse data, build presentations and create error-free documents faster in Excel, PowerPoint and Word.", "", "4 months"],
+  ["Data & Analytics", "Advanced Excel for HR Professionals", "Excel built around HR work: employee master data, attendance and leave, payroll with PF, ESI and PT, recruitment and appraisal analysis, and interactive HR dashboards, all on real data for a 250-employee company. 16 sessions of 1.5 hours.", "", "3 months (24 hours)"],
+  ["AI & Programming", "Gen AI (ChatGPT, Gemini & Copilot)", "A 10-hour hands-on course in five 2-hour sessions: use ChatGPT, Gemini and Copilot with Excel, PowerPoint and Word to write formulas, analyse data, build presentations and create error-free documents. No coding needed.", "", "10 hours"],
+  ["AI & Programming", "Claude AI", "A 6-hour Generative AI program in six 1-hour sessions for non-technical teams: Claude compared with ChatGPT, Gemini and Grok, structured prompt design, document and data workflows, and responsible use at work.", "", "6 hours"],
+  ["Data & Analytics", "MIS Specialist", "A 6-month MIS program: Advanced Excel, VBA automation and Power BI to build automated MIS reports and dashboards.", "", "6 months"],
+  ["Data & Analytics", "Advanced MIS Specialist", "A complete MIS career program in four modules: Advanced Excel, Power BI, Excel VBA and SQL. Build automated MIS reports and interactive dashboards, and pull data straight from databases.", "", "8 months"],
+  ["Data & Analytics", "MIS with Gen AI", "The MIS Specialist program with Generative AI: Excel, VBA and Power BI reports built faster with AI tools (7 months).", "", "7 months"],
+  ["Data & Analytics", "MIS Reporting & Dashboards", "Build professional MIS reports and interactive dashboards with Advanced Excel and Power BI, the two tools every MIS role uses.", "", "4.5 months"],
+  ["Automation & Google", "VBA/Macros", "Automate Excel with VBA: macros, procedures, loops, user forms, ribbon tabs and your own add-ins.", "", "2.5 months"],
+  ["Automation & Google", "Google Sheet", "Google Sheets from basics to advanced: formulas, lookups, QUERY, pivot tables, charts and collaboration.", "", "2.5 months"],
+  ["Automation & Google", "Google sheet with Google Form", "Collect data with Google Forms and analyse it in Google Sheets with formulas, pivots and automated reports.", "", "3.5 months"],
+  ["Automation & Google", "Google Sheets with App script (AUTOMATION)", "A job-oriented program on Google Sheets, Forms, Apps Script, web apps and Looker Studio, ending with an end-to-end business automation project.", "New", "3.5 months"],
+  ["Automation & Google", "Google sheets With Looker Studio", "Google Sheets from basic to advanced, connected to Looker Studio for live, shareable dashboards.", "", "3.5 months"],
+  ["Data & Analytics", "Power Query", "Import, clean, combine and automate data in Excel Power Query, the first half of the Power Query & Power Pivot course.", "", "1 month"],
+  ["Data & Analytics", "Power Pivot", "Build data models, write DAX and create interactive dashboards with Excel Power Pivot, the second half of the Power Query & Power Pivot course.", "", "1 month"],
+  ["Data & Analytics", "Power BI", "Turn raw data into interactive dashboards with Power BI Desktop and Service: Power Query, data modelling, DAX and sharing.", "", "2.5 months"],
+  ["Data & Analytics", "Tableau", "Visual analytics in Tableau Desktop: connect data, build charts, maps and calculations, and design interactive dashboards.", "", "2.5 months"],
+  ["Automation & Google", "MS Power Apps", "Build business apps on the Microsoft Power Platform with Power Apps, SharePoint, Dataverse and Power Automate.", "", "2 months"],
+  ["Automation & Google", "MS PowerAutomate", "Automate everyday work across Microsoft 365 with Power Automate cloud flows, approvals and Excel/Outlook/Forms automation.", "", "2 months"],
   ["Office & Productivity", "MS Access", "Design and use Access databases: tables, relationships, queries, forms, reports and basic automation.", "", "2.5 months"],
+  ["Data & Analytics", "SQL", "Microsoft SQL Server from basics to advanced analytics, with Python integration and AI-assisted query writing.", "", "2.5 months"],
+  ["Office & Productivity", "MS Word", "Work with Microsoft Word professionally: advanced formatting, styles, tables, long documents, templates and mail merge.", "", "1.5 months"],
+  ["Office & Productivity", "MS PowerPoint", "Create impactful, professional presentations with templates, SmartArt, charts, multimedia and animation.", "", "1.5 months"],
+  ["Office & Productivity", "MS Outlook", "Manage email, calendar, contacts and tasks efficiently in Microsoft Outlook.", "", "1.5 months"],
   ["Office & Productivity", "MS Office", "A complete MS Office program: Excel from basic to advanced, PowerPoint and Word for everyday office work.", "", "5 months"],
   ["Office & Productivity", "MS Project (MSP)", "Plan, schedule, track and report projects in Microsoft Project, from first plan to progress reports.", "", "2.5 months"],
   ["Office & Productivity", "MS Visio", "Create professional diagrams in Microsoft Visio: flowcharts, swimlane SOPs, org charts built from Excel, network and floor plans, and process maps linked to live data.", "", "2 months"],
@@ -32,38 +56,11 @@ const COURSES = [
   ["Office & Productivity", "Open Office (Calc-Excel)", "Advanced spreadsheets in OpenOffice Calc: formulas, lookups, data cleaning, pivot tables and professional reports.", "", "2.5 months"],
   ["Office & Productivity", "Open Office (Writer-Word)", "Create professional documents in OpenOffice Writer: styles, tables, long documents, templates and mail merge.", "", "1.5 months"],
   ["Office & Productivity", "Open Office (Presentation-PPT)", "Build professional presentations in OpenOffice Impress with masters, charts, multimedia and animations.", "", "1.5 months"],
-  ["Office & Productivity", "Basics of Computer", "Computer fundamentals for beginners: Windows, files and folders, internet and email, plus basic Word and Excel.", "", "2.5 months"],
-  ["Data & Analytics", "Advanced Excel", "Master advanced Excel for analysis and MIS: complex formulas, lookups, dynamic arrays, data cleaning and professional reports and dashboards.", "Popular", "2.5 months"],
-  ["Data & Analytics", "Advanced Excel with AI", "Excel from basics to professional MIS reporting, then AI inside Excel to write formulas, analyse data and build reports faster.", "New", "4 months"],
-  ["Data & Analytics", "Advanced Excel for HR Professionals", "Excel built around HR work: employee master data, attendance and leave, payroll with PF, ESI and PT, recruitment and appraisal analysis, and interactive HR dashboards, all on real data for a 250-employee company. 16 sessions of 1.5 hours.", "", "3 months (24 hours)"],
-  ["Data & Analytics", "Basic Excel", "Build a strong Excel foundation: worksheets, cell references, everyday formulas, sorting, filtering and formatting.", "Popular", "1.5 months"],
-  ["Data & Analytics", "SQL", "Microsoft SQL Server from basics to advanced analytics, with Python integration and AI-assisted query writing.", "", "2.5 months"],
-  ["Data & Analytics", "Power BI", "Turn raw data into interactive dashboards with Power BI Desktop and Service: Power Query, data modelling, DAX and sharing.", "", "2.5 months"],
-  ["Data & Analytics", "Tableau", "Visual analytics in Tableau Desktop: connect data, build charts, maps and calculations, and design interactive dashboards.", "", "2.5 months"],
   ["Data & Analytics", "Data Analytics", "A 10-month career program covering Advanced Excel, VBA, Power BI, SQL, statistics and Python for data analysis, with projects.", "", "10 months"],
   ["Data & Analytics", "Data Analytics with AI", "The Data Analytics career program with AI tools added: Excel, VBA, Power BI, SQL and Python, plus AI for faster analysis and reporting (12 months).", "", "12 months"],
   ["Data & Analytics", "Business Analytics", "A 12-month program: Excel, VBA, Power BI, SQL, Python, statistics and machine learning applied to business decisions.", "", "10 months"],
   ["Data & Analytics", "Business Analytics with Gen AI", "Business Analytics with Generative AI: Excel, Power BI, SQL, Python and machine learning, supported by AI tools for faster insight.", "", "12 months"],
-  ["Data & Analytics", "MIS Specialist", "A 6-month MIS program: Advanced Excel, VBA automation and Power BI to build automated MIS reports and dashboards.", "", "6 months"],
-  ["Data & Analytics", "MIS with Gen AI", "The MIS Specialist program with Generative AI: Excel, VBA and Power BI reports built faster with AI tools (7 months).", "", "7 months"],
-  ["Data & Analytics", "Advanced MIS Specialist", "A complete MIS career program in four modules: Advanced Excel, Power BI, Excel VBA and SQL. Build automated MIS reports and interactive dashboards, and pull data straight from databases.", "", "8 months"],
-  ["Data & Analytics", "MIS Reporting & Dashboards", "Build professional MIS reports and interactive dashboards with Advanced Excel and Power BI, the two tools every MIS role uses.", "", "4.5 months"],
-  ["Data & Analytics", "Power Query", "Import, clean, combine and automate data in Excel Power Query, the first half of the Power Query & Power Pivot course.", "", "1 month"],
-  ["Data & Analytics", "Power Pivot", "Build data models, write DAX and create interactive dashboards with Excel Power Pivot, the second half of the Power Query & Power Pivot course.", "", "1 month"],
-  ["Automation & Google", "Google Sheets with App script (AUTOMATION)", "A job-oriented program on Google Sheets, Forms, Apps Script, web apps and Looker Studio, ending with an end-to-end business automation project.", "New", "3.5 months"],
-  ["Automation & Google", "Google sheets With Looker Studio", "Google Sheets from basic to advanced, connected to Looker Studio for live, shareable dashboards.", "", "3.5 months"],
-  ["Automation & Google", "VBA/Macros", "Automate Excel with VBA: macros, procedures, loops, user forms, ribbon tabs and your own add-ins.", "", "2.5 months"],
-  ["Automation & Google", "MS Power Apps", "Build business apps on the Microsoft Power Platform with Power Apps, SharePoint, Dataverse and Power Automate.", "", "2 months"],
-  ["Automation & Google", "MS PowerAutomate", "Automate everyday work across Microsoft 365 with Power Automate cloud flows, approvals and Excel/Outlook/Forms automation.", "", "2 months"],
-  ["Automation & Google", "Google Sheet", "Google Sheets from basics to advanced: formulas, lookups, QUERY, pivot tables, charts and collaboration.", "", "2.5 months"],
-  ["Automation & Google", "Google sheet with Google Form", "Collect data with Google Forms and analyse it in Google Sheets with formulas, pivots and automated reports.", "", "3.5 months"],
-  ["AI & Programming", "Python with AI", "Python for data analytics: programming basics, NumPy, Pandas, visualisation and statistics, with AI tools to code faster.", "", "3 months"],
-  ["AI & Programming", "Gen AI (ChatGPT, Gemini & Copilot)", "A 10-hour hands-on course in five 2-hour sessions: use ChatGPT, Gemini and Copilot with Excel, PowerPoint and Word to write formulas, analyse data, build presentations and create error-free documents. No coding needed.", "", "10 hours"],
   ["AI & Programming", "Machine Learning (ML)", "Machine learning with Python: the maths, key algorithms and the full lifecycle to train, evaluate and use models.", "", "2.5 months"],
-  ["AI & Programming", "C Programming", "Learn C from your first program to pointers, dynamic memory, structures and files, with lab practice in every class and a capstone project. The foundation for C++, Java and placements.", "New", "35 hours"],
-  ["AI & Programming", "C++ Programming", "Object-oriented programming in C++ the way the industry uses it: classes, inheritance, polymorphism, templates, the STL and modern C++ (C++11 to C++20), ending with a complete OOP project.", "New", "35 hours"],
-  ["AI & Programming", "Web App Development (Full Stack)", "Build and deploy web applications end to end: HTML, CSS and JavaScript front end, back end, database and hosting.", "", "2 months"],
-  ["AI & Programming", "Claude AI", "A 6-hour Generative AI program in six 1-hour sessions for non-technical teams: Claude compared with ChatGPT, Gemini and Grok, structured prompt design, document and data workflows, and responsible use at work.", "", "6 hours"],
   ["ERP & Accounting", "Tally", "Accounting and GST in TallyPrime: company setup, vouchers, inventory, GST returns and financial reports.", "", "2 months"],
   ["ERP & Accounting", "SAP FICO", "SAP Financial Accounting and Controlling in S/4HANA/ECC: configuration, transactions and management reporting.", "", "2 months"],
   ["ERP & Accounting", "SAP Business One", "SAP Business One ERP for small and mid-size companies: sales, purchasing, inventory, finance and production. Practice software provided.", "", "2 months"],
@@ -72,8 +69,14 @@ const COURSES = [
   ["ERP & Accounting", "SAP SD (User Level)", "SAP S/4HANA Sales & Distribution for end users: the complete order-to-cash process.", "", "2 months"],
   ["ERP & Accounting", "SAP SD (Consultant Level)", "SAP SD consultant training: O2C configuration, pricing, shipping, billing and integration with MM and FI.", "", "3.5 months"],
   ["ERP & Accounting", "NetSuite", "Oracle NetSuite cloud ERP: accounting, order-to-cash, procure-to-pay, inventory, CRM, reporting and dashboards.", "", "3 months"],
-  ["Career Skills", "Career Communication & Interview Skills Program", "A 4-month program to build spoken English, confidence and interview skills for the workplace.", "", "3 months"]
+  ["AI & Programming", "Python with AI", "Python for data analytics: programming basics, NumPy, Pandas, visualisation and statistics, with AI tools to code faster.", "", "3 months"],
+  ["AI & Programming", "Web App Development (Full Stack)", "Build and deploy web applications end to end: HTML, CSS and JavaScript front end, back end, database and hosting.", "", "2 months"],
+  ["AI & Programming", "C Programming", "Learn C from your first program to pointers, dynamic memory, structures and files, with lab practice in every class and a capstone project. The foundation for C++, Java and placements.", "New", "35 hours"],
+  ["AI & Programming", "C++ Programming", "Object-oriented programming in C++ the way the industry uses it: classes, inheritance, polymorphism, templates, the STL and modern C++ (C++11 to C++20), ending with a complete OOP project.", "New", "35 hours"],
+  ["Career Skills", "Career Communication & Interview Skills Program", "A 4-month program to build spoken English, confidence and interview skills for the workplace.", "", "3 months"],
 ].map(([cat, title, desc, badge, dur]) => ({ cat, title, desc, badge, dur }));
+// show the cards straight away in the order last read from the sheet (no jump when the sheet's order arrives)
+try { const o = JSON.parse(localStorage.getItem('mars_order') || 'null'), k = s => String(s || '').toLowerCase().replace(/[^a-z0-9]+/g, ' ').trim(); if (o) COURSES.sort((x, y) => (o[k(x.title)] ?? 1e9) - (o[k(y.title)] ?? 1e9)); } catch (e) {}
 
 /* Programs made of several modules: shown as chips on the course card and in a "Modules" window */
 const MOD_INFO = {
@@ -323,7 +326,7 @@ function loadCatalog() {
     });
     // arrange the cards in the order of the sheet's Order column (Courses tab); courses not in the sheet go last
     if (SHEET_ORDER) { const ord = {}; (d.courses || []).forEach((c, i) => { const n = parseFloat(c.Order); ord[normT(String(c.Title || ''))] = isFinite(n) ? n : 1e6 + i; });
-      COURSES.sort((x, y) => (ord[normT(x.title)] ?? 1e9) - (ord[normT(y.title)] ?? 1e9)); }
+      COURSES.sort((x, y) => (ord[normT(x.title)] ?? 1e9) - (ord[normT(y.title)] ?? 1e9)); try { localStorage.setItem('mars_order', JSON.stringify(ord)); } catch (e) {} }
     if (added) $$('[data-courses]').forEach(e => { e.dataset.to = COURSES.length; e.textContent = COURSES.length; }), $$('[data-courses-round]').forEach(e => { e.textContent = (e.dataset.label || '{n}').replace('{n}', Math.floor(COURSES.length / 10) * 10 + '+'); });
     return true;
   };
