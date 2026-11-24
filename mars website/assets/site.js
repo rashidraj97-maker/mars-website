@@ -460,7 +460,7 @@ const GIFT_IC = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stro
    - Advanced Excel: "Your professional life is not complete without this"
    - every course with a figure below: about how many jobs are open in India for that skill (Indeed India, Nov 2026) */
 const HOVER_PREVIEW = true;
-const LINES_PREVIEW = /[?&]preview=lines\b/.test(location.search);
+const LINES_PREVIEW = true;   // marketing line on every course card
 const JOBS_PREVIEW = /[?&]preview=jobs\b/.test(location.search);
 const LINES_LIST = [   // [course title, marketing line shown on mouse-over]
   ['Basics of Computer', 'Your first step into the digital world starts here'],
