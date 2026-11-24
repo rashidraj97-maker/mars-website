@@ -456,9 +456,37 @@ function coverHtml(c) {
 /* Advanced Excel: Basic Excel included free (shown on the card and in the course details) */
 const hasFreeBasic = t => /^advanced excel$/i.test(String(t || '').trim());
 const GIFT_IC = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="8" width="18" height="4" rx="1"/><path d="M12 8v13M19 12v7a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2v-7"/><path d="M7.5 8a2.5 2.5 0 0 1 0-5C10 3 12 8 12 8s2-5 4.5-5a2.5 2.5 0 0 1 0 5"/></svg>';
-/* Advanced Excel: a message that appears over the card picture when the mouse is on the card (always shown on phones) */
+/* Mouse-over panel on the course card picture (always shown as a strip on phones):
+   - Advanced Excel: "Your professional life is not complete without this"
+   - every course with a figure below: about how many jobs are open in India for that skill (Indeed India, Nov 2026) */
 const HOVER_PREVIEW = true;
-const hoverMsg = t => HOVER_PREVIEW && hasFreeBasic(t) ? `<div class="hovmsg" role="note"><span class="hm-star" aria-hidden="true">★</span><b>Your professional life is not complete without this</b></div>` : '';
+const JOBS_PREVIEW = /[?&]preview=jobs\b/.test(location.search);
+const JOBS_SRC = 'Source: Indeed India · Nov 2026';
+const JOBS_LIST = [   // [course title, approx. open jobs, skill searched]
+  ['Basics of Computer', '30,000+', 'computer'], ['Basic Excel', '28,000+', 'MS Excel'], ['Advanced Excel', '10,000+', 'Advanced Excel'],
+  ['Advanced Excel with AI', '10,000+', 'Advanced Excel'], ['Advanced Excel & Gen Ai', '10,000+', 'Advanced Excel'], ['Advanced Excel for HR Professionals', '200+', 'HR MIS'],
+  ['Gen AI (ChatGPT, Gemini & Copilot)', '2,000+', 'Gen AI'], ['Claude AI', '2,000+', 'Gen AI'],
+  ['MIS Specialist', '6,000+', 'MIS'], ['Advanced MIS Specialist', '6,000+', 'MIS'], ['MIS with Gen AI', '6,000+', 'MIS'], ['MIS Reporting & Dashboards', '6,000+', 'MIS'],
+  ['VBA/Macros', '700+', 'Excel VBA'], ['Google Sheet', '4,000+', 'Google Sheets'], ['Google sheet with Google Form', '4,000+', 'Google Sheets'],
+  ['Google Sheets with App script (AUTOMATION)', '4,000+', 'Google Sheets & Apps Script'], ['Google sheets With Looker Studio', '800+', 'Looker Studio'],
+  ['Power Query', '1,000+', 'Power Query'], ['Power Pivot', '1,000+', 'Power Query & Power Pivot'], ['Power BI', '6,000+', 'Power BI'], ['Tableau', '3,000+', 'Tableau'],
+  ['MS Power Apps', '2,000+', 'Power Apps'], ['MS PowerAutomate', '1,000+', 'Power Automate'], ['MS Access', '3,000+', 'MS Access'], ['SQL', '48,000+', 'SQL'],
+  ['MS Word', '4,000+', 'MS Word'], ['MS PowerPoint', '4,000+', 'PowerPoint'], ['MS Outlook', '20,000+', 'MS Office'], ['MS Office', '20,000+', 'MS Office'], ['MS Visio', '300+', 'Visio'],
+  ['Data Analytics', '8,000+', 'Data Analyst'], ['Data Analytics with AI', '8,000+', 'Data Analyst'], ['Business Analytics', '4,000+', 'Business Analyst'], ['Business Analytics with Gen AI', '4,000+', 'Business Analyst'],
+  ['Machine Learning (ML)', '16,000+', 'Machine Learning'], ['Tally', '6,000+', 'Tally'], ['SAP FICO', '600+', 'SAP FICO'], ['SAP Business One', '2,000+', 'SAP Business One'],
+  ['SAP MM (User Level)', '1,000+', 'SAP MM'], ['SAP MM (Consultant Level)', '1,000+', 'SAP MM'], ['SAP SD (User Level)', '1,000+', 'SAP SD'], ['SAP SD (Consultant Level)', '1,000+', 'SAP SD'],
+  ['NetSuite', '200+', 'NetSuite'], ['Python with AI', '20,000+', 'Python'], ['Web App Development (Full Stack)', '4,000+', 'Full Stack Developer'],
+  ['C Programming', '3,000+', 'C programming'], ['C++ Programming', '9,000+', 'C++'],
+];
+let JOBS_MAP = null;
+const jobsFor = t => { if (!JOBS_PREVIEW) return null; if (!JOBS_MAP) JOBS_MAP = Object.fromEntries(JOBS_LIST.map(([k, n, s]) => [normT(k), { n, s }])); return JOBS_MAP[normT(t)] || null; };
+const TREND_IC = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 17l6-6 4 4 8-8"/><path d="M14 7h7v7"/></svg>';
+const hoverMsg = t => {
+  const m = HOVER_PREVIEW && hasFreeBasic(t), j = jobsFor(t);
+  if (!m && !j) return '';
+  const jobs = j ? `<div class="hm-j"><div class="hm-big">${TREND_IC}<b>${esc(j.n)}</b></div><div class="hm-lbl"><span class="hm-skill">${esc(j.s)} </span>jobs open in India</div><small class="hm-src">${JOBS_SRC}</small></div>` : '';
+  return `<div class="hovmsg${m ? ' msg' : ''}${j ? ' jobs' : ''}" role="note">${m ? `<span class="hm-star" aria-hidden="true">★</span><b class="hm-msg">Your professional life is not complete without this</b>` : ''}${jobs}</div>`;
+};
 const perkCard = t => hasFreeBasic(t) ? `<div class="sapx perk">${GIFT_IC}<span><b>Basic Excel included</b> at no extra cost</span></div>` : '';
 const perkBox = t => hasFreeBasic(t) ? `<div class="sapbox perk">${GIFT_IC}<div><b>Basic Excel course included, complimentary.</b><span>New to Excel? Start with our Basic Excel course at no extra cost, then move on to Advanced Excel.</span></div></div>` : '';
 /* SAP courses: the fee includes unlimited SAP server access (shown on the card and in the course details) */

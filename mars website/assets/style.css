@@ -1126,3 +1126,28 @@ html{scroll-padding-top:96px}
   .cc4 .hovmsg b{font-size:.76rem;max-width:none;white-space:nowrap;text-align:left}
   .cc4 .hm-star{width:22px;height:22px;font-size:.7rem;box-shadow:none;flex:none}
 }
+
+/* jobs-in-India figure in the mouse-over panel */
+.cc4 .hovmsg .hm-j{display:flex;flex-direction:column;align-items:center;gap:2px}
+.cc4 .hovmsg .hm-big{display:flex;align-items:center;gap:8px;color:var(--gold)}
+.cc4 .hovmsg .hm-big svg{width:26px;height:26px}
+.cc4 .hovmsg .hm-big b{font-size:2rem;line-height:1;font-weight:900;letter-spacing:-.02em;color:var(--gold);max-width:none}
+.cc4 .hovmsg .hm-lbl{font-size:.95rem;font-weight:700}
+.cc4 .hovmsg .hm-src{font-size:.66rem;opacity:.7;margin-top:4px}
+.cc4 .hovmsg.msg.jobs{gap:6px}
+.cc4 .hovmsg.msg.jobs .hm-star{display:none}
+.cc4 .hovmsg.msg.jobs .hm-msg{font-size:1.02rem}
+.cc4 .hovmsg.msg.jobs .hm-j{border-top:1px solid rgba(255,255,255,.22);padding-top:7px;margin-top:2px;flex-direction:row;flex-wrap:wrap;justify-content:center;column-gap:7px}
+.cc4 .hovmsg.msg.jobs .hm-big svg{width:18px;height:18px}
+.cc4 .hovmsg.msg.jobs .hm-big b{font-size:1.1rem}
+.cc4 .hovmsg.msg.jobs .hm-lbl{font-size:.85rem}
+.cc4 .hovmsg.msg.jobs .hm-src{flex-basis:100%;text-align:center;margin-top:0}
+@media (hover:none){
+  .cc4 .hovmsg .hm-src,.cc4 .hovmsg .hm-skill{display:none}
+  .cc4 .hovmsg .hm-j{flex-direction:row;gap:6px;align-items:center;border:0;padding:0;margin:0}
+  .cc4 .hovmsg .hm-big svg{width:16px;height:16px}
+  .cc4 .hovmsg .hm-big b{font-size:.95rem}
+  .cc4 .hovmsg .hm-lbl{font-size:.76rem;white-space:nowrap}
+  .cc4 .hovmsg.msg.jobs .hm-j{display:none}
+  .cc4 .hovmsg.msg.jobs .hm-star{display:grid}
+}
