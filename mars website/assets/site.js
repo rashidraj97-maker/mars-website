@@ -307,7 +307,7 @@ function coursesPage() {
 /* Course cards ("cover art" style): picture on top, rating, facts, one highlight line, price with offer, Enroll.
    Prices, offers, installment plans, badges and next batch dates come live from the Google Sheet (?action=data). */
 let CAT = {};
-const SHEET_ORDER = /[?&]order=sheet\b/.test(location.search);   // preview: courses.html?order=sheet
+const SHEET_ORDER = true;   // course cards follow the Order column of the Courses tab
 function loadCatalog() {
   if (!/^https:\/\/script\.google\.com\//.test(SITE.api)) return Promise.resolve(false);
   const use = d => {
