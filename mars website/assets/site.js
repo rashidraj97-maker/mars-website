@@ -1,4 +1,4 @@
-const PV_DEMOS = /[?&]preview=demos\b/.test(location.search); /* preview: every demo on the home page, several demos per course */
+const PV_DEMOS = true; /* several demos per course + every demo on the home page (was preview-only: ?preview=demos) */
 /* MARS Training & Solution – website script */
 
 /* ===== Settings you may change ===== */
