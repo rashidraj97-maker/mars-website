@@ -307,6 +307,7 @@ function coursesPage() {
 /* Course cards ("cover art" style): picture on top, rating, facts, one highlight line, price with offer, Enroll.
    Prices, offers, installment plans, badges and next batch dates come live from the Google Sheet (?action=data). */
 let CAT = {};
+const SHEET_ORDER = /[?&]order=sheet\b/.test(location.search);   // preview: courses.html?order=sheet
 function loadCatalog() {
   if (!/^https:\/\/script\.google\.com\//.test(SITE.api)) return Promise.resolve(false);
   const use = d => {
@@ -320,15 +321,18 @@ function loadCatalog() {
         emi: ((d.emi || {})[t] || []).map(p => p.n), batch: b ? { start: b.start, timing: b.timing, left: b.left, seats: b.seats } : null,
         hl: String(c.Highlights || '').split('|').map(x => x.trim()).filter(Boolean) };
     });
+    // arrange the cards in the order of the sheet's Order column (Courses tab); courses not in the sheet go last
+    if (SHEET_ORDER) { const ord = {}; (d.courses || []).forEach((c, i) => { const n = parseFloat(c.Order); ord[normT(String(c.Title || ''))] = isFinite(n) ? n : 1e6 + i; });
+      COURSES.sort((x, y) => (ord[normT(x.title)] ?? 1e9) - (ord[normT(y.title)] ?? 1e9)); }
     if (added) $$('[data-courses]').forEach(e => { e.dataset.to = COURSES.length; e.textContent = COURSES.length; }), $$('[data-courses-round]').forEach(e => { e.textContent = (e.dataset.label || '{n}').replace('{n}', Math.floor(COURSES.length / 10) * 10 + '+'); });
     return true;
   };
-  try { const c = JSON.parse(sessionStorage.getItem('mars_cat3') || 'null'); if (c && Date.now() - c.at < 10 * 60e3) return Promise.resolve(use(c.d)); } catch (e) {}
+  try { const c = JSON.parse(sessionStorage.getItem('mars_cat4') || 'null'); if (c && Date.now() - c.at < 10 * 60e3) return Promise.resolve(use(c.d)); } catch (e) {}
   return fetch(SITE.api + '?action=data').then(r => r.json()).then(d => {
     if (!d || !d.courses) return false;
-    const slim = { courses: d.courses.map(c => ({ Title: c.Title, Fee: c.Fee, Price: c.Price, Offer: c.Offer ? { label: c.Offer.label } : null, Badge: c.Badge, Highlights: c['Highlights (separate with |)'] || '', Category: c.Category || '', Description: c.Description || '', Duration: c.Duration || '' })),
+    const slim = { courses: d.courses.map(c => ({ Title: c.Title, Fee: c.Fee, Price: c.Price, Offer: c.Offer ? { label: c.Offer.label } : null, Badge: c.Badge, Highlights: c['Highlights (separate with |)'] || '', Category: c.Category || '', Description: c.Description || '', Duration: c.Duration || '', Order: c.Order })),
       emi: Object.fromEntries(Object.entries(d.emi || {}).map(([k, v]) => [k, v.map(p => ({ n: p.n }))])), batches: (d.batches || []).map(b => ({ course: b.course, start: b.start, timing: b.timing, left: b.left, seats: b.seats })) };
-    try { sessionStorage.setItem('mars_cat3', JSON.stringify({ at: Date.now(), d: slim })); } catch (e) {}
+    try { sessionStorage.setItem('mars_cat4', JSON.stringify({ at: Date.now(), d: slim })); } catch (e) {}
     return use(slim);
   }).catch(() => false);
 }
