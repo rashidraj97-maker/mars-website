@@ -648,6 +648,17 @@ function shareText(c, bold) {
   L.push('📞💬 Call / WhatsApp: ' + SITE.phones.join(' | '));
   return L.join('\n');
 }
+/* "How your batch runs" box in the course details window: 2 classes a week, 1.5 hours each */
+const BATCHBOX_PREVIEW = /[?&]preview=batch\b/.test(location.search);
+const CAL_IC = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4.5" width="18" height="16" rx="3"/><path d="M3 9.5h18M8 2.5v4M16 2.5v4"/><path d="M8 14h2M14 14h2M8 17.5h2"/></svg>';
+function batchBox(c, d) {
+  if (!BATCHBOX_PREVIEW) return '';
+  const hrs = parseFloat((String(c.dur || '').match(/(\d+(?:\.\d+)?)\s*(?:hours|hrs?)\b/i) || [])[1]);
+  const plan = hrs >= 6 ? `<p class="bbp">That's about <b>${Math.round(hrs / 1.5)} live classes</b> in this course, ${hrs} hours in total, with plenty of hands-on practice.</p>` : '';
+  return `<div class="bbox"><div class="bbh"><span class="bbi">${CAL_IC}</span><div><b>How your batch runs</b><small>Learn without disturbing your job or college</small></div></div>
+    <div class="bbs"><div><b>2</b><span>classes a week</span></div><div><b>1.5 hrs</b><span>per class</span></div><div><b>3 hrs</b><span>live learning a week</span></div></div>
+    ${plan}</div>`;
+}
 /* Course details window: opened from a course card or a shared link */
 function showCourse(c) {
   let cd = $('#cd');
@@ -671,6 +682,7 @@ function showCourse(c) {
       <small>${esc(c.cat)}</small><h3>${esc(c.title)}</h3><p class="sub">${esc(c.desc)}</p>
       ${sapBox(c.title)}${perkBox(c.title)}${price}
       <dl class="cdf">${facts.map(([k, v]) => `<div><dt>${esc(k)}</dt><dd>${esc(v)}</dd></div>`).join('')}</dl>
+      ${batchBox(c, d)}
       ${mods ? `<h4>Modules</h4>${modChips(mods)}` : ''}
       ${hl.length ? `<h4>What you will learn</h4><ul class="cdl">${hl.map(x => `<li>${esc(x)}</li>`).join('')}</ul>` : ''}
       <div class="act"><a class="btn en" href="${esc(enroll(c.title))}" target="_blank" rel="noopener">Enroll now</a><a class="btn ghost" href="${esc(enquire(c.title))}" target="_blank" rel="noopener">Enquire / free counselling</a>

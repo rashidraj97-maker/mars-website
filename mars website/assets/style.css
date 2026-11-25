@@ -1156,3 +1156,18 @@ html{scroll-padding-top:96px}
 @media (hover:none){ .cc4 .hovmsg.msg .hm-msg,.cc4 .hovmsg.msg.jobs .hm-msg{white-space:normal;font-size:.78rem;line-height:1.25;text-align:left} }
 
 .btn.dmb{white-space:normal;text-align:center;line-height:1.3;padding:10px 22px}
+
+/* course details: how your batch runs */
+.bbox{margin:18px 0 6px;padding:16px;border-radius:16px;background:linear-gradient(160deg,#EEF5FF,#F7FAFF);border:1px solid #CFE0F7}
+.bbox .bbh{display:flex;align-items:center;gap:12px;margin-bottom:12px}
+.bbox .bbi{width:42px;height:42px;border-radius:12px;display:grid;place-items:center;background:var(--brand);color:#fff;flex:none}
+.bbox .bbi svg{width:22px;height:22px}
+.bbox .bbh b{display:block;color:var(--ink);font-size:1.02rem;line-height:1.2}
+.bbox .bbh small{display:block;color:var(--muted);font-size:.84rem;margin-top:2px;text-transform:none;letter-spacing:normal;font-weight:500}
+.bbox .bbs{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.bbox .bbs div{background:#fff;border:1px solid var(--line);border-radius:12px;padding:10px 6px;text-align:center}
+.bbox .bbs b{display:block;font-size:1.3rem;font-weight:900;color:var(--brand);line-height:1.1}
+.bbox .bbs span{display:block;font-size:.74rem;color:var(--muted);margin-top:3px;line-height:1.25}
+.bbox .bbp,.bbox .bbt{margin:12px 0 0;font-size:.88rem;color:var(--text)}
+.bbox .bbt{margin-top:6px;padding-top:8px;border-top:1px dashed #CFE0F7}
+.bbox .bbp b,.bbox .bbt b{color:var(--ink)}
