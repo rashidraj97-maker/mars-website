@@ -279,6 +279,8 @@ const OUTLINE_ALIAS = { 'advanced excel for data analysis': 'advanced excel', 's
   'google app script': 'google sheets with app script automation', 'sap sd sales and distribution': 'sap sd user level',
   'basic intermediate computer': 'basics of computer', 'libre office': 'libre office calc excel', 'open office': 'open office calc excel' };
 const normT = s => String(s || '').toLowerCase().replace(/[^a-z0-9]+/g, ' ').trim();
+/* Course duration as typed in the Courses sheet, tidied for display: "1 Month(10 hours)" -> "1 month (10 hours)", "18 -20" -> "18–20", "60hours" -> "60 hours" */
+const tidyDur = s => String(s || '').trim().replace(/\bMonths?\b/g, m => m.toLowerCase()).replace(/(\d)\s*[-–]\s*(\d)/g, '$1–$2').replace(/(\d)\s*(?:hours?|hrs?)\b\.?/gi, (m, d) => d + ' hours').replace(/\s*\(\s*/g, ' (').replace(/\s*\)/g, ')').replace(/\s{2,}/g, ' ');
 let OUTLINES = {};
 function loadOutlines() {
   if (!/^https:\/\/script\.google\.com\//.test(SITE.api)) return Promise.resolve();
@@ -327,7 +329,10 @@ function loadCatalog() {
     (d.courses || []).forEach(c => {
       const t = String(c.Title || '').trim(); if (!t) return;
       // a course added only in the Google Sheet (Courses tab, Show = Yes) still gets its card on the website
-      if (!COURSES.some(x => normT(x.title) === normT(t))) { COURSES.push({ cat: String(c.Category || 'Data & Analytics').trim(), title: t, desc: String(c.Description || '').trim(), badge: '', dur: String(c.Duration || '').trim() }); added++; }
+      // the Courses tab is the source: duration and description edits in the sheet show on the website
+      const ex = COURSES.find(x => normT(x.title) === normT(t)), sDur = tidyDur(c.Duration), sDesc = String(c.Description || '').trim();
+      if (!ex) { COURSES.push({ cat: String(c.Category || 'Data & Analytics').trim(), title: t, desc: sDesc, badge: '', dur: sDur }); added++; }
+      else { if (sDur) ex.dur = sDur; if (sDesc) ex.desc = sDesc; }
       const fee = inr(String(c.Fee).replace(/[^\d.]/g, '')), b = (d.batches || []).find(x => normT(x.course) === normT(t));
       CAT[normT(t)] = { fee, price: c.Price ? inr(c.Price) : fee, off: c.Offer ? (c.Offer.label || '') : '', badge: String(c.Badge || '').trim(),
         emi: ((d.emi || {})[t] || []).map(p => p.n), batch: b ? { start: b.start, timing: b.timing, left: b.left, seats: b.seats } : null,
@@ -475,7 +480,7 @@ const LINES_LIST = [   // [course title, marketing line shown on mouse-over]
   ['Advanced Excel & Gen Ai', 'Work smarter, not longer: Excel powered by AI'],
   ['Advanced Excel for HR Professionals', 'Turn HR data into decisions, not headaches'],
   ['Gen AI (ChatGPT, Gemini & Copilot)', 'Let AI do the busy work. You take the credit'],
-  ['Claude AI', 'Get a tireless AI assistant at your desk in just 6 hours'],
+  ['Claude AI', 'Get a tireless AI assistant at your desk in just 8 hours'],
   ['MIS Specialist', 'Be the person every manager depends on for reports'],
   ['Advanced MIS Specialist', 'Reports, dashboards, automation: become indispensable'],
   ['MIS with Gen AI', 'MIS reports in minutes, not days, with AI'],

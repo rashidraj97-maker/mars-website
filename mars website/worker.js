@@ -18,6 +18,8 @@ const MODULES = { 'data analytics': DA, 'data analytics with ai': DA.concat('Gen
   'business analytics with gen ai': DA.concat('Machine Learning', 'Generative AI'), 'mis specialist': MIS, 'mis with gen ai': MIS.concat('Generative AI'),
   'ms office': ['MS Word', 'MS PowerPoint', 'MS Excel'], 'ms office with gen ai': ['MS Excel', 'MS PowerPoint', 'MS Word', 'Generative AI'], 'complete ms office': ['MS Excel', 'MS PowerPoint', 'MS Word', 'MS Outlook'], 'advanced excel with ai': ['Advanced Excel', 'Generative AI'] };
 const normT = s => String(s || '').toLowerCase().replace(/[^a-z0-9]+/g, ' ').trim();
+/* Course duration as typed in the Courses sheet, tidied for display: "1 Month(10 hours)" -> "1 month (10 hours)", "18 -20" -> "18–20", "60hours" -> "60 hours" */
+const tidyDur = s => String(s || '').trim().replace(/\bMonths?\b/g, m => m.toLowerCase()).replace(/(\d)\s*[-–]\s*(\d)/g, '$1–$2').replace(/(\d)\s*(?:hours?|hrs?)\b\.?/gi, (m, d) => d + ' hours').replace(/\s*\(\s*/g, ' (').replace(/\s*\)/g, ')').replace(/\s{2,}/g, ' ');
 
 const json = (o, status = 200, extra = {}) => new Response(JSON.stringify(o), { status, headers: Object.assign({ 'Content-Type': 'application/json; charset=utf-8', 'Cache-Control': 'no-store' }, extra) });
 const num = v => Number(String(v == null ? '' : v).replace(/[^\d.]/g, '')) || 0;
@@ -50,7 +52,7 @@ async function loadCatalog(ctx) {
   const S = d.settings || {}, today = todayIst();
   const courses = d.courses.filter(c => c.Title && num(c.Fee) > 0 && !/^test$/i.test(String(c.Title).trim())).map(c => {
     const t = String(c.Title).trim(), fee = num(c.Fee), price = num(c.Price) || fee, o = c.Offer || null;
-    return { t, cat: String(c.Category || ''), dur: String(c.Duration || ''), fee, price, off: o ? String(o.label || '') : '', offName: o ? String(o.name || '') : '', offEnd: o ? isoDay(o.end) : '',
+    return { t, cat: String(c.Category || ''), dur: tidyDur(c.Duration), fee, price, off: o ? String(o.label || '') : '', offName: o ? String(o.name || '') : '', offEnd: o ? isoDay(o.end) : '',
       badge: String(c.Badge || ''), desc: String(c.Description || '').replace(/\s*\((?:about\s*)?\d+(?:\s*[–-]\s*\d+)?\s*hours\)/gi, '').slice(0, 260), hl: String(c['Highlights (separate with |)'] || '').split('|').map(x => x.trim()).filter(Boolean).slice(0, 6),
       mods: MODULES[normT(t)] || null, emi: ((d.emi || {})[t] || []).map(p => ({ n: p.n, extra: p.extra, total: p.total, first: (p.amounts || [])[0] || Math.ceil(p.total / p.n) })) };
   });

@@ -995,6 +995,8 @@ function priceHtml(c) { return !amt(c.Fee) ? `<span>${esc(c.Fee || 'Ask for fee'
 
 /* Course cards in the website's cover-art style */
 const normT = s => String(s || '').toLowerCase().replace(/[^a-z0-9]+/g, ' ').trim();
+/* Course duration as typed in the Courses sheet, tidied for display: "1 Month(10 hours)" -> "1 month (10 hours)", "18 -20" -> "18–20", "60hours" -> "60 hours" */
+const tidyDur = s => String(s || '').trim().replace(/\bMonths?\b/g, m => m.toLowerCase()).replace(/(\d)\s*[-–]\s*(\d)/g, '$1–$2').replace(/(\d)\s*(?:hours?|hrs?)\b\.?/gi, (m, d) => d + ' hours').replace(/\s*\(\s*/g, ' (').replace(/\s*\)/g, ')').replace(/\s{2,}/g, ' ');
 const MOD_INFO = {
   'Advanced Excel': ['XL', '#16A34A', 'Formulas, lookups, pivot tables, dashboards and MIS reports'],
   'Excel VBA': ['VBA', '#0F766E', 'Macros, loops, user forms and one-click report automation'],
@@ -1146,7 +1148,7 @@ const sapCard = t => isSap(t) ? `<div class="sapx">${SAPX_IC}<span><b>Course fee
 const sapBox = t => isSap(t) ? `<div class="sapbox">${SAPX_IC}<div><b>Course Fee Includes Unlimited SAP Server Access at No Additional Cost.</b><span>Practise on a live SAP system as much as you need during the course. No separate server or licence charges.</span></div></div>` : '';
 function card(c) {
   const mods = modulesFor(c.Title), f = amt(c.Fee), p = price(c), off = c.Offer && f && p < f ? Math.round((1 - p / f) * 100) : 0;
-  const facts = [c.Duration, mods ? mods.length + ' modules' : '', 'Certificate'].filter(Boolean);
+  const facts = [tidyDur(c.Duration), mods ? mods.length + ' modules' : '', 'Certificate'].filter(Boolean);
   const b = batchesOf(c.Title).filter(x => x.left !== 0 && ymd(x.start) && x.start.slice(0, 10) >= TODAY).sort((x, y) => x.start < y.start ? -1 : 1)[0];
   const emi = (D.emi[c.Title] || []).map(x => x.n).filter((n, i, a) => n > 1 && a.indexOf(n) === i);
   let hl = '';
@@ -1302,7 +1304,7 @@ function greet() {
 function openCourse(title) {
   const c = D.courses.find(x => x.Title === title); if (!c) return;
   const hl = String(c['Highlights (separate with |)'] || '').split('|').map(s => s.trim()).filter(Boolean), bs = batchesOf(c.Title);
-  const pills = [['Duration', c.Duration], ['Level', c.Level], ['Mode', c.Mode], ['One-to-one fee', indOn() && Number(c.IndFee) ? inr(Number(c.IndPrice) || Number(c.IndFee)) : '']].filter(x => x[1]);
+  const pills = [['Duration', tidyDur(c.Duration)], ['Level', c.Level], ['Mode', c.Mode], ['One-to-one fee', indOn() && Number(c.IndFee) ? inr(Number(c.IndPrice) || Number(c.IndFee)) : '']].filter(x => x[1]);
   $('#dCat').textContent = c.Category || 'Course'; $('#dTitle').textContent = c.Title;
   $('#dBody').innerHTML = (c.Badge ? `<span class="badge">${esc(c.Badge)}</span>` : '') +
     (c.Description ? `<p style="color:var(--muted);margin:10px 0">${esc(c.Description)}</p>` : `<p style="color:var(--muted);margin:10px 0">Ask us for the syllabus, duration and fee for this course.</p>`) +
@@ -1935,7 +1937,7 @@ else fetch(API + '?action=data', { cache: 'no-store' })
 <script>/* Share button: this course's details for the Share window (share-course.js) */
 window.MARS_SHARE_INFO = t => { const key = s => String(s || '').toLowerCase().replace(/\s+/g, ' ').trim(); const c = (typeof D !== 'undefined' && D && D.courses || []).find(x => key(x.Title) === key(t)); if (!c) return null;
   const b = batchesOf(c.Title).filter(x => x.left !== 0 && ymd(x.start) && x.start.slice(0, 10) >= TODAY).sort((x, y) => x.start < y.start ? -1 : 1)[0];
-  return { fee: amt(c.Fee), price: price(c), dur: c.Duration || '', outline: /^https:/.test(c.Outline || '') ? c.Outline : '',
+  return { fee: amt(c.Fee), price: price(c), dur: tidyDur(c.Duration), outline: /^https:/.test(c.Outline || '') ? c.Outline : '',
     batch: b ? { start: String(b.start).slice(0, 10), timing: b.timing, left: b.left } : null, offEnd: (() => { const e = c.Offer && c.Offer.end && new Date(c.Offer.end); return e && !isNaN(e) ? new Date(e.getTime() + 5.5 * 36e5).toISOString().slice(0, 10) : ''; })(), emi: (D.emi[c.Title] || []).map(x => x.n) }; };
 </script>
 <script src="https://marstraining.in/assets/share-course.js?v=5" defer></script>
