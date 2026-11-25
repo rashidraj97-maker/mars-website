@@ -649,7 +649,7 @@ function shareText(c, bold) {
   return L.join('\n');
 }
 /* "How your batch runs" box in the course details window: 2 classes a week, 1.5 hours each */
-const BATCHBOX_PREVIEW = /[?&]preview=batch\b/.test(location.search);
+const BATCHBOX_PREVIEW = true;   // shown on every course
 const CAL_IC = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4.5" width="18" height="16" rx="3"/><path d="M3 9.5h18M8 2.5v4M16 2.5v4"/><path d="M8 14h2M14 14h2M8 17.5h2"/></svg>';
 function batchBox(c, d) {
   if (!BATCHBOX_PREVIEW) return '';
