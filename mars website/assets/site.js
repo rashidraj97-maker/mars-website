@@ -49,6 +49,7 @@ const COURSES = [
   ["Office & Productivity", "MS PowerPoint", "Create impactful, professional presentations with templates, SmartArt, charts, multimedia and animation.", "", "1.5 months"],
   ["Office & Productivity", "MS Outlook", "Manage email, calendar, contacts and tasks efficiently in Microsoft Outlook.", "", "1.5 months"],
   ["Office & Productivity", "MS Office", "A 57.5-hour MS Office program for professionals: Excel from basic to advanced, then PowerPoint and Word, taught in 1.5-hour sessions with a final 2-hour doubt-clearing session.", "", "6 months (57.5 hours)"],
+  ["Office & Productivity", "Complete MS Office", "A 6-month program covering the complete Microsoft Office suite: Excel from basic to advanced, PowerPoint, Word and Outlook, in 46 practical sessions of 1.5 hours.", "New", "6 months (69 hours)"],
   ["Office & Productivity", "MS Office with Gen AI", "A 6-month program: Excel from basic to advanced, PowerPoint and Word, then Gen AI to write formulas, analyse data, build presentations and create error-free documents faster. 1.5-hour Office sessions and 2-hour Gen AI sessions.", "New", "6 months (67.5 hours)"],
   ["Office & Productivity", "MS Project (MSP)", "Plan, schedule, track and report projects in Microsoft Project, from first plan to progress reports.", "", "2.5 months"],
   ["Office & Productivity", "MS Visio", "Create professional diagrams in Microsoft Visio: flowcharts, swimlane SOPs, org charts built from Excel, network and floor plans, and process maps linked to live data.", "", "2 months"],
@@ -91,7 +92,8 @@ const MOD_INFO = {
   'Generative AI': ['AI', '#DB2777', 'ChatGPT, Claude and Copilot for analysis, reports and automation'],
   'MS Word': ['W', '#1D4ED8', 'Professional documents, styles, tables, templates and mail merge'],
   'MS PowerPoint': ['P', '#C2410C', 'Impactful presentations with SmartArt, charts and animation'],
-  'MS Excel': ['X', '#15803D', 'Excel from basics to advanced: formulas, lookups and pivots']
+  'MS Excel': ['X', '#15803D', 'Excel from basics to advanced: formulas, lookups and pivots'],
+  'MS Outlook': ['O', '#0F6CBD', 'Email, calendar, contacts and tasks in Outlook']
 };
 const DA = ['Advanced Excel', 'Excel VBA', 'Power BI', 'SQL', 'Python'], MIS = ['Advanced Excel', 'Excel VBA', 'Power BI'];
 const MODULES = {
@@ -100,6 +102,7 @@ const MODULES = {
   'mis specialist': MIS, 'mis with gen ai': MIS.concat('Generative AI'),
   'ms office': ['MS Word', 'MS PowerPoint', 'MS Excel'],
   'ms office with gen ai': ['MS Excel', 'MS PowerPoint', 'MS Word', 'Generative AI'],
+  'complete ms office': ['MS Excel', 'MS PowerPoint', 'MS Word', 'MS Outlook'],
   'advanced excel with ai': ['Advanced Excel', 'Generative AI'],
   'advanced mis specialist': ['Advanced Excel', 'Power BI', 'Excel VBA', 'SQL'], 'mis reporting dashboards': ['Advanced Excel', 'Power BI'],
   'advanced excel gen ai': ['Advanced Excel', 'Generative AI']
@@ -384,7 +387,7 @@ function coverOf(title) {
 /* Photo covers: free photos from Unsplash (Unsplash License). First match wins; LibreOffice and OpenOffice share one photo per app.
    If a photo fails to load, the drawn cover underneath shows instead. */
 const PHOTOS = [
-  [['ms office with gen ai'], '1694903089438-bf28d4697d9a'], [['advanced excel with ai'], '1744640326166-433469d102f2'], [['advanced excel'], '1783115259399-3a5a3e0e4592'], [['basic excel'], '1542744173-05336fcc7ad4'],
+  [['complete ms office'], '1713947503717-b5b1deec8a0d'], [['ms office with gen ai'], '1694903089438-bf28d4697d9a'], [['advanced excel with ai'], '1744640326166-433469d102f2'], [['advanced excel'], '1783115259399-3a5a3e0e4592'], [['basic excel'], '1542744173-05336fcc7ad4'],
   [['app script'], '1498050108023-c5249f4df085'], [['google form'], '1586282023639-dbd68e65a9fe'], [['looker'], '1560472354-b33ff0c44a43'], [['google sheet'], '1599658880436-c61792e70672'],
   [['sql'], '1580106815433-a5b1d1d53d85'], [['ms access'], '1544383835-bda2bc66a55d'], [['power bi'], '1551288049-bebda4e38f71'], [['tableau'], '1666875753105-c63a6f3bdc86'],
   [['data analytics with ai'], '1757466762489-52fea38071ad'], [['data analytics'], '1758873268745-dd2cf0d677b5'],
@@ -495,6 +498,7 @@ const LINES_LIST = [   // [course title, marketing line shown on mouse-over]
   ['MS Outlook', 'Take control of your inbox and your day'],
   ['MS Office', 'The complete office toolkit every employer expects'],
   ['MS Office with Gen AI', 'Master Office, then let AI do the heavy lifting'],
+  ['Complete MS Office', 'Every Office tool you need, mastered in one course'],
   ['MS Project (MSP)', 'Deliver projects on time, every time'],
   ['MS Visio', 'Explain complex ideas in one clear diagram'],
   ['Libre Office (Calc-Excel)', 'Spreadsheet power with zero licence cost'],
@@ -534,7 +538,7 @@ const JOBS_LIST = [   // [course title, approx. open jobs, skill searched]
   ['Google Sheets with App script (AUTOMATION)', '4,000+', 'Google Sheets & Apps Script'], ['Google sheets With Looker Studio', '800+', 'Looker Studio'],
   ['Power Query', '1,000+', 'Power Query'], ['Power Pivot', '1,000+', 'Power Query & Power Pivot'], ['Power BI', '6,000+', 'Power BI'], ['Tableau', '3,000+', 'Tableau'],
   ['MS Power Apps', '2,000+', 'Power Apps'], ['MS PowerAutomate', '1,000+', 'Power Automate'], ['MS Access', '3,000+', 'MS Access'], ['SQL', '48,000+', 'SQL'],
-  ['MS Word', '4,000+', 'MS Word'], ['MS PowerPoint', '4,000+', 'PowerPoint'], ['MS Outlook', '20,000+', 'MS Office'], ['MS Office', '20,000+', 'MS Office'], ['MS Office with Gen AI', '20,000+', 'MS Office'], ['MS Visio', '300+', 'Visio'],
+  ['MS Word', '4,000+', 'MS Word'], ['MS PowerPoint', '4,000+', 'PowerPoint'], ['MS Outlook', '20,000+', 'MS Office'], ['MS Office', '20,000+', 'MS Office'], ['MS Office with Gen AI', '20,000+', 'MS Office'], ['Complete MS Office', '20,000+', 'MS Office'], ['MS Visio', '300+', 'Visio'],
   ['Data Analytics', '8,000+', 'Data Analyst'], ['Data Analytics with AI', '8,000+', 'Data Analyst'], ['Business Analytics', '4,000+', 'Business Analyst'], ['Business Analytics with Gen AI', '4,000+', 'Business Analyst'],
   ['Machine Learning (ML)', '16,000+', 'Machine Learning'], ['Tally', '6,000+', 'Tally'], ['SAP FICO', '600+', 'SAP FICO'], ['SAP Business One', '2,000+', 'SAP Business One'],
   ['SAP MM (User Level)', '1,000+', 'SAP MM'], ['SAP MM (Consultant Level)', '1,000+', 'SAP MM'], ['SAP SD (User Level)', '1,000+', 'SAP SD'], ['SAP SD (Consultant Level)', '1,000+', 'SAP SD'],
@@ -562,7 +566,7 @@ function courseCard(c) {
   const badge = (d && d.badge) || c.badge, off = d && d.fee && d.price < d.fee ? Math.round((1 - d.price / d.fee) * 100) : 0;
   const facts = [c.dur, mods ? mods.length + ' modules' : '', 'Certificate'].filter(Boolean);
   let hl = '';
-  if (mods && mods.length > 2) hl = `<div class="hl v">${mods.map(m => esc(m.replace('Advanced ', 'Adv ').replace('Generative AI', 'AI').replace('Machine Learning', 'ML'))).join(' → ')}</div>`;
+  if (mods && mods.length > 2) hl = `<div class="hl v">${mods.map(m => esc((mods.length > 3 ? m.replace(/^MS /, '') : m).replace('Advanced ', 'Adv ').replace('Generative AI', 'AI').replace('Machine Learning', 'ML'))).join(' → ')}</div>`;
   else if (d && d.batch && d.batch.start) hl = `<div class="hl g"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>Next batch ${esc(niceDate(d.batch.start))}${d.batch.timing ? ' · ' + esc(d.batch.timing.split(/\s+\d/)[0]) : ''}${d.batch.seats && d.batch.left <= 5 ? ` · only ${d.batch.left} seats left` : ''}</div>`;
   else if (d && d.emi && d.emi.length) hl = `<div class="hl b"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20"/></svg>Pay in ${d.emi.join(' or ')} easy parts</div>`;
   else hl = '';

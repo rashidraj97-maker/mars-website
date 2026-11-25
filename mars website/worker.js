@@ -16,7 +16,7 @@ const CACHE_SECS = 600, MAX_MSGS = 8, MAX_LEN = 600, RATE_PER_10MIN = 40;
 const DA = ['Advanced Excel', 'Excel VBA', 'Power BI', 'SQL', 'Python'], MIS = ['Advanced Excel', 'Excel VBA', 'Power BI'];
 const MODULES = { 'data analytics': DA, 'data analytics with ai': DA.concat('Generative AI'), 'business analytics': DA.concat('Machine Learning'),
   'business analytics with gen ai': DA.concat('Machine Learning', 'Generative AI'), 'mis specialist': MIS, 'mis with gen ai': MIS.concat('Generative AI'),
-  'ms office': ['MS Word', 'MS PowerPoint', 'MS Excel'], 'ms office with gen ai': ['MS Excel', 'MS PowerPoint', 'MS Word', 'Generative AI'], 'advanced excel with ai': ['Advanced Excel', 'Generative AI'] };
+  'ms office': ['MS Word', 'MS PowerPoint', 'MS Excel'], 'ms office with gen ai': ['MS Excel', 'MS PowerPoint', 'MS Word', 'Generative AI'], 'complete ms office': ['MS Excel', 'MS PowerPoint', 'MS Word', 'MS Outlook'], 'advanced excel with ai': ['Advanced Excel', 'Generative AI'] };
 const normT = s => String(s || '').toLowerCase().replace(/[^a-z0-9]+/g, ' ').trim();
 
 const json = (o, status = 200, extra = {}) => new Response(JSON.stringify(o), { status, headers: Object.assign({ 'Content-Type': 'application/json; charset=utf-8', 'Cache-Control': 'no-store' }, extra) });

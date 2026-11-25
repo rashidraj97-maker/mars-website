@@ -1005,7 +1005,8 @@ const MOD_INFO = {
   'Generative AI': ['AI', '#DB2777', 'ChatGPT, Claude and Copilot for analysis, reports and automation'],
   'MS Word': ['W', '#1D4ED8', 'Professional documents, styles, tables, templates and mail merge'],
   'MS PowerPoint': ['P', '#C2410C', 'Impactful presentations with SmartArt, charts and animation'],
-  'MS Excel': ['X', '#15803D', 'Excel from basics to advanced: formulas, lookups and pivots']
+  'MS Excel': ['X', '#15803D', 'Excel from basics to advanced: formulas, lookups and pivots'],
+  'MS Outlook': ['O', '#0F6CBD', 'Email, calendar, contacts and tasks in Outlook']
 };
 const DA = ['Advanced Excel', 'Excel VBA', 'Power BI', 'SQL', 'Python'], MIS = ['Advanced Excel', 'Excel VBA', 'Power BI'];
 const MODULES = {
@@ -1014,6 +1015,7 @@ const MODULES = {
   'mis specialist': MIS, 'mis with gen ai': MIS.concat('Generative AI'),
   'ms office': ['MS Word', 'MS PowerPoint', 'MS Excel'],
   'ms office with gen ai': ['MS Excel', 'MS PowerPoint', 'MS Word', 'Generative AI'],
+  'complete ms office': ['MS Excel', 'MS PowerPoint', 'MS Word', 'MS Outlook'],
   'advanced excel with ai': ['Advanced Excel', 'Generative AI'],
   'advanced mis specialist': ['Advanced Excel', 'Power BI', 'Excel VBA', 'SQL'], 'mis reporting dashboards': ['Advanced Excel', 'Power BI'],
   'advanced excel gen ai': ['Advanced Excel', 'Generative AI']
@@ -1056,7 +1058,7 @@ function coverOf(title) {
 /* Photo covers: free photos from Unsplash (Unsplash License). First match wins; LibreOffice and OpenOffice share one photo per app.
    If a photo fails to load, the drawn cover underneath shows instead. */
 const PHOTOS = [
-  [['ms office with gen ai'], '1694903089438-bf28d4697d9a'], [['advanced excel with ai'], '1744640326166-433469d102f2'], [['advanced excel'], '1783115259399-3a5a3e0e4592'], [['basic excel'], '1542744173-05336fcc7ad4'],
+  [['complete ms office'], '1713947503717-b5b1deec8a0d'], [['ms office with gen ai'], '1694903089438-bf28d4697d9a'], [['advanced excel with ai'], '1744640326166-433469d102f2'], [['advanced excel'], '1783115259399-3a5a3e0e4592'], [['basic excel'], '1542744173-05336fcc7ad4'],
   [['app script'], '1498050108023-c5249f4df085'], [['google form'], '1586282023639-dbd68e65a9fe'], [['looker'], '1560472354-b33ff0c44a43'], [['google sheet'], '1599658880436-c61792e70672'],
   [['sql'], '1580106815433-a5b1d1d53d85'], [['ms access'], '1544383835-bda2bc66a55d'], [['power bi'], '1551288049-bebda4e38f71'], [['tableau'], '1666875753105-c63a6f3bdc86'],
   [['data analytics with ai'], '1757466762489-52fea38071ad'], [['data analytics'], '1758873268745-dd2cf0d677b5'],
@@ -1148,7 +1150,7 @@ function card(c) {
   const b = batchesOf(c.Title).filter(x => x.left !== 0 && ymd(x.start) && x.start.slice(0, 10) >= TODAY).sort((x, y) => x.start < y.start ? -1 : 1)[0];
   const emi = (D.emi[c.Title] || []).map(x => x.n).filter((n, i, a) => n > 1 && a.indexOf(n) === i);
   let hl = '';
-  if (mods && mods.length > 2) hl = `<div class="chl v">${mods.map(m => esc(m.replace('Advanced ', 'Adv ').replace('Generative AI', 'AI').replace('Machine Learning', 'ML'))).join(' → ')}</div>`;
+  if (mods && mods.length > 2) hl = `<div class="chl v">${mods.map(m => esc((mods.length > 3 ? m.replace(/^MS /, '') : m).replace('Advanced ', 'Adv ').replace('Generative AI', 'AI').replace('Machine Learning', 'ML'))).join(' → ')}</div>`;
   else if (b) { const d = ymd(b.start); hl = `<div class="chl g">${CAL}Next batch ${d.d} ${d.m}${b.timing ? ' · ' + esc(b.timing.split(/\s+\d/)[0]) : ''}${b.left && b.left <= 5 ? ` · only ${b.left} seats left` : ''}</div>`; }
   else if (emi.length) hl = `<div class="chl b">${CARD}Pay in ${emi.join(' or ')} easy parts</div>`;
   const loc = hl ? `<div class="loc">${PIN}<span>Live online · or classroom in Kolkata</span></div>` : `<div class="chl k">${PIN}<span><b>Live online</b> · or <b>classroom in Kolkata</b></span></div>`;
