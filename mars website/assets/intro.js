@@ -15,8 +15,8 @@
 #mintro.out{opacity:0;transform:scale(1.04);pointer-events:none}
 #mintro:before{content:"";position:absolute;inset:0;background-image:radial-gradient(rgba(255,255,255,.07) 1px,transparent 1px);background-size:22px 22px;pointer-events:none}
 #mintro .mi-in{position:relative;max-width:640px}
-#mintro .mi-logo{display:inline-block;background:#fff;border-radius:16px;padding:10px 18px;box-shadow:0 14px 40px -12px rgba(0,0,0,.5);animation:mi-up .6s .05s both}
-#mintro .mi-logo img{display:block;height:44px;width:auto}
+#mintro .mi-logo{display:inline-block;background:#fff;border-radius:20px;padding:14px 26px;box-shadow:0 14px 40px -12px rgba(0,0,0,.5);animation:mi-up .6s .05s both}
+#mintro .mi-logo img{display:block;height:clamp(58px,11vw,78px);width:auto;max-width:72vw}
 #mintro .mi-num{font:800 clamp(6rem,24vw,11rem)/.9 "Plus Jakarta Sans",Inter,sans-serif;letter-spacing:-.05em;margin:26px 0 4px;color:#FFC23C;
   text-shadow:0 10px 40px rgba(255,194,60,.35);animation:mi-up .7s .15s both}
 #mintro .mi-num sup{font-size:.32em;vertical-align:.95em;margin-left:4px;letter-spacing:0}
