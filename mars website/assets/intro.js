@@ -4,7 +4,10 @@
   const PREVIEW = /[?&]preview=intro\b/.test(location.search), LIVE = true;
   if (!LIVE && !PREVIEW) return;
   const KEY = 'mars_intro1';
-  try { if (!PREVIEW && sessionStorage.getItem(KEY)) return; sessionStorage.setItem(KEY, '1'); } catch (e) {}
+  // remembered for the whole browser session, across all tabs and both www / non-www addresses
+  const seen = () => { try { return document.cookie.split('; ').includes(KEY + '=1') || sessionStorage.getItem(KEY) || localStorage.getItem(KEY) > Date.now() - 6 * 3600e3; } catch (e) { return false; } };
+  if (!PREVIEW && seen()) return;
+  try { const dom = /marstraining\.in$/.test(location.hostname) ? '; domain=.marstraining.in' : ''; document.cookie = KEY + '=1; path=/; SameSite=Lax' + dom; sessionStorage.setItem(KEY, '1'); localStorage.setItem(KEY, String(Date.now())); } catch (e) {}
   const YEARS = 31, STAY = 3200;
   const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
 
