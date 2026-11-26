@@ -83,11 +83,11 @@
     if (show({ href: u.href, name })) e.preventDefault();
   }, true);
   // computer: the mouse leaves through the top edge of the page
-  document.addEventListener('mouseout', e => { if (!e.relatedTarget && e.clientY <= 8) show(); });
+  // (off) document.addEventListener('mouseout', e => { if (!e.relatedTarget && e.clientY <= 8) show(); });
   // phone (and computer): the visitor switched away and came back
-  let away = 0;
-  document.addEventListener('visibilitychange', () => {
-    if (document.hidden) away = Date.now();
-    else if (away && Date.now() - away > 3000 && matchMedia('(hover:none)').matches) show();
-  });
+  // (off) let away = 0;
+  // (off) document.addEventListener('visibilitychange', () => {
+  // (off) if (document.hidden) away = Date.now();
+  // (off) else if (away && Date.now() - away > 3000 && matchMedia('(hover:none)').matches) show();
+  // (off) });
 })();
