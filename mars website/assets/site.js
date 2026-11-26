@@ -21,6 +21,7 @@ const SITE = {
 /* ===== Course catalogue (shown on courses.html and the home page) ===== */
 const COURSES = [
   ["Office & Productivity", "Basics of Computer", "Computer fundamentals for beginners: Windows, files and folders, internet and email, plus basic Word and Excel.", "", "2.5 months (24 hours)"],
+  ["Office & Productivity", "Basic Computers for Homemakers", "A friendly, step-by-step course for housewives and homemakers with no computer knowledge: use a computer with confidence, manage household budgets in Excel, make cards and letters in Word, and use the internet, Gmail and online services safely.", "", "2.5 months (24 hours)"],
   ["Data & Analytics", "Basic Excel", "Build a strong Excel foundation: worksheets, cell references, everyday formulas, sorting, filtering and formatting.", "Popular", "1.5 months (12 hours)"],
   ["Data & Analytics", "Advanced Excel", "Master advanced Excel for analysis and MIS: complex formulas, lookups, dynamic arrays, data cleaning and professional reports and dashboards.", "Popular", "2.5 months (30 hours)"],
   ["Data & Analytics", "Advanced Excel with AI", "Excel from basics to professional MIS reporting, then AI inside Excel to write formulas, analyse data and build reports faster.", "New", "4 months (38 hours)"],
@@ -385,6 +386,7 @@ function coverOf(title) {
   if (/^(gen ai|claude)/.test(t)) return { bg: '#1E1B4B', kind: 'ai', ic: 'AI' };
   if (has('analytics', 'mis')) return { bg: has('business') ? '#0B2E4F' : has('mis') ? '#14324F' : '#1B1340', kind: 'bars', ic: has('mis') ? 'MIS' : has('business') ? 'BA' : 'DA', ai: has(' ai') };
   if (has('sap', 'netsuite', 'tally')) return { bg: has('tally') ? '#0B5C5C' : has('netsuite') ? '#1F3A5F' : '#0A3D6B', kind: 'ledger', ic: has('tally') ? 'T' : has('netsuite') ? 'NS' : 'SAP' };
+  if (HOME_PREVIEW && has('homemaker')) return { bg: '#A23E6A', kind: 'pc', ic: 'PC' };
   if (has('computer')) return { bg: '#334155', kind: 'pc', ic: 'PC' };
   if (has('career', 'interview')) return { bg: '#7C2D12', kind: 'talk', ic: 'Hi' };
   return { bg: '#1B4F86', kind: 'bars', ic: title.slice(0, 2).toUpperCase() };
@@ -471,10 +473,12 @@ const GIFT_IC = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stro
    - Advanced Excel: "Your professional life is not complete without this"
    - every course with a figure below: about how many jobs are open in India for that skill (Indeed India, Nov 2026) */
 const HOVER_PREVIEW = true;
+const HOME_PREVIEW = /[?&]preview=home\b/.test(location.search);   // Basic Computers for Homemakers: own cover colour and hover line
 const LINES_PREVIEW = true;   // marketing line on every course card
 const JOBS_PREVIEW = /[?&]preview=jobs\b/.test(location.search);
 const LINES_LIST = [   // [course title, marketing line shown on mouse-over]
   ['Basics of Computer', 'Your first step into the digital world starts here'],
+  ['Basic Computers for Homemakers', 'Manage your home, family and finances with confidence'],
   ['Basic Excel', 'Every office runs on Excel. Make it your strength'],
   ['Advanced Excel with AI', 'Excel skills + AI speed = the employee everyone wants'],
   ['Advanced Excel & Gen Ai', 'Work smarter, not longer: Excel powered by AI'],
@@ -532,7 +536,7 @@ const LINES_LIST = [   // [course title, marketing line shown on mouse-over]
   ['Career Communication & Interview Skills Program', 'Speak with confidence. Crack your next interview'],
 ];
 let LINES_MAP = null;
-const lineFor = t => { if (hasFreeBasic(t)) return HOVER_PREVIEW ? 'Your professional life is not complete without this' : ''; if (!LINES_PREVIEW) return ''; if (!LINES_MAP) LINES_MAP = Object.fromEntries(LINES_LIST.map(([k, v]) => [normT(k), v])); return LINES_MAP[normT(t)] || ''; };
+const lineFor = t => { if (hasFreeBasic(t)) return HOVER_PREVIEW ? 'Your professional life is not complete without this' : ''; if (!LINES_PREVIEW) return ''; if (!LINES_MAP) LINES_MAP = Object.fromEntries(LINES_LIST.map(([k, v]) => [normT(k), v])); return (!HOME_PREVIEW && /homemaker/i.test(t)) ? '' : (LINES_MAP[normT(t)] || ''); };
 const JOBS_SRC = 'Source: Indeed India · Nov 2026';
 const JOBS_LIST = [   // [course title, approx. open jobs, skill searched]
   ['Basics of Computer', '30,000+', 'computer'], ['Basic Excel', '28,000+', 'MS Excel'], ['Advanced Excel', '10,000+', 'Advanced Excel'],
