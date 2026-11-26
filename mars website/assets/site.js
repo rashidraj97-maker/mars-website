@@ -473,7 +473,7 @@ const GIFT_IC = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stro
    - Advanced Excel: "Your professional life is not complete without this"
    - every course with a figure below: about how many jobs are open in India for that skill (Indeed India, Nov 2026) */
 const HOVER_PREVIEW = true;
-const HOME_PREVIEW = /[?&]preview=home\b/.test(location.search);   // Basic Computers for Homemakers: own cover colour and hover line
+const HOME_PREVIEW = true;   // Basic Computers for Homemakers: own cover colour and hover line
 const LINES_PREVIEW = true;   // marketing line on every course card
 const JOBS_PREVIEW = /[?&]preview=jobs\b/.test(location.search);
 const LINES_LIST = [   // [course title, marketing line shown on mouse-over]
