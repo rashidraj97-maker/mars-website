@@ -1,7 +1,7 @@
 /* Welcome banner shown the moment the website opens: "31 Years of Corporate Exposure".
  * Once per visit (browser tab session), about 3 seconds, closes on tap / click / any key. */
 (function () {
-  const ISO = /[?&]preview=iso\b/.test(location.search);   // preview: ISO certified badge
+  const ISO = true;   // ISO + Google Reviews badges   // preview: ISO certified badge
   const PREVIEW = ISO || /[?&]preview=intro\b/.test(location.search), LIVE = true;
   if (!LIVE && !PREVIEW) return;
   const KEY = 'mars_intro1';
