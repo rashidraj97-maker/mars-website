@@ -165,7 +165,7 @@ function showcase(items, mark) {
     ? `<span class="st-t lgt" title="${esc(x.n)}"><img src="https://drive.google.com/thumbnail?id=${esc(x.id)}&sz=w400" alt="${esc(x.n)}" loading="lazy" referrerpolicy="no-referrer"></span>`
     : `<span class="st-t">${mark(x)}<i>${esc(x.n)}</i></span>`;
   const half = Math.ceil(items.length / 2), rows = [items.slice(0, half), items.slice(half)];
-  const row = (l, rev) => { const one = l.map(tile).join(''); return `<div class="sc-row"><div class="sc-track${rev ? ' rev' : ''}" style="animation-duration:${Math.max(50, l.length * 3.4)}s">${one}${one.replace(/<span/g, '<span aria-hidden="true"')}</div></div>`; };
+  const row = (l, rev) => { const one = l.map(tile).join(''); return `<div class="sc-row"><div class="sc-shift"><div class="sc-track${rev ? ' rev' : ''}" style="animation-duration:${Math.max(50, l.length * 3.4)}s">${one}${one.replace(/<span/g, '<span aria-hidden="true"')}</div></div></div>`; };
   sec.innerHTML = `<div class="sc-in">
     <h2 class="sc-h">Professionals From Top Companies Trained By <em>Us</em></h2>
     <div class="sc-stage"><div class="sc-light" aria-hidden="true"></div>${row(rows[0])}${row(rows[1], true)}</div>
@@ -175,6 +175,11 @@ function showcase(items, mark) {
       <div><b>3 Lakh<sup>+</sup></b><span>Professionals Trained</span></div>
       <div><b>12,590</b><span>Batches Delivered</span></div>
     </div></div>`;
+  // scroll aura: the spotlight switches on and the rows glide apart as the section moves through the screen
+  const upd = () => { const r = sec.getBoundingClientRect(), vh = innerHeight;
+    const p = Math.min(Math.max((vh - r.top) / (vh * 0.9), 0), 1), q = Math.min(Math.max((vh - r.top) / (vh + r.height), 0), 1);
+    sec.style.setProperty('--p', p.toFixed(3)); sec.style.setProperty('--q', q.toFixed(3)); };
+  addEventListener('scroll', upd, { passive: true }); addEventListener('resize', upd); upd();
   $$('.lgt img', sec).forEach(im => im.addEventListener('error', () => { im.parentNode.classList.remove('lgt'); im.parentNode.innerHTML = '<i>' + esc(im.alt) + '</i>'; }));
   $$('img.ic', sec).forEach(im => { const bad = () => { const b = document.createElement('b'); b.className = 'ini'; b.style.cssText = im.style.cssText; b.textContent = im.dataset.ini; im.replaceWith(b); };
     im.addEventListener('error', bad); im.addEventListener('load', () => { if (im.naturalWidth < 24) bad(); }); });
