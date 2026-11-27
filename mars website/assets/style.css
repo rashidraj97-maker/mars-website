@@ -1234,3 +1234,12 @@ html{scroll-padding-top:96px}
 .scase .sc-light{transform:translateX(-50%)!important;opacity:1!important}
 .scase .sc-beam{opacity:1!important}
 .scase .sc-stage:before{background:radial-gradient(ellipse 50% 55% at 50% 35%,rgba(124,82,246,.5),rgba(70,40,170,.22) 55%,transparent 80%)!important}
+
+/* light spread matched to the reference: bar ~43% wide, beam widens ~35% over ~560px, fades before the stats */
+.scase .sc-light{width:min(860px,44vw)!important;height:6px;background:linear-gradient(90deg,#6D3FE0,#B9A2FF 12%,#D6C8FF 50%,#B9A2FF 88%,#6D3FE0);box-shadow:0 0 22px 4px rgba(150,110,255,.65),0 6px 40px 10px rgba(124,82,246,.35)}
+.scase .sc-beam{width:min(1180px,60vw)!important;height:560px!important;filter:blur(22px)!important}
+.scase .sc-beam i{clip-path:polygon(13.5% 0,86.5% 0,100% 100%,0 100%)!important;background:linear-gradient(180deg,rgba(150,108,255,.85) 0%,rgba(122,82,240,.6) 22%,rgba(96,60,214,.34) 52%,rgba(70,40,170,.12) 78%,transparent 100%)!important}
+.scase .sc-stage:before{width:min(1300px,70vw)!important;height:760px!important;top:-20px!important;background:radial-gradient(ellipse 50% 50% at 50% 40%,rgba(110,70,230,.32),rgba(60,30,150,.14) 60%,transparent 82%)!important}
+.scase .sc-in{max-width:none}
+.scase .sc-stats{max-width:1500px;margin-left:auto;margin-right:auto}
+.scase .sc-row{-webkit-mask-image:none;mask-image:none}
