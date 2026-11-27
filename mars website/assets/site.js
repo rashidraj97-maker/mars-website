@@ -172,6 +172,31 @@ function hSlider(el) {
     el.scrollBy({ left: Number(b.dataset.d) * step, behavior: 'smooth' }); });
   el.addEventListener('scroll', upd, { passive: true }); addEventListener('resize', upd); upd(); setTimeout(upd, 600);
 }
+/* The showcase light, painted to match the reference: a crisp-topped cone (#7454B7) that is brightest at the top edge,
+   fades to black ~1.5 bar-half-widths below, and whose sides go from sharp at the top to soft further down. */
+function paintLight(sec) {
+  const cv = $('.sc-cv', sec), bar = $('.sc-light', sec); if (!cv || !bar || !cv.getContext) return;
+  const Vt = [[0, 1], [.1, .93], [.43, .7], [.8, .54], [.94, .45], [1, .39], [1.16, .24], [1.23, .17], [1.31, .11], [1.38, .075], [1.46, .04], [1.62, 0]];
+  const V = d => { for (let i = 1; i < Vt.length; i++) if (d <= Vt[i][0]) { const [a, va] = Vt[i - 1], [b, vb] = Vt[i]; return va + (vb - va) * (d - a) / (b - a); } return 0; };
+  const draw = () => {
+    const Wh = bar.getBoundingClientRect().width / 2; if (!Wh) return;
+    const up = 24, w = Math.round(Wh * 3.8), h = Math.round(Wh * 1.62 + up);
+    cv.width = w; cv.height = h; cv.style.width = w + 'px'; cv.style.height = h + 'px'; cv.style.top = -up + 'px';
+    const ctx = cv.getContext('2d'), img = ctx.createImageData(w, h), D = img.data, cx = w / 2;
+    for (let y = 0; y < h; y++) {
+      const dp = y - up, d = dp / Wh; let vy, n, a;
+      if (dp < 0) { vy = .32 * Math.exp(dp / 6); n = 20; a = .97; }
+      else { vy = V(d); const t = Math.min(d / .4, 1); n = 3 + 17 * (1 - t) * (1 - t); a = .97 + .28 * Math.pow(Math.min(d / .85, 1), .6); }
+      const k = Math.min(Math.max(d / .5, 0), 1), cg = 84 - 16 * k, cb = 183 + 35 * k;
+      for (let x = 0; x < w; x++) {
+        const I = vy * Math.exp(-Math.pow(Math.abs(x - cx) / Wh / a, n)), o = (y * w + x) * 4;
+        D[o] = 116; D[o + 1] = cg; D[o + 2] = cb; D[o + 3] = Math.round(Math.min(I, 1) * 255);
+      }
+    }
+    ctx.putImageData(img, 0, 0);
+  };
+  draw(); let tm; addEventListener('resize', () => { clearTimeout(tm); tm = setTimeout(draw, 150); });
+}
 function showcase(items, mark) {
   const sec = $('section.logos'); if (!sec) return;
   sec.classList.add('scase');
@@ -182,13 +207,14 @@ function showcase(items, mark) {
   const row = (l, rev) => { const one = l.map(tile).join(''); return `<div class="sc-row"><div class="sc-shift"><div class="sc-track${rev ? ' rev' : ''}" style="animation-duration:${Math.max(50, l.length * 3.4)}s">${one}${one.replace(/<span/g, '<span aria-hidden="true"')}</div></div></div>`; };
   sec.innerHTML = `<div class="sc-in">
     <h2 class="sc-h">Professionals From Top Companies Trained By <em>Us</em></h2>
-    <div class="sc-stage"><div class="sc-beam" aria-hidden="true"><i></i></div><div class="sc-light" aria-hidden="true"></div>${row(rows[0])}${row(rows[1], true)}</div>
+    <div class="sc-stage"><canvas class="sc-cv" aria-hidden="true"></canvas><div class="sc-light" aria-hidden="true"></div>${row(rows[0])}${row(rows[1], true)}</div>
     <div class="sc-stats">
       <div><b>31<sup>+</sup></b><span>Years of Corporate Exposure</span></div>
       <div><b>500<sup>+</sup></b><span>Organisations Trained</span></div>
       <div><b>3 Lakh<sup>+</sup></b><span>Professionals Trained</span></div>
       <div><b>12,590</b><span>Batches Delivered</span></div>
     </div></div>`;
+  paintLight(sec);
   // scroll aura: the spotlight switches on and the rows glide apart as the section moves through the screen
   const upd = () => { const r = sec.getBoundingClientRect(), vh = innerHeight;
     const p = Math.min(Math.max((vh - r.top) / (vh * 0.9), 0), 1), q = Math.min(Math.max((vh - r.top) / (vh + r.height), 0), 1);
