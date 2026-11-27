@@ -185,8 +185,9 @@ function paintLight(sec) {
     const ctx = cv.getContext('2d'), img = ctx.createImageData(w, h), D = img.data, cx = w / 2;
     for (let y = 0; y < h; y++) {
       const dp = y - up, d = dp / Wh; let vy, n, a;
-      if (dp < 0) { vy = .32 * Math.exp(dp / 6); n = 20; a = .97; }
-      else { vy = V(d); const t = Math.min(d / .4, 1); n = 3 + 17 * (1 - t) * (1 - t); a = .97 + .28 * Math.pow(Math.min(d / .85, 1), .6); }
+      // sides: crisp only at the very top edge, then softening quickly into a diagonal glow (measured edge ramp ≈ 40px + 2 × depth)
+      if (dp < 0) { vy = .1 * Math.exp(dp / 2.5); n = 60; a = .99; }
+      else { vy = V(d); n = 3 + 57 / (1 + Math.pow(d / .02, 1.3)); a = .99 + .26 * Math.pow(Math.min(d / .85, 1), .6); }
       const k = Math.min(Math.max(d / .5, 0), 1), cg = 84 - 16 * k, cb = 183 + 35 * k;
       for (let x = 0; x < w; x++) {
         const I = vy * Math.exp(-Math.pow(Math.abs(x - cx) / Wh / a, n)), o = (y * w + x) * 4;
