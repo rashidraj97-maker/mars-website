@@ -47,7 +47,7 @@
   const box = document.createElement('div'); box.id = 'mintro'; box.setAttribute('role', 'dialog'); box.setAttribute('aria-label', '31 years of corporate exposure');
   box.innerHTML = `<div class="mi-in">
     <div class="mi-logo"><img src="assets/logo.png" alt="MARS Training & Solution"></div>
-    ${ISO ? `<div class="mi-badges"><div class="mi-iso"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 2l2.4 2.1 3.2-.3.8 3.1 2.8 1.6-1.2 3 1.2 3-2.8 1.6-.8 3.1-3.2-.3L12 22l-2.4-2.1-3.2.3-.8-3.1-2.8-1.6 1.2-3-1.2-3 2.8-1.6.8-3.1 3.2.3z"/><path d="M8.5 12l2.4 2.4 4.6-4.8"/></svg><span><b>ISO 9001:2015</b> Certified Company</span></div><div class="mi-iso mi-g"><span class="mi-stars" aria-hidden="true">★★★★★</span><span><b>1K+</b> Google Reviews</span></div></div>` : ''}
+    ${ISO ? `<div class="mi-badges"><div class="mi-iso"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 2l2.4 2.1 3.2-.3.8 3.1 2.8 1.6-1.2 3 1.2 3-2.8 1.6-.8 3.1-3.2-.3L12 22l-2.4-2.1-3.2.3-.8-3.1-2.8-1.6 1.2-3-1.2-3 2.8-1.6.8-3.1 3.2.3z"/><path d="M8.5 12l2.4 2.4 4.6-4.8"/></svg><span><b>ISO 9001:2015</b> Certified Company</span></div><div class="mi-iso mi-g"><span class="mi-stars" aria-hidden="true">★★★★★</span><span><b>1.1K+</b> Google Reviews</span></div></div>` : ''}
     <div class="mi-num"><span id="mi-n">${reduce ? YEARS : 0}</span><sup>+</sup></div>
     <p class="mi-t">Years of Corporate Exposure</p>
     <div class="mi-line"></div>
