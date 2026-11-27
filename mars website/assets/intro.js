@@ -1,15 +1,17 @@
 /* Welcome banner shown the moment the website opens: "31 Years of Corporate Exposure".
  * Once per visit (browser tab session), about 3 seconds, closes on tap / click / any key. */
 (function () {
-  const ISO = true;   // ISO + Google Reviews badges   // preview: ISO certified badge
-  const PREVIEW = ISO || /[?&]preview=intro\b/.test(location.search), LIVE = true;
+  const ISO = true;   // ISO + Google Reviews badges (always on)
+  const PREVIEW = /[?&]preview=(intro|iso)\b/.test(location.search), LIVE = true;
   if (!LIVE && !PREVIEW) return;
   const KEY = 'mars_intro1';
-  // show every time someone arrives at the website (typed address, Google, ads, WhatsApp link, reopened tab),
-  // but not when they move from one page of the website to another
+  // once per visit: shown on the first page someone opens, then not again in any tab
+  // until the browser is closed (session cookie, shared by all tabs and www / non-www)
   let fromSite = false;
   try { fromSite = !!document.referrer && /(^|\.)marstraining\.in$|^localhost$/.test(new URL(document.referrer).hostname); } catch (e) {}
-  if (!PREVIEW && fromSite) return;
+  const seen = (() => { try { return document.cookie.split('; ').includes(KEY + '=1') || !!sessionStorage.getItem(KEY); } catch (e) { return false; } })();
+  if (!PREVIEW && (fromSite || seen)) return;
+  try { document.cookie = KEY + '=1; path=/; SameSite=Lax' + (/marstraining\.in$/.test(location.hostname) ? '; domain=.marstraining.in' : ''); sessionStorage.setItem(KEY, '1'); } catch (e) {}
   const YEARS = 31, STAY = 3200;
   const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
 
