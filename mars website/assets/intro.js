@@ -5,13 +5,16 @@
   const PREVIEW = /[?&]preview=(intro|iso)\b/.test(location.search), LIVE = true;
   if (!LIVE && !PREVIEW) return;
   const KEY = 'mars_intro1';
-  // once per visit: shown on the first page someone opens, then not again in any tab
-  // until the browser is closed (session cookie, shared by all tabs and www / non-www)
-  let fromSite = false;
-  try { fromSite = !!document.referrer && /(^|\.)marstraining\.in$|^localhost$/.test(new URL(document.referrer).hostname); } catch (e) {}
-  const seen = (() => { try { return document.cookie.split('; ').includes(KEY + '=1') || !!sessionStorage.getItem(KEY); } catch (e) { return false; } })();
-  if (!PREVIEW && (fromSite || seen)) return;
-  try { document.cookie = KEY + '=1; path=/; SameSite=Lax' + (/marstraining\.in$/.test(location.hostname) ? '; domain=.marstraining.in' : ''); sessionStorage.setItem(KEY, '1'); } catch (e) {}
+  // Once per visit, whichever page is opened first. A visit ends after 30 minutes with no page opened on the
+  // website (the usual analytics rule). Every page view keeps the visit alive. The marker is a cookie shared by
+  // all tabs and by www / non-www, plus localStorage as a backup.
+  const VISIT = 30 * 60;   // seconds
+  const dom = /marstraining\.in$/.test(location.hostname) ? '; domain=.marstraining.in' : '';
+  const inVisit = (() => { try { return document.cookie.split('; ').includes(KEY + '=1') || Number(localStorage.getItem(KEY) || 0) > Date.now() - VISIT * 1000; } catch (e) { return false; } })();
+  const touch = () => { try { document.cookie = KEY + '=1; path=/; max-age=' + VISIT + '; SameSite=Lax' + dom; localStorage.setItem(KEY, String(Date.now())); } catch (e) {} };
+  touch();   // this page view starts or extends the visit
+  addEventListener('pageshow', touch);
+  if (!PREVIEW && inVisit) return;
   const YEARS = 31, STAY = 3200;
   const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
 
