@@ -158,6 +158,20 @@ function offerBar() {
 /* Futurense-style client showcase (preview: ?preview=showcase): dark stage, purple spotlight,
    two rows of logo tiles moving in opposite directions, big italic stats underneath */
 const SHOWCASE = /[?&]preview=showcase\b/.test(location.search);
+/* Futurense-style horizontal slider: one row of cards, purple progress bar, ‹ › buttons (preview: ?preview=showcase) */
+function hSlider(el) {
+  if (!el || el.dataset.hs) return; el.dataset.hs = '1'; el.classList.add('hs');
+  const bar = document.createElement('div'); bar.className = 'hs-ctl';
+  bar.innerHTML = '<div class="hs-prog"><i></i></div><button type="button" class="hs-b" data-d="-1" aria-label="Previous"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M15 6l-6 6 6 6"/></svg></button><button type="button" class="hs-b on" data-d="1" aria-label="Next"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg></button>';
+  el.after(bar);
+  const fill = $('.hs-prog i', bar), [pv, nx] = $$('.hs-b', bar);
+  const upd = () => { const max = el.scrollWidth - el.clientWidth, k = max > 0 ? el.scrollLeft / max : 1, w = Math.min(el.clientWidth / el.scrollWidth, 1);
+    fill.style.width = (w * 100) + '%'; fill.style.left = (k * (1 - w) * 100) + '%';
+    pv.classList.toggle('on', el.scrollLeft > 4); nx.classList.toggle('on', el.scrollLeft < max - 4); bar.hidden = max <= 4; };
+  bar.addEventListener('click', e => { const b = e.target.closest('.hs-b'); if (!b) return; const c = el.firstElementChild, step = c ? c.getBoundingClientRect().width + 24 : el.clientWidth * .8;
+    el.scrollBy({ left: Number(b.dataset.d) * step, behavior: 'smooth' }); });
+  el.addEventListener('scroll', upd, { passive: true }); addEventListener('resize', upd); upd(); setTimeout(upd, 600);
+}
 function showcase(items, mark) {
   const sec = $('section.logos'); if (!sec) return;
   sec.classList.add('scase');
@@ -279,6 +293,7 @@ function home() {
   } else if (f) f.textContent = text;
   // client marquee: names from the page, real logos from the Drive folder "MARS Client Logos"
   clientStrip();
+  if (SHOWCASE) hSlider($('.fbk-grid'));
   // total number of courses (homepage stat, Courses page banner): counted from the course list, so it updates when a course is added
   $$('[data-courses]').forEach(e => { e.dataset.to = COURSES.length; e.textContent = COURSES.length; });
   $$('[data-courses-round]').forEach(e => { e.textContent = (e.dataset.label || '{n}').replace('{n}', Math.floor(COURSES.length / 10) * 10 + '+'); });   // e.g. 51 courses -> "50+"
@@ -781,6 +796,7 @@ function demosHome() {
     if (!l.length) return;
     grid.innerHTML = (PV_DEMOS ? l : l.slice(0, 8)).map((v, i) => `<button type="button" class="demo" data-play="${i}"><span class="th" style="background-image:url('${esc(thumbOf(v))}')"><span class="pl"><svg viewBox="0 0 24 24"><path d="M7 4v16l13-8z"/></svg></span>${v.dur ? `<span class="du">${esc(v.dur)}</span>` : ''}</span><span class="bd">${v.course ? `<small>${esc(v.course)}</small>` : ''}<b>${esc(v.title)}</b>${v.trainer ? `<span class="tr">Trainer: ${esc(v.trainer)}</span>` : ''}</span></button>`).join('');
     sec.hidden = false;
+    if (SHOWCASE) hSlider(grid);
   });
 }
 
