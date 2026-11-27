@@ -371,6 +371,7 @@ function coverOf(title) {
   if (has('google sheet', 'google form', 'app script')) return has('looker') ? { bg: '#174EA6', kind: 'bars', ic: 'LS' } : grid('#188038', 'G', has('script') ? 'onEdit(e)' : '=QUERY(…)');
   if (has('powerpoint')) return { bg: '#B7472A', kind: 'slide', ic: 'P' };
   if (has('ms word')) return { bg: '#2B579A', kind: 'doc', ic: 'W' };
+  if (has('teams')) return { bg: '#5B5FC7', kind: 'mail', ic: 'T' };
   if (has('outlook')) return { bg: '#0F6CBD', kind: 'mail', ic: 'O' };
   if (has('access')) return { bg: '#A4373A', kind: 'db', ic: 'A' };
   if (has('visio')) return { bg: '#2E3F8F', kind: 'flow', ic: 'V' };
@@ -505,6 +506,7 @@ const LINES_LIST = [   // [course title, marketing line shown on mouse-over]
   ['MS Word', 'Documents that look professional, every time'],
   ['MS PowerPoint', 'Presentations that make people listen'],
   ['MS Outlook', 'Take control of your inbox and your day'],
+  ['MS Teams with Forms', 'Meet, collaborate and collect feedback, all in one place'],
   ['MS Office', 'The complete office toolkit every employer expects'],
   ['MS Office with Gen AI', 'Master Office, then let AI do the heavy lifting'],
   ['Complete MS Office', 'Every Office tool you need, mastered in one course'],
