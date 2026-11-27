@@ -1,7 +1,8 @@
 /* Welcome banner shown the moment the website opens: "31 Years of Corporate Exposure".
  * Once per visit (browser tab session), about 3 seconds, closes on tap / click / any key. */
 (function () {
-  const PREVIEW = /[?&]preview=intro\b/.test(location.search), LIVE = true;
+  const ISO = /[?&]preview=iso\b/.test(location.search);   // preview: ISO certified badge
+  const PREVIEW = ISO || /[?&]preview=intro\b/.test(location.search), LIVE = true;
   if (!LIVE && !PREVIEW) return;
   const KEY = 'mars_intro1';
   // show every time someone arrives at the website (typed address, Google, ads, WhatsApp link, reopened tab),
@@ -30,6 +31,10 @@
 #mintro .mi-s b{color:#fff}
 #mintro .mi-skip{position:absolute;right:18px;bottom:18px;font-size:.8rem;color:rgba(255,255,255,.6);background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.18);border-radius:99px;padding:7px 14px;cursor:pointer}
 #mintro .mi-bar{position:absolute;left:0;bottom:0;height:3px;background:#FFC23C;animation:mi-bar ${STAY}ms linear both}
+#mintro .mi-iso{display:inline-flex;align-items:center;gap:8px;margin-top:16px;padding:8px 16px 8px 10px;border-radius:99px;background:rgba(255,194,60,.14);border:1px solid rgba(255,194,60,.55);color:#fff;font-size:clamp(.85rem,2.4vw,1rem);letter-spacing:.02em;animation:mi-up .6s .1s both}
+#mintro .mi-iso svg{width:24px;height:24px;color:#FFC23C;flex:none}
+#mintro .mi-iso b{color:#FFC23C;font-weight:800}
+#mintro .mi-in>.mi-iso{display:flex;width:max-content;margin-left:auto;margin-right:auto}
 @keyframes mi-up{from{opacity:0;transform:translateY(16px)}}
 @keyframes mi-grow{from{transform:scaleX(0)}}
 @keyframes mi-bar{from{width:0}to{width:100%}}
@@ -39,6 +44,7 @@
   const box = document.createElement('div'); box.id = 'mintro'; box.setAttribute('role', 'dialog'); box.setAttribute('aria-label', '31 years of corporate exposure');
   box.innerHTML = `<div class="mi-in">
     <div class="mi-logo"><img src="assets/logo.png" alt="MARS Training & Solution"></div>
+    ${ISO ? `<div class="mi-iso"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 2l2.4 2.1 3.2-.3.8 3.1 2.8 1.6-1.2 3 1.2 3-2.8 1.6-.8 3.1-3.2-.3L12 22l-2.4-2.1-3.2.3-.8-3.1-2.8-1.6 1.2-3-1.2-3 2.8-1.6.8-3.1 3.2.3z"/><path d="M8.5 12l2.4 2.4 4.6-4.8"/></svg><span><b>ISO 9001:2015</b> Certified Company</span></div>` : ''}
     <div class="mi-num"><span id="mi-n">${reduce ? YEARS : 0}</span><sup>+</sup></div>
     <p class="mi-t">Years of Corporate Exposure</p>
     <div class="mi-line"></div>
