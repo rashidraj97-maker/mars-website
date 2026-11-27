@@ -182,7 +182,7 @@ function showcase(items, mark) {
   const row = (l, rev) => { const one = l.map(tile).join(''); return `<div class="sc-row"><div class="sc-shift"><div class="sc-track${rev ? ' rev' : ''}" style="animation-duration:${Math.max(50, l.length * 3.4)}s">${one}${one.replace(/<span/g, '<span aria-hidden="true"')}</div></div></div>`; };
   sec.innerHTML = `<div class="sc-in">
     <h2 class="sc-h">Professionals From Top Companies Trained By <em>Us</em></h2>
-    <div class="sc-stage"><div class="sc-light" aria-hidden="true"></div>${row(rows[0])}${row(rows[1], true)}</div>
+    <div class="sc-stage"><div class="sc-beam" aria-hidden="true"><i></i></div><div class="sc-light" aria-hidden="true"></div>${row(rows[0])}${row(rows[1], true)}</div>
     <div class="sc-stats">
       <div><b>31<sup>+</sup></b><span>Years of Corporate Exposure</span></div>
       <div><b>500<sup>+</sup></b><span>Organisations Trained</span></div>

@@ -1178,8 +1178,7 @@ html{scroll-padding-top:96px}
 .scase .sc-h{font:600 clamp(1.4rem,3vw,2.1rem)/1.25 "Plus Jakarta Sans",Inter,sans-serif;text-align:center;color:#ECECF4;letter-spacing:-.01em;margin:0 16px 46px}
 .scase .sc-h em{font-family:"DM Serif Display",Georgia,serif;font-style:italic;font-weight:400;color:#A88BFF}
 .scase .sc-stage{position:relative;padding-top:34px}
-.scase .sc-light{position:absolute;left:50%;top:0;transform:translateX(-50%);width:min(820px,80%);height:4px;border-radius:4px;background:linear-gradient(90deg,transparent,#8B5CF6 15%,#B79BFF 50%,#8B5CF6 85%,transparent);box-shadow:0 0 30px 6px rgba(139,92,246,.55)}
-.scase .sc-light:after{content:"";position:absolute;left:5%;right:5%;top:4px;height:360px;background:linear-gradient(180deg,rgba(124,82,246,.55),rgba(91,55,210,.22) 45%,transparent 80%);clip-path:polygon(0 0,100% 0,112% 100%,-12% 100%);filter:blur(18px);pointer-events:none}
+.scase .sc-light{position:absolute;left:50%;top:0;transform:translateX(-50%);width:min(900px,62%);height:4px;border-radius:4px;background:linear-gradient(90deg,transparent,#8B5CF6 15%,#B79BFF 50%,#8B5CF6 85%,transparent);box-shadow:0 0 30px 6px rgba(139,92,246,.55)}
 .scase .sc-row{overflow:hidden;padding:9px 0;-webkit-mask-image:linear-gradient(90deg,transparent,#000 6%,#000 94%,transparent);mask-image:linear-gradient(90deg,transparent,#000 6%,#000 94%,transparent);position:relative}
 .scase .sc-track{display:flex;gap:22px;width:max-content;animation:scroll 60s linear infinite}
 .scase .sc-track.rev{animation-direction:reverse}
@@ -1201,8 +1200,9 @@ html{scroll-padding-top:96px}
 /* scroll aura (driven by --p: section entering, --q: progress through the screen) */
 .scase{--p:0;--q:0}
 .scase .sc-light{transform:translateX(-50%) scaleX(calc(.25 + .75 * var(--p)));opacity:calc(.25 + .75 * var(--p));transition:transform .15s linear,opacity .15s linear}
-.scase .sc-light:after{opacity:var(--p)}
-.scase .sc-stage:before{content:"";position:absolute;left:50%;top:-140px;width:min(1100px,95%);height:520px;transform:translateX(-50%);background:radial-gradient(ellipse at 50% 30%,rgba(124,82,246,calc(.38 * var(--p))),transparent 65%);pointer-events:none}
+
+.scase .sc-stage:before{content:"";position:absolute;left:50%;top:-60px;width:min(1500px,120%);height:900px;transform:translateX(-50%);background:radial-gradient(ellipse 50% 55% at 50% 35%,rgba(124,82,246,calc(.5 * var(--p))),rgba(70,40,170,calc(.22 * var(--p))) 55%,transparent 80%);pointer-events:none}
+.scase .sc-stage{z-index:0}.scase .sc-row,.scase .sc-stats{position:relative;z-index:1}
 .scase .sc-shift{transform:translateX(calc((var(--q) - .5) * -260px))}
 .scase .sc-row:nth-child(3) .sc-shift{transform:translateX(calc((var(--q) - .5) * 260px))}
 .scase .sc-h{opacity:calc(.35 + .65 * var(--p));transform:translateY(calc((1 - var(--p)) * 24px))}
@@ -1225,3 +1225,7 @@ html{scroll-padding-top:96px}
 .hs-b:not(.on){opacity:.85}
 @media(max-width:1000px){.demogrid.hs>*{flex-basis:calc((100% - 24px) / 2)}}
 @media(max-width:700px){.hs>*,.demogrid.hs>*{flex-basis:86%}.hs-prog{margin-right:10px}.hs-b{width:44px;height:42px}}
+
+.scase .sc-beam{position:absolute;left:50%;top:4px;width:min(1640px,150%);height:700px;transform:translateX(-50%);filter:blur(34px);opacity:var(--p);pointer-events:none;z-index:0}
+.scase .sc-beam i{position:absolute;inset:0;background:linear-gradient(180deg,rgba(139,92,246,.8) 0%,rgba(112,72,232,.5) 30%,rgba(82,46,192,.28) 62%,transparent 94%);clip-path:polygon(31% 0,69% 0,100% 100%,0 100%)}
+.scase .sc-light{z-index:1}
