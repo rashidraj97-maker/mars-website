@@ -1265,3 +1265,42 @@ html{scroll-padding-top:96px}
 .scase .sc-stats{max-width:1240px;margin-top:56px}
 .scase .sc-stats b{font-size:clamp(2.3rem,4.6vw,4.4rem)}
 .scase .sc-stats span{font-size:1rem;margin-top:14px}
+
+/* Futurense-style featured trainer slide (preview) */
+.tr-lead.tr-hero{display:grid;grid-template-columns:1.15fr 1fr;gap:20px;padding:0;overflow:hidden;position:relative;border:0;border-radius:28px;color:#fff;
+  background:radial-gradient(ellipse 60% 80% at 78% 55%,rgba(124,82,246,.32),transparent 70%),linear-gradient(120deg,#160F26 0%,#1D1433 55%,#24183F 100%);box-shadow:0 40px 90px -40px rgba(30,15,70,.7)}
+.tr-hero .th-txt{padding:52px 10px 46px 52px;position:relative;z-index:2}
+.tr-hero .th-tag{display:inline-block;font:700 .74rem Inter,sans-serif;letter-spacing:.14em;text-transform:uppercase;color:#C9B8FF;background:rgba(139,92,246,.18);border:1px solid rgba(139,92,246,.35);border-radius:99px;padding:7px 14px;margin-bottom:18px}
+.tr-hero h4{font:800 clamp(2rem,3.6vw,3.2rem)/1.08 "Plus Jakarta Sans",Inter,sans-serif;letter-spacing:-.03em;color:#fff;margin:0 0 14px}
+.tr-hero .th-it{font-style:italic;font-size:1.05rem;color:#E4DDF7;margin:0 0 26px;max-width:560px}
+.tr-hero .th-stats{display:grid;grid-template-columns:repeat(4,auto);justify-content:start;gap:12px 34px;margin-bottom:26px}
+.tr-hero .th-stats b{display:block;font:italic 400 2.3rem/1 "DM Serif Display",Georgia,serif;color:#fff}
+.tr-hero .th-stats span{display:block;font-size:.8rem;color:#A99FC4;margin-top:6px;max-width:130px}
+.tr-hero .th-hl{list-style:none;margin:0 0 22px;padding:0;display:grid;gap:12px}
+.tr-hero .th-hl li{display:flex;gap:12px;align-items:flex-start;padding:0;font-size:.95rem;color:#E9E4F7;line-height:1.45}
+.tr-hero .th-hl li::before{display:none}
+.tr-hero .th-hl svg{flex:none;width:30px;height:30px;padding:6px;border-radius:9px;background:rgba(139,92,246,.22);color:#C4B0FF}
+.tr-hero .th-tr{font-size:.85rem;color:#9C93B8;margin:0;line-height:1.55}
+.tr-hero .th-tr b{color:#CFC6EA;font-weight:600}
+.tr-hero .th-art{position:relative;min-height:520px;background-image:radial-gradient(rgba(255,255,255,.09) 1.2px,transparent 1.4px);background-size:16px 16px;-webkit-mask-image:linear-gradient(90deg,transparent,#000 18%);mask-image:linear-gradient(90deg,transparent,#000 18%)}
+.tr-hero .th-ring{position:absolute;left:50%;top:54%;width:min(330px,72%);aspect-ratio:1;transform:translate(-50%,-50%);border-radius:50%;padding:6px;
+  background:conic-gradient(from 200deg,transparent 0deg,#F59E0B 40deg,#FDBA74 150deg,#F97316 230deg,transparent 300deg);box-shadow:0 0 60px -6px rgba(249,115,22,.45),0 0 120px 10px rgba(124,82,246,.35)}
+.tr-hero .th-ring img,.tr-hero .th-ini{width:100%;height:100%;border-radius:50%;object-fit:cover;object-position:50% 20%;display:block;border:6px solid #1D1433;background:#2A1E47}
+.tr-hero .th-ini{display:grid;place-items:center;font:800 4rem "Plus Jakarta Sans",sans-serif;color:#C4B0FF}
+.tr-hero .th-w{position:absolute;font:900 clamp(3rem,6vw,5.6rem)/1 "Plus Jakarta Sans",Inter,sans-serif;letter-spacing:-.04em;background:linear-gradient(180deg,#E9DEFF 0%,#A78BFA 55%,#7C3AED 100%);-webkit-background-clip:text;background-clip:text;color:transparent;z-index:1}
+.tr-hero .th-l{left:2%;top:58%}
+.tr-hero .th-r{right:6%;top:22%}
+.tr-hero .th-logo{position:absolute;right:28px;top:26px;height:36px;background:#fff;border-radius:10px;padding:6px 10px;z-index:3}
+@media(max-width:900px){.tr-lead.tr-hero{grid-template-columns:1fr}.tr-hero .th-art{order:-1;min-height:360px}.tr-hero .th-txt{padding:10px 26px 34px}.tr-hero .th-stats{grid-template-columns:repeat(2,auto)}}
+/* trainers slider: 3 cards per view */
+.tr-grid.hs{margin-bottom:0}
+.tr-grid.hs>*{flex-basis:calc((100% - 48px) / 3)}
+.tr-grid.hs>[hidden]{display:none!important}
+.tr-lead.tr-hero[hidden]{display:none}
+.tr-grid.hs+.hs-ctl{margin-bottom:26px}
+@media(max-width:1000px){.tr-grid.hs>*{flex-basis:calc((100% - 24px) / 2)}}
+@media(max-width:700px){.tr-grid.hs>*{flex-basis:86%}}
+.tr-hero .th-ring{z-index:2}
+.tr-hero .th-w{z-index:1}
+.tr-hero .th-l{left:3%;top:64%}
+@media(max-width:900px){.tr-hero .th-l{left:2%;top:70%}}

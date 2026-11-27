@@ -1040,7 +1040,8 @@ function corporatePage() {
    If the sheet can't be reached, the cards already written in index.html stay as they are. */
 function trainersSection() {
   const list = $('#trlist'), bar = $('.tr-filters'); if (!list) return;
-  const applyFilter = f => $$('.tr-lead,.trc', list).forEach(e => { e.hidden = !(f === 'all' || (e.dataset.cat || '').split(' ').includes(f)); });
+  const applyFilter = f => { $$('.tr-lead,.trc', list).forEach(e => { e.hidden = !(f === 'all' || (e.dataset.cat || '').split(' ').includes(f)); });
+    const g = $('.tr-grid.hs', list); if (g) { g.scrollLeft = 0; g.dispatchEvent(new Event('scroll')); } };
   if (bar) bar.addEventListener('click', e => {
     const b = e.target.closest('button[data-f]'); if (!b) return;
     $$('button', bar).forEach(x => x.setAttribute('aria-pressed', x === b)); applyFilter(b.dataset.f);
@@ -1071,13 +1072,28 @@ function trainersSection() {
         <div class="tr-col">${t.highlights ? `<h5>From the field</h5><ul>${lines(t.highlights).map(l => `<li>${esc(l)}</li>`).join('')}</ul>` : (t.field ? `<h5>From the field</h5><p>${esc(t.field)}</p>` : '')}</div>
         ${tr ? `<div class="tr-trusted">${i > 0 ? `<h5>${esc(tr.slice(0, i))}</h5><p>${esc(tr.slice(i + 1).trim())}</p>` : `<p>${esc(tr)}</p>`}</div>` : ''}</article>`;
     };
+    const IC = ['<path d="M3 17l6-6 4 4 8-8"/><path d="M14 7h7v7"/>', '<path d="M4 7h16M4 12h10M4 17h7"/>', '<rect x="3" y="4" width="18" height="14" rx="2"/><path d="M8 21h8M12 18v3"/>', '<path d="M12 3l9 5-9 5-9-5 9-5z"/><path d="M7 10.5V15c0 1.4 2.2 3 5 3s5-1.6 5-3v-4.5"/>', '<path d="M4 19V5a2 2 0 012-2h12v16H6a2 2 0 00-2 2z"/><path d="M8 7h6"/>'];
+    const hero = t => {
+      const stats = lines(t.stats).map(l => { const [v, ...r] = l.split('|'); return `<div><b>${esc(v.trim())}</b><span>${esc(r.join('|').trim())}</span></div>`; }).join('');
+      const tr = String(t.trusted || ''), i = tr.indexOf(':'), src = photo(t.photo);
+      const yrs = (lines(t.stats)[0] || '').split('|')[0].trim() || '31+';
+      return `<article class="tr-lead tr-hero" data-cat="${esc(cats(t.filters))}">
+        <div class="th-txt">${t.exp ? `<span class="th-tag">${esc(t.exp)}</span>` : ''}<h4>${esc(t.name)}</h4>${t.role ? `<p class="th-it">${esc(t.role)}</p>` : ''}
+          ${stats ? `<div class="th-stats">${stats}</div>` : ''}
+          ${t.highlights ? `<ul class="th-hl">${lines(t.highlights).map((l, k) => `<li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${IC[k % IC.length]}</svg><span>${esc(l)}</span></li>`).join('')}</ul>` : ''}
+          ${tr ? `<p class="th-tr">${i > 0 ? `<b>${esc(tr.slice(0, i))}:</b> ${esc(tr.slice(i + 1).trim())}` : esc(tr)}</p>` : ''}</div>
+        <div class="th-art" aria-hidden="true"><span class="th-w th-l">MOS</span><span class="th-w th-r">${esc(yrs)}</span>
+          <div class="th-ring">${src ? `<img src="${esc(src)}" alt="" loading="lazy" referrerpolicy="no-referrer">` : `<span class="th-ini">${esc(initials(t.name))}</span>`}</div>
+          <img class="th-logo" src="assets/logo.png" alt=""></div></article>`;
+    };
     const card = t => `<article class="trc" data-cat="${esc(cats(t.filters))}">
         <div class="trc-top">${av(t, 'trc-av', 72, 72)}<div><h4>${esc(t.name)}</h4>${t.role ? `<p class="trc-role">${esc(t.role)}</p>` : ''}${t.exp ? `<span class="trc-exp">${esc(t.exp)}</span>` : ''}</div></div>
         ${t.field ? `<div class="trc-proof"><b>From the field</b>${esc(t.field)}</div>` : ''}
         ${t.skills ? `<div class="trc-chips">${chips(t.skills)}</div>` : ''}
         ${t.footer ? `<p class="trc-cl">${labelled(t.footer)}</p>` : ''}</article>`;
     const more = names.length ? `Including ${names.map(t => esc(t.name)).join(', ').replace(/, ([^,]*)$/, ' and $1')}, with experienced trainers across Excel, data, SAP, programming and more` : 'Experienced trainers across Excel, data, SAP, programming and more';
-    list.innerHTML = feat.map(lead).join('') + (full.length ? `<div class="tr-grid">${full.map(card).join('')}</div>` : '');
+    list.innerHTML = feat.map(SHOWCASE ? hero : lead).join('') + (full.length ? `<div class="tr-grid">${full.map(card).join('')}</div>` : '');
+    if (SHOWCASE) hSlider($('.tr-grid', list));
     const mp = $('.faculty .fm.more p'); if (mp) mp.innerHTML = more;
     const on = bar && $('button[aria-pressed="true"]', bar); applyFilter(on ? on.dataset.f : 'all');
   }).catch(() => {});
