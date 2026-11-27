@@ -212,7 +212,7 @@ function showcase(items, mark) {
     <div class="sc-stats">
       <div><b>31<sup>+</sup></b><span>Years of Corporate Exposure</span></div>
       <div><b>500<sup>+</sup></b><span>Organisations Trained</span></div>
-      <div><b>3 Lakh<sup>+</sup></b><span>Professionals Trained</span></div>
+      <div><b>4 Lakh<sup>+</sup></b><span>Professionals Trained</span></div>
       <div><b>12,590</b><span>Batches Delivered</span></div>
     </div></div>`;
   paintLight(sec);
