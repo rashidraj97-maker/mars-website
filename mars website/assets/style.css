@@ -1261,3 +1261,7 @@ html{scroll-padding-top:96px}
 @media (max-width:760px){.scase .st-t{width:180px;height:92px}}
 .scase .sc-stats sup{vertical-align:.08em;font-size:.78em;font-weight:200;margin-left:.14em;font-family:Inter,system-ui,sans-serif}
 .logos.scase{background:#010102!important}
+/* stats: smaller, in proportion with the logo rows */
+.scase .sc-stats{max-width:1240px;margin-top:56px}
+.scase .sc-stats b{font-size:clamp(2.3rem,4.6vw,4.4rem)}
+.scase .sc-stats span{font-size:1rem;margin-top:14px}
