@@ -1040,6 +1040,40 @@ function corporatePage() {
    If the sheet can't be reached, the cards already written in index.html stay as they are. */
 /* Trainers below the founder: the panel pins while the page scrolls down, and the cards slide sideways one by one
    (each card rests a moment before the next slides in). Phones get a simple vertical list. */
+/* Faculty deck: the panel pins while the page scrolls; the front card flies off to the left and the next rises from the stack */
+function deckScroll(pin) {
+  if (!pin) return;
+  const st = $('.dk-sticky', pin), deck = $('.dk-deck', pin), cur = $('.dk-cur', pin), tot = $('.dk-tot', pin), now = $('.dk-now', pin), line = $('.dk-line i', pin);
+  const mq = matchMedia('(max-width: 900px)');
+  let cards = [], per = 600, top = 90, last = -1;
+  const ease = f => { if (f <= .2) return 0; if (f >= .8) return 1; const t = (f - .2) / .6; return t * t * (3 - 2 * t); };
+  const paint = x => {
+    cards.forEach((c, i) => {
+      const d = i - x; let tf, op, z;
+      if (d < 0) { const t = Math.min(-d, 1); tf = `translate3d(${-t * 38}%,${-t * 26}%,0) rotate(${-t * 14}deg) scale(${1 - t * .08})`; op = Math.max(0, 1 - t * 1.7); z = 200 + i; }
+      else { const k = Math.min(d, 3.2); tf = `translate3d(${k * 34}px,${k * 14}px,0) scale(${1 - k * .055}) rotate(${k * 2.2}deg)`; op = d > 3 ? Math.max(0, 1 - (d - 3) * 2) : 1; z = 100 - i; }
+      c.style.transform = tf; c.style.opacity = op.toFixed(3); c.style.zIndex = z; c.style.setProperty('--dim', Math.min(Math.max(d, 0), 3) * .16);
+    });
+    const a = Math.min(Math.round(x), cards.length - 1);
+    if (a !== last && cards[a]) { last = a; cur.textContent = String(a + 1).padStart(2, '0'); $('b', now).textContent = cards[a].dataset.name; $('span', now).textContent = cards[a].dataset.role; cur.classList.remove('pop'); void cur.offsetWidth; cur.classList.add('pop'); }
+    line.style.width = (cards.length > 1 ? x / (cards.length - 1) * 100 : 100) + '%';
+  };
+  const upd = () => { if (pin.classList.contains('dk-flat') || !cards.length) return;
+    const sc = Math.min(Math.max(top - pin.getBoundingClientRect().top, 0), per * (cards.length - 1)), p = sc / per, i = Math.min(Math.floor(p), Math.max(cards.length - 2, 0));
+    paint(cards.length > 1 ? i + ease(p - i) : 0); };
+  const layout = () => {
+    cards = $$('.dk-card', deck).filter(c => !c.hidden); tot.textContent = String(cards.length).padStart(2, '0'); last = -1;
+    $$('.dk-no', deck).forEach(e => e.parentNode.parentNode.hidden || (e.textContent = String(cards.indexOf(e.closest('.dk-card')) + 1).padStart(2, '0')));
+    const h = $('header.head'); top = h ? Math.round(h.getBoundingClientRect().height) : 80;
+    if (mq.matches) { pin.classList.add('dk-flat'); pin.style.height = ''; $$('.dk-card', deck).forEach(c => { c.style.transform = c.style.opacity = c.style.zIndex = ''; }); if (!deck.dataset.hs) hSlider(deck); return; }
+    pin.classList.remove('dk-flat'); st.style.top = top + 'px'; st.style.height = `calc(100vh - ${top}px)`;
+    per = Math.max(460, Math.round(innerHeight * .75)); pin.style.height = `calc(100vh - ${top}px + ${per * Math.max(cards.length - 1, 0)}px)`;
+    upd();
+  };
+  $$('.dk-nav button', pin).forEach(b => b.addEventListener('click', () => scrollBy({ top: Number(b.dataset.d) * per, behavior: 'smooth' })));
+  addEventListener('scroll', upd, { passive: true }); addEventListener('resize', layout); pin.addEventListener('dk:refresh', layout);
+  layout(); setTimeout(layout, 800);
+}
 function pinScroll(pin) {
   if (!pin) return;
   const st = $('.ts-sticky', pin), tr = $('.ts-track', pin), fill = $('.hs-prog i', pin), cnt = $('.ts-count', pin);
@@ -1072,7 +1106,8 @@ function trainersSection() {
   const list = $('#trlist'), bar = $('.tr-filters'); if (!list) return;
   const applyFilter = f => { $$('.tr-lead,.trc', list).forEach(e => { e.hidden = !(f === 'all' || (e.dataset.cat || '').split(' ').includes(f)); });
     const g = $('.tr-grid.hs', list); if (g) { g.scrollLeft = 0; g.dispatchEvent(new Event('scroll')); }
-    if ($('.ts-pin', list)) dispatchEvent(new Event('resize')); };
+    if ($('.ts-pin', list)) dispatchEvent(new Event('resize'));
+    const dp = $('.dk-pin', list); if (dp) dp.dispatchEvent(new Event('dk:refresh')); };
   if (bar) bar.addEventListener('click', e => {
     const b = e.target.closest('button[data-f]'); if (!b) return;
     $$('button', bar).forEach(x => x.setAttribute('aria-pressed', x === b)); applyFilter(b.dataset.f);
@@ -1144,11 +1179,37 @@ function trainersSection() {
         ${t.skills ? `<div class="trc-chips">${chips(t.skills)}</div>` : ''}
         ${t.footer ? `<p class="trc-cl">${labelled(t.footer)}</p>` : ''}</article>`;
     const more = names.length ? `Including ${names.map(t => esc(t.name)).join(', ').replace(/, ([^,]*)$/, ' and $1')}, with experienced trainers across Excel, data, SAP, programming and more` : 'Experienced trainers across Excel, data, SAP, programming and more';
-    if (SHOWCASE) {   // Futurense-style: every trainer as a big dark slide, one per view, on a black stage
-      const wrap = list.closest('.wrap'); if (wrap) wrap.classList.add('trw-dark');
-      list.innerHTML = feat.map(t => slide(t, true)).join('') + (full.length ? `<div class="ts-pin"><div class="ts-sticky"><div class="ts-track">${full.map(t => slide(t, false)).join('')}</div>
-        <div class="ts-bar"><div class="hs-prog"><i></i></div><span class="ts-count"></span><button type="button" class="hs-b on" data-d="-1" aria-label="Previous trainer"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M15 6l-6 6 6 6"/></svg></button><button type="button" class="hs-b on" data-d="1" aria-label="Next trainer"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg></button></div></div></div>` : '');
-      pinScroll($('.ts-pin', list));
+    if (SHOWCASE) {   // MARS "Faculty Deck": founder spotlight, then a pinned stack of trainer cards
+      const wrap = list.closest('.wrap'); if (wrap) wrap.classList.add('trw-fx');
+      const n2 = k => String(k + 1).padStart(2, '0');
+      const fx = t => {
+        const src = photo(t.photo), stats = lines(t.stats).map(l => { const [v, ...r] = l.split('|'); return `<div><b>${esc(v.trim())}</b><span>${esc(r.join('|').trim())}</span></div>`; }).join('');
+        const tr = String(t.trusted || ''), ti = tr.indexOf(':');
+        return `<article class="fx-card" data-cat="${esc(cats(t.filters))}">
+          <div class="fx-pic"><div class="fx-arch">${src ? `<img src="${esc(src)}" alt="${esc(t.name)}" loading="lazy" referrerpolicy="no-referrer">` : `<span>${esc(initials(t.name))}</span>`}</div>${t.exp ? `<span class="fx-badge">${esc(t.exp)}</span>` : ''}</div>
+          <div class="fx-body"><span class="fx-k">Meet the founder</span><h4>${esc(t.name)}</h4>${t.role ? `<p class="fx-role">${esc(t.role)}</p>` : ''}
+            ${stats ? `<div class="fx-stats">${stats}</div>` : ''}
+            ${t.highlights ? `<ul class="fx-hl">${lines(t.highlights).slice(0, 4).map(l => `<li>${esc(l)}</li>`).join('')}</ul>` : ''}
+            ${tr ? `<p class="fx-tr"><b>${esc(ti > 0 ? tr.slice(0, ti) : 'Trusted by')}</b>${esc(ti > 0 ? tr.slice(ti + 1).trim() : tr)}</p>` : ''}</div></article>`;
+      };
+      const dk = (t, k) => {
+        const src = photo(t.photo), sk = String(t.skills || '').split(',').map(x => x.trim()).filter(Boolean).slice(0, 5);
+        return `<article class="trc dk-card" data-cat="${esc(cats(t.filters))}" data-name="${esc(t.name)}" data-role="${esc(t.role || '')}">
+          <div class="dk-band"><span class="dk-no">${n2(k)}</span>${t.exp ? `<span class="dk-exp">${esc(t.exp)}</span>` : ''}</div>
+          <div class="dk-av">${src ? `<img src="${esc(src)}" alt="${esc(t.name)}" loading="lazy" referrerpolicy="no-referrer" onerror="this.outerHTML='<span>${esc(initials(t.name))}</span>'">` : `<span>${esc(initials(t.name))}</span>`}</div>
+          <h4>${esc(t.name)}</h4>${t.role ? `<p class="dk-role">${esc(t.role)}</p>` : ''}
+          ${t.field ? `<blockquote class="dk-q">${esc(t.field)}</blockquote>` : ''}
+          ${sk.length ? `<div class="dk-chips">${sk.map(x => `<span>${esc(x)}</span>`).join('')}</div>` : ''}
+          ${t.footer ? `<p class="dk-ft">${labelled(t.footer)}</p>` : ''}</article>`;
+      };
+      list.innerHTML = feat.map(fx).join('') + (full.length ? `<div class="dk-pin"><div class="dk-sticky">
+          <div class="dk-side"><span class="dk-eb">The MARS faculty</span><h4>Learn from people who <em>do the work</em></h4>
+            <div class="dk-ctr"><b class="dk-cur">01</b><span>/ <i class="dk-tot">${String(full.length).padStart(2, '0')}</i></span></div>
+            <p class="dk-now"><b></b><span></span></p>
+            <div class="dk-line"><i></i></div>
+            <div class="dk-nav"><button type="button" data-d="-1" aria-label="Previous trainer"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M15 6l-6 6 6 6"/></svg></button><button type="button" data-d="1" aria-label="Next trainer"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg></button><small>Scroll to meet the team</small></div></div>
+          <div class="dk-deck">${full.map(dk).join('')}</div></div></div>` : '');
+      deckScroll($('.dk-pin', list));
     } else list.innerHTML = feat.map(lead).join('') + (full.length ? `<div class="tr-grid">${full.map(card).join('')}</div>` : '');
     const mp = $('.faculty .fm.more p'); if (mp) mp.innerHTML = more;
     const on = bar && $('button[aria-pressed="true"]', bar); applyFilter(on ? on.dataset.f : 'all');
