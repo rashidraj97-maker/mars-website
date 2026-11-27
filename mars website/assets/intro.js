@@ -35,6 +35,9 @@
 #mintro .mi-iso svg{width:24px;height:24px;color:#FFC23C;flex:none}
 #mintro .mi-iso b{color:#FFC23C;font-weight:800}
 #mintro .mi-in>.mi-iso{display:flex;width:max-content;margin-left:auto;margin-right:auto}
+#mintro .mi-badges{display:flex;flex-wrap:wrap;justify-content:center;gap:10px;margin-top:16px;animation:mi-up .7s .8s both}
+#mintro .mi-badges .mi-iso{margin:0}
+#mintro .mi-g .mi-stars{color:#FFC23C;letter-spacing:1px;font-size:1rem}
 @keyframes mi-up{from{opacity:0;transform:translateY(16px)}}
 @keyframes mi-grow{from{transform:scaleX(0)}}
 @keyframes mi-bar{from{width:0}to{width:100%}}
@@ -44,7 +47,7 @@
   const box = document.createElement('div'); box.id = 'mintro'; box.setAttribute('role', 'dialog'); box.setAttribute('aria-label', '31 years of corporate exposure');
   box.innerHTML = `<div class="mi-in">
     <div class="mi-logo"><img src="assets/logo.png" alt="MARS Training & Solution"></div>
-    ${ISO ? `<div class="mi-iso"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 2l2.4 2.1 3.2-.3.8 3.1 2.8 1.6-1.2 3 1.2 3-2.8 1.6-.8 3.1-3.2-.3L12 22l-2.4-2.1-3.2.3-.8-3.1-2.8-1.6 1.2-3-1.2-3 2.8-1.6.8-3.1 3.2.3z"/><path d="M8.5 12l2.4 2.4 4.6-4.8"/></svg><span><b>ISO 9001:2015</b> Certified Company</span></div>` : ''}
+    ${ISO ? `<div class="mi-badges"><div class="mi-iso"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 2l2.4 2.1 3.2-.3.8 3.1 2.8 1.6-1.2 3 1.2 3-2.8 1.6-.8 3.1-3.2-.3L12 22l-2.4-2.1-3.2.3-.8-3.1-2.8-1.6 1.2-3-1.2-3 2.8-1.6.8-3.1 3.2.3z"/><path d="M8.5 12l2.4 2.4 4.6-4.8"/></svg><span><b>ISO 9001:2015</b> Certified Company</span></div><div class="mi-iso mi-g"><span class="mi-stars" aria-hidden="true">★★★★★</span><span><b>1K+</b> Google Reviews</span></div></div>` : ''}
     <div class="mi-num"><span id="mi-n">${reduce ? YEARS : 0}</span><sup>+</sup></div>
     <p class="mi-t">Years of Corporate Exposure</p>
     <div class="mi-line"></div>
