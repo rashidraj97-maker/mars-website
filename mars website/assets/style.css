@@ -1491,3 +1491,9 @@ html{scroll-padding-top:96px}
 .fx-pic::before{background:repeating-radial-gradient(circle,rgba(255,194,60,.26) 0 1px,transparent 1.5px 30px)!important}
 .fx-pic::after{opacity:1.6;filter:brightness(1.6)}
 .fx-card::after{content:"MARS";left:30px;right:auto;bottom:-38px;font-size:clamp(6rem,11vw,9.5rem);-webkit-text-stroke:1.5px rgba(255,194,60,.10)}
+/* founder photo: round */
+.fx-arch{width:340px;height:340px;border-radius:50%;padding:8px}
+.fx-arch img,.fx-arch span{border-radius:50%;object-position:50% 20%}
+.fx-badge{bottom:-14px}
+@media(max-width:1100px){.fx-arch{width:280px;height:280px}}
+@media(max-width:900px){.fx-arch{width:240px;height:240px}}
