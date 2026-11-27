@@ -155,6 +155,30 @@ function offerBar() {
 }
 
 /* "Trusted by" strip on the home page: company names, replaced by their logo when one is in the Drive folder "MARS Client Logos" */
+/* Futurense-style client showcase (preview: ?preview=showcase): dark stage, purple spotlight,
+   two rows of logo tiles moving in opposite directions, big italic stats underneath */
+const SHOWCASE = /[?&]preview=showcase\b/.test(location.search);
+function showcase(items, mark) {
+  const sec = $('section.logos'); if (!sec) return;
+  sec.classList.add('scase');
+  const tile = x => x.id
+    ? `<span class="st-t lgt" title="${esc(x.n)}"><img src="https://drive.google.com/thumbnail?id=${esc(x.id)}&sz=w400" alt="${esc(x.n)}" loading="lazy" referrerpolicy="no-referrer"></span>`
+    : `<span class="st-t">${mark(x)}<i>${esc(x.n)}</i></span>`;
+  const half = Math.ceil(items.length / 2), rows = [items.slice(0, half), items.slice(half)];
+  const row = (l, rev) => { const one = l.map(tile).join(''); return `<div class="sc-row"><div class="sc-track${rev ? ' rev' : ''}" style="animation-duration:${Math.max(50, l.length * 3.4)}s">${one}${one.replace(/<span/g, '<span aria-hidden="true"')}</div></div>`; };
+  sec.innerHTML = `<div class="sc-in">
+    <h2 class="sc-h">Professionals From Top Companies Trained By <em>Us</em></h2>
+    <div class="sc-stage"><div class="sc-light" aria-hidden="true"></div>${row(rows[0])}${row(rows[1], true)}</div>
+    <div class="sc-stats">
+      <div><b>31<sup>+</sup></b><span>Years of Corporate Exposure</span></div>
+      <div><b>500<sup>+</sup></b><span>Organisations Trained</span></div>
+      <div><b>3 Lakh<sup>+</sup></b><span>Professionals Trained</span></div>
+      <div><b>12,590</b><span>Batches Delivered</span></div>
+    </div></div>`;
+  $$('.lgt img', sec).forEach(im => im.addEventListener('error', () => { im.parentNode.classList.remove('lgt'); im.parentNode.innerHTML = '<i>' + esc(im.alt) + '</i>'; }));
+  $$('img.ic', sec).forEach(im => { const bad = () => { const b = document.createElement('b'); b.className = 'ini'; b.style.cssText = im.style.cssText; b.textContent = im.dataset.ini; im.replaceWith(b); };
+    im.addEventListener('error', bad); im.addEventListener('load', () => { if (im.naturalWidth < 24) bad(); }); });
+}
 function clientStrip() {
   const tr = $('#track'); if (!tr) return;
   const base = $$('span', tr).map(s => s.textContent.trim()).filter(Boolean), doms = {};
@@ -171,6 +195,7 @@ function clientStrip() {
     const hue = n => [...n].reduce((a, c) => a + c.charCodeAt(0), 0) % 360;
     const mark = x => x.d ? `<img class="ic" src="https://t1.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=https://${esc(x.d)}&size=128" alt="" loading="lazy" referrerpolicy="no-referrer" data-ini="${esc(ini(x.n))}" style="--h:${hue(x.n)}">` : `<b class="ini" style="--h:${hue(x.n)}">${esc(ini(x.n))}</b>`;
     const one = items.map(x => x.id ? `<span class="lg" title="${esc(x.n)}"><img src="https://drive.google.com/thumbnail?id=${esc(x.id)}&sz=w400" alt="${esc(x.n)}" loading="lazy" referrerpolicy="no-referrer"></span>` : `<span class="co">${mark(x)}${esc(x.n)}</span>`).join('');
+    if (SHOWCASE) { showcase(items, mark); return; }
     tr.innerHTML = one + one.replace(/<span/g, '<span aria-hidden="true"');
     tr.style.animationDuration = Math.max(40, items.length * 3.2) + 's';
     const c = $('#ccount'); if (c) c.textContent = (items.length >= 10 ? Math.floor(items.length / 5) * 5 : items.length) + '+';
