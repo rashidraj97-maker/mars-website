@@ -1086,14 +1086,38 @@ function trainersSection() {
           <div class="th-ring">${src ? `<img src="${esc(src)}" alt="" loading="lazy" referrerpolicy="no-referrer">` : `<span class="th-ini">${esc(initials(t.name))}</span>`}</div>
           <img class="th-logo" src="assets/logo.png" alt=""></div></article>`;
     };
+    const slide = (t, isFeat) => {
+      const src = photo(t.photo), sk = String(t.skills || '').split(',').map(x => x.trim()).filter(Boolean);
+      const li = (k, txt) => `<li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${IC[k % IC.length]}</svg><span>${txt}</span></li>`;
+      let pts = [];
+      if (isFeat) pts = lines(t.highlights).slice(0, 3).map((l, k) => li(k, esc(l)));
+      else {
+        if (sk.length) pts.push(li(0, 'Expert in ' + esc(sk.slice(0, 3).join(', ').replace(/, ([^,]*)$/, ' & $1'))));
+        if (t.footer) pts.push(li(3, labelled(t.footer)));
+        pts.push(li(2, 'Live online, or in our Kolkata classroom'));
+      }
+      const stats = isFeat ? lines(t.stats).map(l => { const [v, ...r] = l.split('|'); return `<div><b>${esc(v.trim())}</b><span>${esc(r.join('|').trim())}</span></div>`; }).join('') : '';
+      const chipsAt = sk.slice(isFeat ? 0 : 3, (isFeat ? 0 : 3) + 3).length >= 2 ? sk.slice(isFeat ? 0 : 3, (isFeat ? 0 : 3) + 3) : sk.slice(0, 3);
+      return `<article class="trc ts-card${isFeat ? ' ts-feat' : ''}" data-cat="${esc(cats(t.filters))}">
+        <div class="ts-txt">${t.exp ? `<span class="ts-tag">${esc(t.exp)}</span>` : ''}<h4>${esc(t.name)}</h4>
+          ${t.role ? `<p class="ts-it">${esc(t.role)}</p>` : ''}${!isFeat && t.field ? `<p class="ts-d">${esc(t.field)}</p>` : ''}
+          ${stats ? `<div class="ts-stats">${stats}</div>` : ''}<ul class="ts-hl">${pts.join('')}</ul>
+          <a class="ts-btn" href="courses.html">Explore courses <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg></a></div>
+        <div class="ts-art" aria-hidden="true"><img class="ts-logo" src="assets/logo.png" alt="">
+          <div class="ts-ring">${src ? `<img src="${esc(src)}" alt="" loading="lazy" referrerpolicy="no-referrer" onerror="this.outerHTML='<span class=&quot;ts-ini&quot;>${esc(initials(t.name))}</span>'">` : `<span class="ts-ini">${esc(initials(t.name))}</span>`}</div>
+          ${chipsAt.map((c, k) => `<span class="ts-chip ts-c${k}">${esc(c)}</span>`).join('')}</div></article>`;
+    };
     const card = t => `<article class="trc" data-cat="${esc(cats(t.filters))}">
         <div class="trc-top">${av(t, 'trc-av', 72, 72)}<div><h4>${esc(t.name)}</h4>${t.role ? `<p class="trc-role">${esc(t.role)}</p>` : ''}${t.exp ? `<span class="trc-exp">${esc(t.exp)}</span>` : ''}</div></div>
         ${t.field ? `<div class="trc-proof"><b>From the field</b>${esc(t.field)}</div>` : ''}
         ${t.skills ? `<div class="trc-chips">${chips(t.skills)}</div>` : ''}
         ${t.footer ? `<p class="trc-cl">${labelled(t.footer)}</p>` : ''}</article>`;
     const more = names.length ? `Including ${names.map(t => esc(t.name)).join(', ').replace(/, ([^,]*)$/, ' and $1')}, with experienced trainers across Excel, data, SAP, programming and more` : 'Experienced trainers across Excel, data, SAP, programming and more';
-    list.innerHTML = feat.map(SHOWCASE ? hero : lead).join('') + (full.length ? `<div class="tr-grid">${full.map(card).join('')}</div>` : '');
-    if (SHOWCASE) hSlider($('.tr-grid', list));
+    if (SHOWCASE) {   // Futurense-style: every trainer as a big dark slide, one per view, on a black stage
+      const wrap = list.closest('.wrap'); if (wrap) wrap.classList.add('trw-dark');
+      list.innerHTML = `<div class="ts-slider">${feat.map(t => slide(t, true)).concat(full.map(t => slide(t, false))).join('')}</div>`;
+      hSlider($('.ts-slider', list));
+    } else list.innerHTML = feat.map(lead).join('') + (full.length ? `<div class="tr-grid">${full.map(card).join('')}</div>` : '');
     const mp = $('.faculty .fm.more p'); if (mp) mp.innerHTML = more;
     const on = bar && $('button[aria-pressed="true"]', bar); applyFilter(on ? on.dataset.f : 'all');
   }).catch(() => {});

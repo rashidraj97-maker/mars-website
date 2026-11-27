@@ -1304,3 +1304,55 @@ html{scroll-padding-top:96px}
 .tr-hero .th-w{z-index:1}
 .tr-hero .th-l{left:3%;top:64%}
 @media(max-width:900px){.tr-hero .th-l{left:2%;top:70%}}
+
+/* ===== Trainers: Futurense-style slides on a black stage (preview) ===== */
+.wrap.trw-dark{position:relative;isolation:isolate;padding-top:70px;padding-bottom:70px}
+.wrap.trw-dark::before{content:"";position:absolute;top:0;bottom:0;left:calc(50% - 50vw);right:calc(50% - 50vw);background:#000;z-index:-1}
+.trw-dark .tr-head h3{color:#fff}
+.trw-dark .tr-head p{color:#A7A3B5}
+.trw-dark .tr-head .eyebrow{color:#B79BFF}
+.trw-dark .tr-filters button{background:transparent;color:#E6E3EE;border:1px solid rgba(255,255,255,.18)}
+.trw-dark .tr-filters button[aria-pressed="true"]{background:#8B5CF6;border-color:#8B5CF6;color:#fff}
+.trw-dark .fm.more{background:#1B1428;border:.8px solid rgba(159,118,249,.16);color:#fff}
+.trw-dark .fm.more p{color:#A7A3B5}
+.trw-dark .fm.more h4{color:#fff}
+.ts-slider.hs>*{flex-basis:100%}
+.ts-slider.hs>[hidden]{display:none!important}
+.ts-card{display:grid!important;grid-template-columns:1.05fr 1fr;align-items:stretch;min-height:472px;padding:0!important;gap:0!important;overflow:hidden;border-radius:25px!important;
+  background:#1B1428!important;border:.8px solid rgba(159,118,249,.16)!important;color:#fff;box-shadow:none!important;transform:none!important}
+.ts-card .ts-txt{padding:58px 30px 50px 56px;display:flex;flex-direction:column;justify-content:center}
+.ts-card .ts-tag{align-self:flex-start;font:600 .72rem Inter,sans-serif;letter-spacing:.12em;text-transform:uppercase;color:#C9B8FF;background:rgba(139,92,246,.16);border:1px solid rgba(159,118,249,.3);border-radius:99px;padding:6px 13px;margin-bottom:18px}
+.ts-card h4{font:700 clamp(1.9rem,3vw,2.6rem)/1.15 "Plus Jakarta Sans",Inter,sans-serif;letter-spacing:-.02em;color:#fff;margin:0 0 22px}
+.ts-card .ts-it{font-style:italic;font-size:1.05rem;color:#F1EEF8;margin:0 0 6px}
+.ts-card .ts-d{font-size:1.05rem;color:#F1EEF8;line-height:1.55;margin:0 0 24px;max-width:560px}
+.ts-card .ts-it+.ts-stats,.ts-card .ts-it+.ts-hl{margin-top:22px}
+.ts-card .ts-stats{display:grid;grid-template-columns:repeat(4,auto);justify-content:start;gap:10px 30px;margin:0 0 24px}
+.ts-card .ts-stats b{display:block;font:italic 400 2.1rem/1 "DM Serif Display",Georgia,serif;color:#fff}
+.ts-card .ts-stats span{display:block;font-size:.76rem;color:#A99FC4;margin-top:6px;max-width:120px}
+.ts-card .ts-hl{list-style:none;margin:0 0 30px;padding:0;display:grid;gap:14px}
+.ts-card .ts-hl li{display:flex;gap:12px;align-items:center;padding:0;font-size:.92rem;color:#E9E4F7;line-height:1.4}
+.ts-card .ts-hl li::before{display:none}
+.ts-card .ts-hl li strong{color:#fff;font-weight:600}
+.ts-card .ts-hl svg{flex:none;width:22px;height:22px;color:#B79BFF}
+.ts-card .ts-btn{align-self:flex-start;display:inline-flex;align-items:center;gap:8px;background:#fff;color:#0B0B0F;font-weight:600;font-size:.95rem;border-radius:12px;padding:12px 18px 12px 20px;text-decoration:none;transition:transform .2s}
+.ts-card .ts-btn:hover{transform:translateX(3px)}
+.ts-card .ts-btn svg{width:16px;height:16px}
+.ts-card .ts-art{position:relative;min-height:472px;background-image:radial-gradient(rgba(255,255,255,.1) 1.1px,transparent 1.3px);background-size:14px 14px;
+  -webkit-mask-image:linear-gradient(90deg,transparent 0,#000 22%);mask-image:linear-gradient(90deg,transparent 0,#000 22%)}
+.ts-card .ts-art::after{content:"";position:absolute;left:50%;top:50%;width:520px;height:520px;transform:translate(-50%,-48%);background:radial-gradient(circle,rgba(124,82,246,.35),transparent 62%);pointer-events:none}
+.ts-card .ts-ring{position:absolute;left:50%;top:52%;width:min(340px,70%);aspect-ratio:1;transform:translate(-50%,-50%);border-radius:50%;padding:3px;z-index:2;
+  background:conic-gradient(from 210deg,#7C3AED 0deg,#A78BFA 70deg,#FDBA74 150deg,#F97316 200deg,#FB923C 250deg,#8B5CF6 320deg,#7C3AED 360deg);
+  box-shadow:0 0 28px 2px rgba(249,115,22,.35),0 0 70px 10px rgba(139,92,246,.35)}
+.ts-card .ts-ring img,.ts-card .ts-ini{width:100%;height:100%;border-radius:50%;object-fit:cover;object-position:50% 22%;display:block;border:7px solid #1B1428;background:#2A1E47}
+.ts-card .ts-ini{display:grid;place-items:center;font:800 4rem "Plus Jakarta Sans",sans-serif;color:#C4B0FF}
+.ts-card .ts-logo{position:absolute;right:26px;top:24px;height:34px;background:#fff;border-radius:9px;padding:5px 9px;z-index:3}
+.ts-card .ts-chip{position:absolute;z-index:3;font-size:.8rem;font-weight:600;color:#EDE8FA;background:rgba(27,20,40,.75);border:1px solid rgba(159,118,249,.4);border-radius:99px;padding:7px 13px;backdrop-filter:blur(6px);white-space:nowrap;box-shadow:0 8px 24px -10px rgba(0,0,0,.6)}
+.ts-card .ts-c0{left:8%;top:22%}
+.ts-card .ts-c1{right:6%;top:48%}
+.ts-card .ts-c2{left:12%;bottom:13%}
+/* dark controls */
+.trw-dark .hs-prog{background:rgba(255,255,255,.14)}
+.trw-dark .hs-b{background:transparent;border-color:rgba(255,255,255,.5);color:#fff}
+.trw-dark .hs-b.on{background:#fff;border-color:#fff;color:#0B0B0F}
+@media(max-width:900px){.ts-card{grid-template-columns:1fr}.ts-card .ts-art{order:-1;min-height:330px;-webkit-mask-image:linear-gradient(180deg,#000 75%,transparent);mask-image:linear-gradient(180deg,#000 75%,transparent)}
+  .ts-card .ts-txt{padding:6px 24px 32px}.ts-card .ts-stats{grid-template-columns:repeat(2,auto)}.ts-card .ts-ring{width:min(240px,62%)}.ts-card .ts-chip{font-size:.72rem}}
