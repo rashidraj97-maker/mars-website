@@ -1187,7 +1187,9 @@ html{scroll-padding-top:96px}
 .scase .st-t{flex:none;width:236px;height:112px;border-radius:18px;display:flex;align-items:center;justify-content:center;gap:12px;padding:0 20px;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.06);backdrop-filter:blur(4px);transition:background .25s}
 .scase .st-t:hover{background:rgba(139,92,246,.22)}
 .scase .st-t i{font-style:normal;font:700 1.15rem/1.15 "Plus Jakarta Sans",Inter,sans-serif;color:#fff;text-align:center}
-.scase .st-t img{max-width:170px;max-height:54px;object-fit:contain;filter:brightness(0) invert(1)}
+.scase .st-t img{max-width:170px;max-height:54px;object-fit:contain}
+.scase .st-t.lgt{padding:14px}
+.scase .st-t.lgt img{max-width:100%;max-height:100%;width:100%;height:100%;background:#fff;border-radius:12px;padding:10px 16px;box-shadow:0 6px 18px -8px rgba(0,0,0,.5)}
 .scase .st-t img.ic{width:34px;height:34px;flex:none;filter:none;background:#fff;border-radius:9px;padding:4px}
 .scase .st-t .ini{flex:none;width:36px;height:36px;border-radius:10px;display:grid;place-items:center;font-size:.8rem;background:rgba(255,255,255,.14);color:#fff}
 .scase .sc-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:20px;margin:70px 24px 0;text-align:center}
