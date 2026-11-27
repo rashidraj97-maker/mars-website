@@ -157,7 +157,7 @@ function offerBar() {
 /* "Trusted by" strip on the home page: company names, replaced by their logo when one is in the Drive folder "MARS Client Logos" */
 /* Futurense-style client showcase (preview: ?preview=showcase): dark stage, purple spotlight,
    two rows of logo tiles moving in opposite directions, big italic stats underneath */
-const SHOWCASE = /[?&]preview=showcase\b/.test(location.search);
+const SHOWCASE = true;   // client showcase, review + demo sliders, founder spotlight and faculty deck (live)
 /* Futurense-style horizontal slider: one row of cards, purple progress bar, ‹ › buttons (preview: ?preview=showcase) */
 function hSlider(el) {
   if (!el || el.dataset.hs) return; el.dataset.hs = '1'; el.classList.add('hs');
