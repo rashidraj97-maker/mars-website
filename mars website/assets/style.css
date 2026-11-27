@@ -1461,3 +1461,33 @@ html{scroll-padding-top:96px}
 @media(max-width:900px){.fx-card{grid-template-columns:1fr;padding:30px 22px 26px;text-align:left}.fx-arch{width:230px;height:290px}.fx-stats{grid-template-columns:1fr 1fr}.fx-stats div:nth-child(3){padding-left:0;border-left:0}.fx-stats div:nth-child(n+3){border-top:1px solid rgba(255,255,255,.12)}}
 
 .dk-side{position:relative;z-index:3}
+
+/* founder spotlight: premium background */
+.fx-card{background:
+   radial-gradient(ellipse 34% 62% at 21% 56%,rgba(255,194,60,.20),transparent 70%),
+   radial-gradient(ellipse 40% 55% at 92% 4%,rgba(61,134,209,.55),transparent 70%),
+   radial-gradient(ellipse 50% 60% at 70% 110%,rgba(42,110,181,.35),transparent 70%),
+   linear-gradient(135deg,#123468 0%,#0C2450 38%,#081A3C 70%,#06132E 100%)!important;
+ border:1px solid rgba(255,194,60,.22)!important;box-shadow:0 50px 100px -50px rgba(0,0,0,.8),inset 0 1px 0 rgba(255,255,255,.1)!important}
+.fx-card::before{content:"";position:absolute;left:0;right:0;top:0;height:2px;background:linear-gradient(90deg,transparent 5%,#FFC23C 35%,#FFE29A 50%,#FFC23C 65%,transparent 95%);opacity:.9;z-index:1}
+.fx-card::after{content:"MARS";position:absolute;right:-10px;bottom:-46px;width:auto;height:auto;border:0;border-radius:0;box-shadow:none;top:auto;
+  font:900 clamp(7rem,15vw,13rem)/1 "Plus Jakarta Sans",sans-serif;letter-spacing:-.04em;color:transparent;-webkit-text-stroke:1.5px rgba(255,255,255,.06);pointer-events:none;z-index:0}
+.fx-pic::before{content:"";position:absolute;left:50%;top:48%;width:760px;height:760px;transform:translate(-50%,-50%);border-radius:50%;z-index:-1;pointer-events:none;
+  background:repeating-radial-gradient(circle,rgba(255,194,60,.16) 0 1px,transparent 1px 34px);
+  -webkit-mask-image:radial-gradient(circle,#000 18%,transparent 62%);mask-image:radial-gradient(circle,#000 18%,transparent 62%)}
+.fx-pic::after{content:"";position:absolute;left:50%;top:44%;width:900px;height:900px;transform:translate(-50%,-50%);z-index:-2;pointer-events:none;
+  background:conic-gradient(from 0deg,transparent 0 6deg,rgba(255,214,120,.07) 8deg,transparent 12deg 30deg,rgba(255,214,120,.06) 33deg,transparent 37deg 58deg,rgba(255,214,120,.07) 61deg,transparent 65deg 88deg,rgba(255,214,120,.05) 91deg,transparent 95deg 120deg,rgba(255,214,120,.07) 123deg,transparent 127deg 150deg,rgba(255,214,120,.06) 153deg,transparent 157deg 180deg,rgba(255,214,120,.07) 183deg,transparent 187deg 210deg,rgba(255,214,120,.05) 213deg,transparent 217deg 240deg,rgba(255,214,120,.07) 243deg,transparent 247deg 270deg,rgba(255,214,120,.06) 273deg,transparent 277deg 300deg,rgba(255,214,120,.07) 303deg,transparent 307deg 330deg,rgba(255,214,120,.05) 333deg,transparent 337deg 360deg);
+  -webkit-mask-image:radial-gradient(circle,#000 10%,transparent 60%);mask-image:radial-gradient(circle,#000 10%,transparent 60%)}
+.fx-pic{isolation:auto;z-index:1}
+.fx-body{position:relative;z-index:1}
+.fx-arch{box-shadow:0 0 0 8px rgba(255,194,60,.08),0 30px 70px -20px rgba(0,0,0,.7),0 0 80px -10px rgba(255,194,60,.35)}
+.fx-stats{background:rgba(255,255,255,.03);border-radius:14px;border:1px solid rgba(255,255,255,.1)!important}
+.fx-stats div{padding:16px 16px 14px!important}
+.fx-card{background:
+   radial-gradient(ellipse 30% 55% at 20% 55%,rgba(255,194,60,.30),rgba(255,170,40,.08) 55%,transparent 75%),
+   radial-gradient(ellipse 40% 55% at 92% 4%,rgba(61,134,209,.55),transparent 70%),
+   radial-gradient(ellipse 50% 60% at 70% 110%,rgba(42,110,181,.35),transparent 70%),
+   linear-gradient(135deg,#123468 0%,#0C2450 38%,#081A3C 70%,#06132E 100%)!important}
+.fx-pic::before{background:repeating-radial-gradient(circle,rgba(255,194,60,.26) 0 1px,transparent 1.5px 30px)!important}
+.fx-pic::after{opacity:1.6;filter:brightness(1.6)}
+.fx-card::after{content:"MARS";left:30px;right:auto;bottom:-38px;font-size:clamp(6rem,11vw,9.5rem);-webkit-text-stroke:1.5px rgba(255,194,60,.10)}
