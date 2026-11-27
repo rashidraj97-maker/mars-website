@@ -1356,3 +1356,18 @@ html{scroll-padding-top:96px}
 .trw-dark .hs-b.on{background:#fff;border-color:#fff;color:#0B0B0F}
 @media(max-width:900px){.ts-card{grid-template-columns:1fr}.ts-card .ts-art{order:-1;min-height:330px;-webkit-mask-image:linear-gradient(180deg,#000 75%,transparent);mask-image:linear-gradient(180deg,#000 75%,transparent)}
   .ts-card .ts-txt{padding:6px 24px 32px}.ts-card .ts-stats{grid-template-columns:repeat(2,auto)}.ts-card .ts-ring{width:min(240px,62%)}.ts-card .ts-chip{font-size:.72rem}}
+
+/* founder slide on its own, then the pinned horizontal trainer panel */
+#trlist>.ts-card{margin-bottom:34px}
+.ts-pin{position:relative}
+.ts-sticky{position:sticky;display:flex;flex-direction:column;justify-content:center;gap:22px;overflow:hidden;margin:0 calc(50% - 50vw);padding:0 calc(50vw - 50%)}
+.ts-track{display:flex;gap:24px;will-change:transform}
+.ts-track>.ts-card{flex:0 0 100%}
+.ts-track>[hidden]{display:none!important}
+.ts-bar{display:flex;align-items:center;gap:14px}
+.ts-bar .hs-prog{margin-right:6px}
+.ts-count{color:#A7A3B5;font-size:.9rem;font-variant-numeric:tabular-nums;min-width:52px;text-align:right;margin-right:8px}
+.trw-dark .ts-bar .hs-b{background:#fff;color:#0B0B0F;border-color:#fff}
+.ts-pin.ts-flat .ts-sticky{position:static;margin:0;padding:0;overflow:visible}
+.ts-pin.ts-flat .ts-track{flex-direction:column;transform:none!important}
+.ts-pin.ts-flat .ts-bar{display:none}

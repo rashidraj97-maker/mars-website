@@ -1038,10 +1038,41 @@ function corporatePage() {
 
 /* Trainers: filter buttons, and cards read from the "Trainers" tab of the Google Sheet through Apps Script.
    If the sheet can't be reached, the cards already written in index.html stay as they are. */
+/* Trainers below the founder: the panel pins while the page scrolls down, and the cards slide sideways one by one
+   (each card rests a moment before the next slides in). Phones get a simple vertical list. */
+function pinScroll(pin) {
+  if (!pin) return;
+  const st = $('.ts-sticky', pin), tr = $('.ts-track', pin), fill = $('.hs-prog i', pin), cnt = $('.ts-count', pin);
+  const mq = matchMedia('(max-width: 900px)'), GAP = 24;
+  let n = 0, per = 0, top = 90, step = 0;
+  const ease = f => { if (f <= .18) return 0; if (f >= .82) return 1; const t = (f - .18) / .64; return t * t * t * (t * (t * 6 - 15) + 10); };
+  const upd = () => {
+    if (pin.classList.contains('ts-flat') || n < 2) return;
+    const total = per * (n - 1), sc = Math.min(Math.max(top - pin.getBoundingClientRect().top, 0), total), p = sc / per;
+    const i = Math.min(Math.floor(p), n - 2), x = i + ease(p - i);
+    tr.style.transform = `translate3d(${(-x * step).toFixed(1)}px,0,0)`;
+    fill.style.width = (100 / n) + '%'; fill.style.left = (x / (n - 1) * (100 - 100 / n)) + '%';
+    cnt.textContent = `${Math.round(x) + 1} / ${n}`;
+  };
+  const layout = () => {
+    const cards = $$('.ts-card', tr).filter(c => !c.hidden); n = cards.length;
+    const h = $('header.head'); top = h ? Math.round(h.getBoundingClientRect().height) + 14 : 90;
+    if (mq.matches || n < 2) { pin.classList.add('ts-flat'); pin.style.height = ''; tr.style.transform = ''; return; }
+    pin.classList.remove('ts-flat');
+    st.style.top = top + 'px'; st.style.height = `calc(100vh - ${top}px)`;
+    per = Math.max(420, Math.round(innerHeight * .8)); step = cards[0].getBoundingClientRect().width + GAP;
+    pin.style.height = `calc(100vh - ${top}px + ${per * (n - 1)}px)`;
+    upd();
+  };
+  $$('.hs-b', pin).forEach(b => b.addEventListener('click', () => scrollBy({ top: Number(b.dataset.d) * per, behavior: 'smooth' })));
+  addEventListener('scroll', upd, { passive: true }); addEventListener('resize', layout);
+  layout(); setTimeout(layout, 800);
+}
 function trainersSection() {
   const list = $('#trlist'), bar = $('.tr-filters'); if (!list) return;
   const applyFilter = f => { $$('.tr-lead,.trc', list).forEach(e => { e.hidden = !(f === 'all' || (e.dataset.cat || '').split(' ').includes(f)); });
-    const g = $('.tr-grid.hs', list); if (g) { g.scrollLeft = 0; g.dispatchEvent(new Event('scroll')); } };
+    const g = $('.tr-grid.hs', list); if (g) { g.scrollLeft = 0; g.dispatchEvent(new Event('scroll')); }
+    if ($('.ts-pin', list)) dispatchEvent(new Event('resize')); };
   if (bar) bar.addEventListener('click', e => {
     const b = e.target.closest('button[data-f]'); if (!b) return;
     $$('button', bar).forEach(x => x.setAttribute('aria-pressed', x === b)); applyFilter(b.dataset.f);
@@ -1115,8 +1146,9 @@ function trainersSection() {
     const more = names.length ? `Including ${names.map(t => esc(t.name)).join(', ').replace(/, ([^,]*)$/, ' and $1')}, with experienced trainers across Excel, data, SAP, programming and more` : 'Experienced trainers across Excel, data, SAP, programming and more';
     if (SHOWCASE) {   // Futurense-style: every trainer as a big dark slide, one per view, on a black stage
       const wrap = list.closest('.wrap'); if (wrap) wrap.classList.add('trw-dark');
-      list.innerHTML = `<div class="ts-slider">${feat.map(t => slide(t, true)).concat(full.map(t => slide(t, false))).join('')}</div>`;
-      hSlider($('.ts-slider', list));
+      list.innerHTML = feat.map(t => slide(t, true)).join('') + (full.length ? `<div class="ts-pin"><div class="ts-sticky"><div class="ts-track">${full.map(t => slide(t, false)).join('')}</div>
+        <div class="ts-bar"><div class="hs-prog"><i></i></div><span class="ts-count"></span><button type="button" class="hs-b on" data-d="-1" aria-label="Previous trainer"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M15 6l-6 6 6 6"/></svg></button><button type="button" class="hs-b on" data-d="1" aria-label="Next trainer"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg></button></div></div></div>` : '');
+      pinScroll($('.ts-pin', list));
     } else list.innerHTML = feat.map(lead).join('') + (full.length ? `<div class="tr-grid">${full.map(card).join('')}</div>` : '');
     const mp = $('.faculty .fm.more p'); if (mp) mp.innerHTML = more;
     const on = bar && $('button[aria-pressed="true"]', bar); applyFilter(on ? on.dataset.f : 'all');
