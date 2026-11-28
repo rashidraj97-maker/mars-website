@@ -31,6 +31,7 @@ const COURSES = [
   ["AI & Programming", "Claude AI", "A 6-hour Generative AI program in six 1-hour sessions for non-technical teams: Claude compared with ChatGPT, Gemini and Grok, structured prompt design, document and data workflows, and responsible use at work.", "", "1 month (6 hours)"],
   ["Data & Analytics", "MIS Specialist", "A 6-month MIS program: Advanced Excel, VBA automation and Power BI to build automated MIS reports and dashboards.", "", "6 months (60–70 hours)"],
   ["Data & Analytics", "Advanced MIS Specialist", "A complete MIS career program in four modules: Advanced Excel, Power BI, Excel VBA and SQL. Build automated MIS reports and interactive dashboards, and pull data straight from databases.", "", "8 months (96 hours)"],
+  ["Data & Analytics", "Advanced MIS Specialist with Gen AI", "A complete MIS career program in five parts: Advanced Excel, Power BI, Excel VBA, SQL with AI and Gen AI with MS Office. Build automated MIS reports and dashboards, pull data from databases, and use AI to work faster in Excel, PowerPoint and Word.", "New", "9 months (106 hours)"],
   ["Data & Analytics", "MIS with Gen AI", "The MIS Specialist program with Generative AI: Excel, VBA and Power BI reports built faster with AI tools (7 months).", "", "7 months (60–80 hours)"],
   ["Data & Analytics", "MIS Reporting & Dashboards", "Build professional MIS reports and interactive dashboards with Advanced Excel and Power BI, the two tools every MIS role uses.", "", "4.5 months (52 hours)"],
   ["Automation & Google", "VBA/Macros", "Automate Excel with VBA: macros, procedures, loops, user forms, ribbon tabs and your own add-ins.", "", "2.5 months (24 hours)"],
@@ -106,7 +107,7 @@ const MODULES = {
   'ms office with gen ai': ['MS Excel', 'MS PowerPoint', 'MS Word', 'Generative AI'],
   'complete ms office': ['MS Excel', 'MS PowerPoint', 'MS Word', 'MS Outlook'],
   'advanced excel with ai': ['Advanced Excel', 'Generative AI'],
-  'advanced mis specialist': ['Advanced Excel', 'Power BI', 'Excel VBA', 'SQL'], 'mis reporting dashboards': ['Advanced Excel', 'Power BI'],
+  'advanced mis specialist': ['Advanced Excel', 'Power BI', 'Excel VBA', 'SQL'], 'advanced mis specialist with gen ai': ['Advanced Excel', 'Power BI', 'Excel VBA', 'SQL', 'Generative AI'], 'mis reporting dashboards': ['Advanced Excel', 'Power BI'],
   'advanced excel gen ai': ['Advanced Excel', 'Generative AI']
 };
 const modulesFor = title => MODULES[normT(title)] || null;
@@ -433,6 +434,7 @@ const niceDate = s => { const m = /^(\d{4})-(\d\d)-(\d\d)$/.exec(String(s || '')
 function coverOf(title) {
   const t = title.toLowerCase(), has = (...w) => w.some(x => t.includes(x));
   const grid = (bg, ic, fx) => ({ bg, kind: 'grid', ic, fx });
+  if (has('mis specialist with gen ai')) return { bg: '#071A3D', kind: 'misai' };
   if (has('ms office')) return { bg: '#1E3A8A', kind: 'trio', l: [['W', '#2B579A'], ['P', '#C43E1C'], ['X', '#107C41']] };
   if (has('libre office', 'open office')) { const k = has('calc') ? grid('#1F7A4D', 'C', '=SUMIFS(…)') : has('writer') ? { bg: '#1E4E9A', kind: 'doc', ic: 'W' } : { bg: '#B4471F', kind: 'slide', ic: 'P' }; return k; }
   if (has('vba', 'macro')) return { bg: '#0F5132', kind: 'code', ic: 'VBA', code: ['Sub MonthlyReport()', '  For Each ws In Sheets', '    ws.Calculate', 'End Sub'] };
@@ -518,8 +520,17 @@ const VISIOART = () => `<svg viewBox="0 0 400 168" preserveAspectRatio="xMinYMid
 <g transform="translate(256 16)"><g fill="none" stroke="#CFE0FF" stroke-width="1.2"><path d="M18 11 V18 M6 18 H30 M6 18 V24 M30 18 V24"/></g><rect x="9" y="0" width="18" height="11" rx="3" fill="#FFC23C"/><rect x="0" y="24" width="13" height="10" rx="2.5" fill="#fff"/><rect x="23" y="24" width="13" height="10" rx="2.5" fill="#fff"/></g>
 <g transform="translate(318 66)" fill="none" stroke="#CFE0FF" stroke-width="1.2" stroke-opacity=".7"><rect x="0" y="0" width="56" height="30" rx="4"/><path d="M14 0 V30 M28 0 V30 M42 0 V30 M0 15 H56"/></g>
 </svg>`;
+/* Advanced MIS Specialist with Gen AI: its own cover. A five-step skill staircase (Excel → Power BI → VBA → SQL → Gen AI)
+   climbing towards a live MIS dashboard with an AI spark. Drawn in HTML/CSS, no image files. */
+const MISAIART = () => `<span class="mxa"><span class="mxa-glow"></span>
+  <span class="mxa-steps">${[['Excel', 'x'], ['Power BI', 'p'], ['VBA', 'v'], ['SQL', 's'], ['Gen AI', 'a']].map(([t, c], i) => `<b class="mxa-${c}" style="--i:${i}">${i === 4 ? '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2l2.2 6.3L20.5 10l-6.3 2.2L12 18.5l-2.2-6.3L3.5 10l6.3-1.7z"/></svg>' : ''}${t}</b>`).join('')}</span>
+  <span class="mxa-dash"><span class="mxa-top"><i></i><i></i><i></i></span>
+    <span class="mxa-kpi"><small>MIS report</small><b>▲ 24%</b></span>
+    <svg class="mxa-line" viewBox="0 0 120 40" preserveAspectRatio="none" aria-hidden="true"><defs><linearGradient id="mxag" x1="0" x2="0" y1="0" y2="1"><stop offset="0" stop-color="#5EE3FF" stop-opacity=".45"/><stop offset="1" stop-color="#5EE3FF" stop-opacity="0"/></linearGradient></defs><path d="M0 34 C14 30 18 22 30 24 S48 30 58 20 S78 8 90 12 S108 6 120 2 V40 H0Z" fill="url(#mxag)"/><path d="M0 34 C14 30 18 22 30 24 S48 30 58 20 S78 8 90 12 S108 6 120 2" fill="none" stroke="#5EE3FF" stroke-width="2.2"/></svg>
+    <span class="mxa-bars"><i style="height:45%"></i><i style="height:70%"></i><i style="height:55%"></i><i style="height:90%"></i><i style="height:75%"></i></span>
+    <span class="mxa-spark">AI</span></span></span>`;
 function coverHtml(c) {
-  const k = coverOf(c.title), tile = (x, cls = '') => `<span class="tile ${cls}">${esc(x)}</span>`, withAi = k.kind !== 'ai' && k.kind !== 'photo' && /\b(ai|gen ai)\b/i.test(c.title);
+  const k = coverOf(c.title), tile = (x, cls = '') => `<span class="tile ${cls}">${esc(x)}</span>`, withAi = k.kind !== 'ai' && k.kind !== 'photo' && k.kind !== 'misai' && /\b(ai|gen ai)\b/i.test(c.title);
   let art = '';
   if (k.kind === 'grid') art = `<span class="gridbg"></span>${tile(k.ic)}<code>${esc(k.fx)}</code>`;
   else if (k.kind === 'trio') art = `<span class="trio">${k.l.map(([x, col], i) => `<span style="background:${col}">${x}</span>`).join('')}</span>`;
@@ -535,8 +546,9 @@ function coverHtml(c) {
   else if (k.kind === 'ai') art = `<img class="aiphoto" src="https://images.unsplash.com/photo-1770233621425-5d9ee7a0a700?fm=jpg&q=70&w=800&auto=format&fit=crop" alt="" loading="lazy" onerror="this.parentNode.insertAdjacentHTML('beforeend', AIHEAD()); this.remove()"><span class="aitint"></span><span class="aishade"></span>`;   // photo: Zach M on Unsplash (Unsplash License)
   else if (k.kind === 'flow') art = VISIOART() + tile(k.ic);
   else if (k.kind === 'pc') art = `<span class="pc"><i></i></span>`;
+  else if (k.kind === 'misai') art = MISAIART();
   else if (k.kind === 'talk') art = `<span class="talk">Tell me about yourself…</span><span class="talk r">I am a…</span>`;
-  const ph = k.kind !== 'photo' && k.kind !== 'ai' ? photoOf(c.title) : null;
+  const ph = k.kind !== 'photo' && k.kind !== 'ai' && k.kind !== 'misai' ? photoOf(c.title) : null;
   if (ph) { const lab = photoTile(c.title, k); art += `<img class="cimg" src="${ph.src}" alt="" loading="lazy" style="object-position:${ph.pos}" onerror="this.parentNode.classList.remove('hasimg')"><span class="cshade"></span>${tile(lab, 'ctile' + (lab.length > 3 ? ' xs' : lab.length > 2 ? ' sm' : ''))}`; }
   return `<div class="cv${ph ? ' hasimg' : ''}" style="--cv:${k.bg}" aria-hidden="true">${art}${withAi ? AIBADGE() : ''}</div>`;
 }
@@ -561,6 +573,7 @@ const LINES_LIST = [   // [course title, marketing line shown on mouse-over]
   ['Claude AI', 'Get a tireless AI assistant at your desk in just 8 hours'],
   ['MIS Specialist', 'Be the person every manager depends on for reports'],
   ['Advanced MIS Specialist', 'Reports, dashboards, automation: become indispensable'],
+  ['Advanced MIS Specialist with Gen AI', 'The complete MIS toolkit, now with AI on your side'],
   ['MIS with Gen AI', 'MIS reports in minutes, not days, with AI'],
   ['MIS Reporting & Dashboards', 'Dashboards that get you noticed in every meeting'],
   ['VBA/Macros', 'Hours of Excel work, done with one click'],
@@ -617,7 +630,7 @@ const JOBS_LIST = [   // [course title, approx. open jobs, skill searched]
   ['Basics of Computer', '30,000+', 'computer'], ['Basic Excel', '28,000+', 'MS Excel'], ['Advanced Excel', '10,000+', 'Advanced Excel'],
   ['Advanced Excel with AI', '10,000+', 'Advanced Excel'], ['Advanced Excel & Gen Ai', '10,000+', 'Advanced Excel'], ['Advanced Excel for HR Professionals', '200+', 'HR MIS'],
   ['Gen AI (ChatGPT, Gemini & Copilot)', '2,000+', 'Gen AI'], ['Claude AI', '2,000+', 'Gen AI'],
-  ['MIS Specialist', '6,000+', 'MIS'], ['Advanced MIS Specialist', '6,000+', 'MIS'], ['MIS with Gen AI', '6,000+', 'MIS'], ['MIS Reporting & Dashboards', '6,000+', 'MIS'],
+  ['MIS Specialist', '6,000+', 'MIS'], ['Advanced MIS Specialist', '6,000+', 'MIS'], ['Advanced MIS Specialist with Gen AI', '6,000+', 'MIS'], ['MIS with Gen AI', '6,000+', 'MIS'], ['MIS Reporting & Dashboards', '6,000+', 'MIS'],
   ['VBA/Macros', '700+', 'Excel VBA'], ['Google Sheet', '4,000+', 'Google Sheets'], ['Google sheet with Google Form', '4,000+', 'Google Sheets'],
   ['Google Sheets with App script (AUTOMATION)', '4,000+', 'Google Sheets & Apps Script'], ['Google sheets With Looker Studio', '800+', 'Looker Studio'],
   ['Power Query', '1,000+', 'Power Query'], ['Power Pivot', '1,000+', 'Power Query & Power Pivot'], ['Power BI', '6,000+', 'Power BI'], ['Tableau', '3,000+', 'Tableau'],
